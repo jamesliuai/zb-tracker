@@ -1,0 +1,257 @@
+# What changed between the spreadsheet and the site
+
+Written by `tools/build_data.py`. All 472 pictures were read sticker by sticker and every algorithm was simulated against its picture.
+
+- 472 cases, all different, covering every ZBLL case exactly once
+- 3537 algorithm lines simulated, 3302 matched their picture and AUF as written
+- 992 two-handed and 848 one-handed algorithms ship, plus 1149 and 858 from the hover comments
+
+## Typos repaired (70)
+
+Each repair changes one move, or rejoins a line that had wrapped, and was proven to solve the case.
+
+- T2-2 (sheet T, row 18), one-handed comment: `[U2] F U' R' U R U F U R' U' R U R' U R` to `[U2] F U' R' U R U F' U R' U' R U R' U R`
+- T2-3 (sheet T, row 19), two-handed comment: `R U R' U2 R' D' R U R' D R2 U' R' U2 R U2 R` to `R U R' U2 R' D' R U R' D R2 U' R' U2 R U2 R'`
+- T3-8 (sheet T, row 36), one-handed comment: `[U2] z F' R' U' R2 U R F z R U R' U' R U' R'` to `[U'] z F' R' U' R2 U R F z' R U R' U' R U' R'`
+- T3-8 (sheet T, row 36), one-handed comment: `f' z' U R U2 R' U' B R U R' U' R U' R'` to `[U'] f' z U R U2 R' U' B R U R' U' R U' R'`
+- T3-10 (sheet T, row 38), two-handed comment: `[U'] L U L' U L U' L' F' U L U2 L' U' F'` to `[U'] L U L' U L U' L' F' U L U2 L' U' F`
+- T3-10 (sheet T, row 38), one-handed comment: `[U] R U R' U R U' R' f' z' U R U2 R' U' B` to `[U] R U R' U R U' R' f' z U R U2 R' U' B`
+- T3-11 (sheet T, row 39), two-handed comment: `[U] R' U R U' F' R' E R U R' D f R2 D` to `[U] R' U R U F' R' E R U R' D f R2 D`
+- T4-4 (sheet T, row 44), two-handed comment: `[U'] F R' D' R U2 R' D R U2 F` to `[U'] F R' D' R U2 R' D R U2 F'`
+- T5-8 (sheet T, row 60), two-handed comment: `[U'] R U R D R' U2 R D' R' U' R' U R U' R' U' R U' R` to `[U'] R U R D R' U2 R D' R' U' R' U R U' R' U' R U' R'`
+- T5-8 (sheet T, row 60), one-handed comment: `[U'] R U2 R' f' z' U R U' R' U' B R U' R'` to `[U'] R U2 R' f' z U R U' R' U' B R U' R'`
+- T6-6 (sheet T, row 70), two-handed comment: `L' U' L U r U' r' f L' U' L S L' U L` to `[U2] L' U' L U r U' r' f L' U' L S' L' U L`
+- U1-1 (sheet U, row 5), two-handed comment: `[U'] r U2 R D R' U' R D' R2' U' r' F R F` to `[U'] r U2 R D R' U' R D' R2' U' r' F R F'`
+- U2-1 (sheet U, row 17), two-handed comment: `R U R' U r' F R F' M' x' U' R U' R'` to `R U R' U r' F R F' M' U' R U' R'`
+- U2-1 (sheet U, row 17), one-handed comment: `R U R' L' U2 R U' R' U' R U' R' M'` to `R U R' L' U2 R U' R' U' R U' M'`
+- U2-4 (sheet U, row 20), one-handed comment: `R U2 R' f' z' U R U R' U' B` to `[U2] R U2 R' f' z U R U R' U' B`
+- U2-5 (sheet U, row 21), one-handed comment: `B U R U' R' U' B R U2 R'` to `[U'] B' U R U' R' U' B R U2 R'`
+- U2-7 (sheet U, row 23), two-handed comment: `[U'] R U2 R2 F R F' M' U' R U' R' U R' r` to `[U'] R U2 r2 F R F' M' U' R U' R' U R' r`
+- U3-6 (sheet U, row 34), two-handed: `[U'] r' F R' F' R F' r U r' U2 L' U2 (r R)` to `[U'] r' F R' F' R F' r U R' U2 L' U2 (r R)`
+- U5-4 (sheet U, row 56), one-handed comment: `R' U L U' R U z U' R' z R' U2 R U R' U R` to `R' U L U' R U z U' R' z' R' U2 R U R' U R`
+- U5-5 (sheet U, row 57), two-handed comment: `[U] R U2 F U F' R' U F U2 F' R U2 R` to `[U] R U2 F U F' R' U F U2 F' R U2 R'`
+- U6-8 (sheet U, row 72), two-handed comment: `R' U R2 u R' U R' U' R u' R2 F' U' F U' R` to `R' U R2 u R' U R' U' R u' R2 F' U F U' R`
+- L2-4 (sheet L, row 20), one-handed comment: `[U'] f' z' U R U' R' U' B U' R U' R'` to `[U'] f' z U R U' R' U' B U' R U' R'`
+- L2-5 (sheet L, row 21), one-handed comment: `[U'] R U R' F' R U2 R' U' R U' R' U R U2 R'` to `[U'] R U R' F' R U2 R' U' R U' R' F U R U2 R'`
+- L2-8 (sheet L, row 24), one-handed comment: `r U2 r2 x' U R U' R' r x' r U2 r'` to `r U2 r2 x U R U' R' r x' r U2 r'`
+- L2-9 (sheet L, row 25), two-handed comment: `M' U' M U2 M' U' M R U2 R2' F R F' R2 U2 R'` to `M' U' M U2 M' U' M R U2 R2' F R F' R U2 R'`
+- L2-11 (sheet L, row 27), two-handed comment: `[U'] R U2 R' U' L' U2 R U M' B r U L` to `[U'] R U2 R' U' L' U2 R U M' B r' U L`
+- L2-11 (sheet L, row 27), one-handed comment: `[U'] z U R U' R U z' R' U R U2 z R' U' z' R' U2 R` to `[U'] z U R U' R U z' R' U R U2 z U' R' z' R' U2 R`
+- L3-1 (sheet L, row 29), two-handed comment: `[U'] R' U' R' D' R U' R' D R U2 R'` to `[U'] R' U' R' D' R U' R' D R U2 R`
+- L3-1 (sheet L, row 29), one-handed comment: `L' R U R' U' L U R U' R` to `L' R U R' U' L U R U' R'`
+- L3-5 (sheet L, row 33), one-handed: `[U2] R' y R' U R U R' U2 R U B / y R` to `[U2] R' y' R' U R U R' U2 R U B / y R`
+- L3-8 (sheet L, row 36), one-handed comment: `[U'] R U R' f' z' U R U R' U' B R U2 R'` to `[U'] R U R' f' z U R U R' U' B R U2 R'`
+- L5-4 (sheet L, row 56), two-handed comment: `R U' r' F R' F' r L U2 L' U' L U' L` to `R U' r' F R' F' r L U2 L' U' L U' L'`
+- L5-5 (sheet L, row 57), one-handed comment: `[U] R L U2 L' U L R' U' R U' R' U L' U' L U2 L` to `[U] R L U2 L' U L R' U' R U' R' U L' U' L U2 L'`
+- L5-5 (sheet L, row 57), one-handed comment: `[U2] L U2 L' U R U2 R' U2 L U R U' R' U L` to `[U2] L U2 L' U R U2 R' U2 L U R U' R' U L'`
+- L5-8 (sheet L, row 60), two-handed comment: `[U'] R2' D' R U2 R' D R U2 R' D' r U2 r' D' R U2 R` to `[U'] R2' D' R U2 R' D R U2 R' D' r U2 r' D R U2 R`
+- L5-9 (sheet L, row 61), one-handed comment: `[U2] R U2 R2 U' R U' R' U R U R U' R' U' F' R' U R U' F'` to `[U2] R U2 R2 U' R U' R' U R U R U' R' U' F R' U R U' F'`
+- L5-12 (sheet L, row 64), one-handed comment: `[U'] R' U R U' R' U R U R' U' R U' R D R' U2 R z R' U'` to `[U'] R' U R U' R' U R U R' U' R U' R D R' U2 R z' R' U'`
+- L6-4 (sheet L, row 68), one-handed comment: `[U2] F U R U2 R' y (R' r) U' r' U r U r'` to `[U] F U R U2 R' y' (R' r) U' r' U r U r'`
+- L6-5 (sheet L, row 69), one-handed comment: `R U2 R' U' R U' R2 U2 R U F R' U R U' F` to `R U2 R' U' R U' R2 U2 R U F R' U R U' F'`
+- H3-8 (sheet H, row 28), one-handed comment: `f' z' R B R' U2 R' U2 R U' r U2 R' U' R U' r'` to `f' z R B R' U2 R' U2 R U' r U2 R' U' R U' r'`
+- H4-7 (sheet H, row 39), two-handed comment: `[U'] f U2 R F R' F' R U2 R U2 R2' U2 F'` to `[U'] f U2 R F R' F' R U2 R U2 R2' U2 f'`
+- Pi1-1 (sheet Pi, row 5), two-handed comment: `[U] R' U' R' F R F' R U' R' U R' F R F' R U' R' U2 R'` to `[U] R' U' R' F R F' R U' R' U R' F R F' R U' R' U2 R`
+- Pi2-2 (sheet Pi, row 18), two-handed comment: `[U2] R U R' U R U2 R2' U2 R F' U' R' U' R U F'` to `[U2] R U R' U R U2 R2' U2 R F U' R' U' R U F'`
+- Pi2-2 (sheet Pi, row 18), one-handed comment: `[U2] R U R' U R U2 R2' U2 R F' U' R' U' R U F'` to `[U2] R U R' U R U2 R2' U2 R F U' R' U' R U F'`
+- Pi2-6 (sheet Pi, row 22), one-handed: `[U2] L R' U' R U' R' U' L' U' R U' z U R U'` to `[U2] L R' U' R U' R' U' L' U' R U' z U R' U'`
+- Pi2-12 (sheet Pi, row 28), two-handed comment: `[U'] S' R' U R' S R' U2 R' F R F' R U' R' U2 R` to `[U'] S' R' U R S R' U2 R' F R F' R U' R' U2 R`
+- Pi3-12 (sheet Pi, row 40), two-handed comment: `[U] R U2 R' U2 F R U' R' U R U R2 F' R2 U2 R` to `[U] R U2 R' U2 F R U' R' U R U R2 F' R2 U2 R'`
+- Pi4-4 (sheet Pi, row 44), one-handed comment: `[U2] F R' F' R U R U' R' U' R' y R' U' R U B` to `[U2] F R' F' R U R U' R' U' R' y' R' U' R U B`
+- Pi6-4 (sheet Pi, row 68), two-handed comment: `R' U' R U' R' U2 R F U R' U' R F U' R' U2 R` to `R' U' R U' R' U2 R F U R' U' R F' U' R' U2 R`
+- Pi6-4 (sheet Pi, row 68), one-handed: `R' U' R U' R' U2 R F U R' U' R F U' R' U2 R` to `R' U' R U' R' U2 R F U R' U' R F' U' R' U2 R`
+- Pi6-5 (sheet Pi, row 69), two-handed comment: `L U2 L' U' L U L' U' L2 F' L' U' L' U L U L'` to `L U2 L' U' L U L' U' L2 F' L' U' L' U L F L'`
+- S2-8 (sheet Sune, row 24), two-handed comment: `[U'] F U R U' R' U R U' R' U R U' R' F' R U2 R' U' R U' R' F'` to `[U'] F U R U' R' U R U' R' U R U' R' F' R U2 R' U' R U' R'`
+- S2-8 (sheet Sune, row 24), two-handed comment: `[U'] F R U R' U' R U R' U' R U R' U' F' R U2 R' U' R U' R' F'` to `[U'] F R U R' U' R U R' U' R U R' U' F' R U2 R' U' R U' R'`
+- S2-8 (sheet Sune, row 24), one-handed comment: `[U'] F R U R' U' R U R' U' R U R' U' F' R U2 R' U' R U' R' F'` to `[U'] F R U R' U' R U R' U' R U R' U' F' R U2 R' U' R U' R'`
+- S3-8 (sheet Sune, row 36), one-handed: `z U' R' U R' U' R' z' R U' L U' R' U' R U' R` to `z U' R' U R' U' R' z' R U' L U' R' U' R U' R'`
+- S6-4 (sheet Sune, row 68), one-handed comment: rejoined a line that had wrapped, `R U2 R' z x r U2 R' U R' U2 R U' R U2 r'`
+- S6-6 (sheet Sune, row 70), two-handed comment: rejoined a line that had wrapped, `R' U2 R U R' U' R U R' F' R U R' U' R' F R2 U' R' U R`
+- S6-8 (sheet Sune, row 72), one-handed: `[U] z U' R' U z U' R U2 L' U' R' U2 L U' R U' R'` to `[U] z U' R' U z' U' R U2 L' U' R' U2 L U' R U' R'`
+- S6-9 (sheet Sune, row 73), one-handed comment: `[U2] R' U R U D' R U R' U R2 U R U' R' U2 R'` to `[U2] D R' U R U D' R U R' U R2 U R U' R' U2 R'`
+- S6-9 (sheet Sune, row 73), one-handed comment: rejoined a line that had wrapped, `R U2 R' U' R U R' U' R U R D R' U2 R D' R2`
+- AS1-3 (sheet As, row 7), two-handed comment: `R U R' U R' U' R2 U R2' U' R2 U' R U' R' U2 R` to `R U R' U R' U' R2 U R2' U' R2 U' R' U' R' U2 R`
+- AS1-11 (sheet As, row 15), two-handed comment: `[U] S U2 r U2 R' U' R U' r' S` to `[U] S U2 r U2 R' U' R U' r' S'`
+- AS2-10 (sheet As, row 26), one-handed comment: `[U2] U R2 U' R' z' R' U2 z U R U' z' U R U' R' U2 R` to `[U2] z U R2 U' R' z' R' U2 z U R U' z' U R U' R' U2 R`
+- AS3-1 (sheet As, row 29), one-handed comment: `R' U R' U' F U R' U' R F'` to `[U2] R' U R U' F U R' U' R F'`
+- AS3-2 (sheet As, row 30), two-handed: `F U' R' U' R U F U2 R' U R U' R' U2 R` to `F U' R' U' R U F' U2 R' U R U' R' U2 R`
+- AS3-5 (sheet As, row 33), two-handed comment: `R U R' F R U R' U' R' F R U R' U' R2 U' R2' U2 R` to `R U R' F' R U R' U' R' F R U R' U' R2 U' R2' U2 R`
+- AS3-11 (sheet As, row 39), one-handed: `[U] U R2 F U' R' U R U F' U' R2 U' z'` to `[U] z U R2 F U' R' U R U F' U' R2 U' z'`
+- AS4-7 (sheet As, row 47), one-handed: `[U] F R U' R' U' R U2 R' U y R' U' R U' R'` to `[U] F R U' R' U' R U2 R' U y' R' U' R U' R'`
+- AS6-6 (sheet As, row 70), two-handed comment: `[U] R' U2 R U' F U' R' U' R U F U R' U2 R` to `[U] R' U2 R U' F U' R' U' R U F' U R' U2 R`
+- AS6-6 (sheet As, row 70), one-handed: `[U] R' U2 R U' F U' R' U' R U F U R' U2 R` to `[U] R' U2 R U' F U' R' U' R U F' U R' U2 R`
+
+## AUFs corrected (120)
+
+The algorithm is right, the AUF in front of it was not.
+
+- T1-10 (sheet T, row 14), one-handed comment: `z U' R' U R' U' R U R' U R U2 R U2 R2 U'` needs AUF U2
+- T2-1 (sheet T, row 17), one-handed comment: `[U2] R U R' U R U' R' L' U2 R U R' U2 r / L` needs AUF U
+- T2-8 (sheet T, row 24), two-handed comment: `[U'] F U R' D' r U2 r' D R2 U' R' U F'` needs AUF U
+- T2-10 (sheet T, row 26), two-handed comment: `[U2] R' F R f' U R' D' R U2 R' D R F' U f` needs AUF U'
+- T3-1 (sheet T, row 29), one-handed comment: `z U R' U' z' U2 R z U R' U' R u' / D'` needs AUF U
+- T3-3 (sheet T, row 31), two-handed comment: `F' U' r' U' F U r U r' R' F r U' R F` needs AUF U2
+- T3-4 (sheet T, row 32), one-handed comment: `[U] R' U' R U' R' U' R U2 R' z U' R D R U R U' R U` needs AUF U'
+- T3-8 (sheet T, row 36), two-handed comment: `[U2] F' U' L' U2 L U F R U R' U' R U' R'` needs AUF U'
+- T3-8 (sheet T, row 36), two-handed comment: `F' U' L' U2 L U F R U R' U' R U' R'` needs AUF U'
+- T3-9 (sheet T, row 37), two-handed comment: `[U'] L' U' L U' L' U L F U R U2 R' U' F'` needs AUF U
+- T4-2 (sheet T, row 42), one-handed: `R' U' R U2' R' U y' R' U R U R' U2' R U2 B` needs AUF U2
+- T5-2 (sheet T, row 54), one-handed: `[U] R' U' R U2 R' U' R y R U R' U2 R U R'` needs AUF U2
+- T5-3 (sheet T, row 55), one-handed comment: `[U'] L R U' R' U L' R U R' U R U R' U' R U' R'` needs AUF U2
+- T5-6 (sheet T, row 58), two-handed comment: `R' U' R U F R' U R U' F' U2 R' U' R` needs AUF U'
+- T5-6 (sheet T, row 58), two-handed comment: `[U] R D R' U' R D' R' U2 R' U' R U R' U R U R' U' R` needs AUF U2
+- T5-6 (sheet T, row 58), one-handed comment: `R' U' R U F R' U R U' F' U2 R' U' R` needs AUF U'
+- T5-7 (sheet T, row 59), two-handed comment: `R U R' U R U2 R2 F R U R' U' R' F' R2 U' R' U2 R` needs AUF U2
+- T5-7 (sheet T, row 59), two-handed comment: `R U R' U R U R' U' f R' F' R2 U' R' U S'` needs AUF U2
+- T5-8 (sheet T, row 60), one-handed comment: `R' U2 R U2 F R2 U' R' U R' U' R2 U R F'` needs AUF U
+- T6-6 (sheet T, row 70), two-handed comment: `L' U' L U L' U (L R') U L' U' L R` needs AUF U2
+- T6-12 (sheet T, row 76), two-handed comment: `R' F R U2 S R' F' R (S' F) R U2 R' F'` needs AUF U2
+- U1-9 (sheet U, row 13), two-handed comment: `[U2] R U2 R2' F R F' R U' B U' B' R'` needs AUF U
+- U1-9 (sheet U, row 13), two-handed comment: `[U] R U R' U' R' U R U R' U R U' R U' R2 U' R` needs AUF none
+- U1-9 (sheet U, row 13), one-handed comment: `[U] R U R' U' R' U R U R' U R U' R U' R2 U' R` needs AUF none
+- U2-11 (sheet U, row 27), two-handed comment: `S R' U' F' U F R2 U R' S' U R U2' R'` needs AUF U
+- U3-2 (sheet U, row 30), two-handed comment: `F R2 U' R2 U' R2 U R' F' R U R2 U' R' F R F'` needs AUF U'
+- U3-2 (sheet U, row 30), two-handed comment: `[U] R2 D' R U2 R' D R2 U R' U2 z U R' D R U'` needs AUF none
+- U3-2 (sheet U, row 30), two-handed comment: `F2 R U r U2 R2 F R F' R U2 r' R' F2` needs AUF U'
+- U3-6 (sheet U, row 34), two-handed comment: `[U2] (R' L') U2 L U2 R U' r' F R' F R F' r` needs AUF none
+- U3-7 (sheet U, row 35), two-handed comment: `R2' D' R U2 R' D R U2 R U R' U2 R U R' U R` needs AUF U'
+- U3-7 (sheet U, row 35), one-handed comment: `R2 D' R U2 R' D R U2 R U R' U2 R U R' U R` needs AUF U'
+- U4-2 (sheet U, row 42), two-handed comment: `[U2] F R U R' U' R' F' r U2 F R' F' R2 U2 r'` needs AUF U
+- U4-4 (sheet U, row 44), one-handed comment: `[U2] L U2 L' U2 R' U2 L U2 L' U2 R` needs AUF none
+- U4-6 (sheet U, row 46), two-handed comment: `[U'] R' U' R U' R' U R U2 R D R' U2 R D' R2 U R` needs AUF U2
+- U4-6 (sheet U, row 46), two-handed comment: `[U'] R2 F2 R U2 R U R2 F2 R2 U R' F2 R` needs AUF U2
+- U5-1 (sheet U, row 53), two-handed comment: `[U'] l' U R D' R' U2 R D R' U l` needs AUF U2
+- U5-1 (sheet U, row 53), two-handed comment: `[U'] L2 D' L U2 L' D L U2 L` needs AUF U2
+- U5-10 (sheet U, row 62), one-handed comment: `[U'] R' U F' R U2 R' U' R U' R' F U2 R U2 R' U' R` needs AUF none
+- U6-8 (sheet U, row 72), two-handed comment: `F U2 R' U' R F' R' U2 F U F' U' R` needs AUF U'
+- U6-10 (sheet U, row 74), two-handed: `R U R2' D' R U R' D R2 U' R' U R' U' R2 U' R' U R' U R` needs AUF U
+- L1-3 (sheet L, row 7), two-handed comment: `[U] R' U2 R U R' U R U2 R' U' R U' R' U2 R` needs AUF U'
+- L1-3 (sheet L, row 7), two-handed comment: `[U] R' U2 R U R' U R L' U' L U' L' U2 L` needs AUF U'
+- L1-3 (sheet L, row 7), two-handed comment: `[U'] L' U2 L U L' U L R' U' R U' R' U2 R` needs AUF U
+- L1-3 (sheet L, row 7), one-handed comment: `[U] R' U2 R U R' U R U2 R' U' R U' R' U2 R` needs AUF U'
+- L1-6 (sheet L, row 10), two-handed comment: `L2 U' L U L U' L' U' L U' L' U L' U L2` needs AUF U2
+- L1-6 (sheet L, row 10), two-handed comment: `R U R' U R U' R' U R U' R' U R U' R' U R' U' R2 U' R' U R' U R` needs AUF U2
+- L2-2 (sheet L, row 18), two-handed comment: `[U2] F U' R' U R D R' U R (U D') F' R' U R` needs AUF none
+- L2-5 (sheet L, row 21), two-handed: `M' U R' F2 r F' r' F2 R2 U' r'` needs AUF U
+- L2-5 (sheet L, row 21), one-handed comment: `F R U R' U' R' F R2 U' R' U' R U R' F2'` needs AUF U2
+- L2-7 (sheet L, row 23), one-handed comment: `[U] R' U2 R' U2 R U R' U F' R U R U' R' F U' R` needs AUF none
+- L2-7 (sheet L, row 23), one-handed comment: `[U] R U2 R' U' L U' R U R' U' R U R' U' R U L' U' R'` needs AUF U2
+- L2-8 (sheet L, row 24), one-handed comment: `R' U' R U2 R U F' U R' U' R F U' R' U R' U2 R` needs AUF U'
+- L2-10 (sheet L, row 26), two-handed comment: `[U2] L U' R2 D R U2 R' D' R U' L' U' R` needs AUF U'
+- L2-11 (sheet L, row 27), two-handed comment: `[U] U' R U R' U R U' R' F2 R U2 R' U2 R' F2 R2 U' R'` needs AUF U2
+- L2-12 (sheet L, row 28), two-handed comment: `[U'] R U R2 F2 R U2 R U2 R' F2 R U R' U' R U' R'` needs AUF U2
+- L3-9 (sheet L, row 37), two-handed comment: `F' R U R' U' R' F R2 F U R' U' R U R' U' R F' R'` needs AUF U2
+- L4-6 (sheet L, row 46), two-handed comment: `[U'] R' B' U R U' R' U' R U' R' U B R` needs AUF none
+- L4-7 (sheet L, row 47), one-handed comment: `R' F' R U2 R U2 R' F R' U' R2 U' R2 U2 R` needs AUF U'
+- L4-8 (sheet L, row 48), one-handed comment: `R U R' U' R' U' R U R U' R' L U' R' U R L' / r'` needs AUF U
+- L4-12 (sheet L, row 52), one-handed comment: `R U2 R' F' R U R' U R U2 R' F R U R' U' R U R'` needs AUF U
+- L5-5 (sheet L, row 57), one-handed: `L R U2 R' U R z U' R' U R' U' R z' R' U' R U2 R'` needs AUF U'
+- L6-3 (sheet L, row 67), one-handed: `F R U R' U' R' F' R U R U R' U' R U' R'` needs AUF U
+- L6-4 (sheet L, row 68), two-handed comment: `[U2] R U B U2 B' R' r U' r' U r U r'` needs AUF none
+- L6-8 (sheet L, row 72), one-handed: `R U R2 D' r U2 r' D R2 U' R' U' R U2 R'` needs AUF U
+- L6-9 (sheet L, row 73), one-handed comment: `R' U2 R2 U R' U R U' R' U' R' U R L' U R U' R' L` needs AUF U
+- L6-10 (sheet L, row 74), one-handed comment: `R U2 R' U L' U2 R U2 L U R' z R U' R U` needs AUF U'
+- H1-1 (sheet H, row 5), two-handed comment: `R U R' U R' U' R U R' U' R2 U' R2 U R U2 R' U2 R` needs AUF U
+- H1-5 (sheet H, row 9), two-handed comment: `[U2] L U L' U L U' L' U L U2 L'` needs AUF none
+- H2-4 (sheet H, row 16), two-handed comment: `[U] R2' F' R U R U' R' F R U' R' U R2 U2 R' U' R U' R'` needs AUF U'
+- H2-8 (sheet H, row 20), two-handed comment: `R2 f' U' f R U2' R U2 R' U2' F R2 F' R'` needs AUF U
+- H3-3 (sheet H, row 23), two-handed comment: `[U] R' U2 R U R' U R2 U2 R' U' R2 D R' U' R D' R2` needs AUF U2
+- H3-3 (sheet H, row 23), two-handed comment: `[U] R' U2 R U R' U R2 U2 R2' D' R U' R' D R2 U' R'` needs AUF U2
+- H3-3 (sheet H, row 23), one-handed comment: `[U] R' U2 R U R' U R2 U2 R2' D' R U' R' D R2 U' R'` needs AUF U2
+- H3-3 (sheet H, row 23), one-handed comment: `[U] R' U2 R U R' U R2 U2 R' U' R2 D R' U' R D' R2` needs AUF U2
+- H3-4 (sheet H, row 24), two-handed comment: `[U'] L' U' L U R U2 L' U2 L U' R' U R U2 R'` needs AUF U
+- H3-4 (sheet H, row 24), one-handed: `R U R' B' U R U2 R' y U2 R U' R' U2 R` needs AUF U
+- H3-4 (sheet H, row 24), one-handed comment: `[U'] z U' R' U R D R2 U' R2 U z' U' R' U R U2 R'` needs AUF U
+- H3-8 (sheet H, row 28), two-handed comment: `[U2] R U2 R D R2' D2 R U' R' D2 R U' R D' R2'` needs AUF none
+- H3-8 (sheet H, row 28), one-handed comment: `R' U' R U' R U R2 U R2 U L' U R' U' L / r` needs AUF U2
+- H3-12 (sheet H, row 32), two-handed: `R2 U' R2' U F R2 U R2' U' F' R2 U R2'` needs AUF U
+- H3-12 (sheet H, row 32), two-handed comment: `[U'] R U2 R2 F R2 U' R' U' R U R' F' U2 R U2 R'` needs AUF U
+- H4-2 (sheet H, row 34), two-handed comment: `[U'] F R U' R' U' R U2 R' U' F' R U2 R' U' R U' R'` needs AUF none
+- H4-5 (sheet H, row 37), two-handed comment: `R U' R2' F2 R U2 R U2' R' F2 U' R U2 R'` needs AUF U
+- H4-6 (sheet H, row 38), two-handed comment: `R f' U' f U2' R2' F' r U' r' F2 R2` needs AUF U
+- H4-6 (sheet H, row 38), two-handed comment: `l U' R' U x U2' R2' F' r U' r' F2 R2` needs AUF U
+- H4-6 (sheet H, row 38), two-handed comment: `[U2] L' U2 L U L' U' L U F L' U' L U L F' L2 U L` needs AUF U'
+- H4-6 (sheet H, row 38), one-handed comment: `[U] R U2 R' U L' U2 R U2 R' U2 L R U' R'` needs AUF U'
+- Pi3-3 (sheet Pi, row 31), two-handed comment: `r' F R F' r U' R' U' R U2 R U R U R U' R' U' R2` needs AUF U2
+- Pi3-3 (sheet Pi, row 31), one-handed: `R U y R U2 R' U R U R' F' R U2 R' U' R U' R'` needs AUF U2
+- Pi3-3 (sheet Pi, row 31), one-handed comment: `L' U R U' L U' R' U' R U2 R U R U R U' R' U' R2` needs AUF U2
+- Pi3-4 (sheet Pi, row 32), two-handed comment: `R U2 R' U' R U' R' U' F U R U2 R' U R U R' F'` needs AUF U2
+- Pi3-5 (sheet Pi, row 33), two-handed comment: `[U] R U R2 F R2 U' R' U' R U R' F' U R U2 R'` needs AUF U'
+- Pi4-3 (sheet Pi, row 43), one-handed comment: `[U'] [U] F R U' R' U' R U R' S U R U' R' f'` needs AUF U'
+- Pi4-10 (sheet Pi, row 50), one-handed: `R' L U' R U L' U2 R' U' L U' R U L' / r'` needs AUF U'
+- Pi6-6 (sheet Pi, row 70), one-handed comment: `R' U2 R U' L' U R U R2 U R2 U2 R' L / r` needs AUF U
+- S2-6 (sheet Sune, row 22), one-handed comment: `R' U' R U' R' U2 R F R U R' U' R U R' U' R U R' U' F'` needs AUF U'
+- S2-9 (sheet Sune, row 25), one-handed comment: `L U' R' U L' U' R x' U' R U L' U' R' U r` needs AUF U
+- S3-6 (sheet Sune, row 34), one-handed comment: `R' U2 R2 U R D' R U R' D R2 U' R U' R'` needs AUF U'
+- S3-9 (sheet Sune, row 37), one-handed: `[U'] R U' R' U' R y R U2 R' U R U R' U2 F'` needs AUF U2
+- S4-7 (sheet Sune, row 47), two-handed comment: `L U L' U L U2 L' R U R' U' R' F R2 U' R' U' R U R' F'` needs AUF U2
+- S5-3 (sheet Sune, row 55), one-handed: `L' U R U' L U' R2 U' R2 U' R2 U2 R` needs AUF U
+- S6-6 (sheet Sune, row 70), two-handed comment: `L' U2 L U L' U L R U R' F' R U R' U' R' F R2 U' R'` needs AUF U
+- AS1-1 (sheet As, row 5), one-handed comment: `[U] z U' R' U R' U' R2 U` needs AUF none
+- AS1-3 (sheet As, row 7), two-handed comment: `R' U' R U' R' U2 R U R' U R' U' R3 U' R' U R U R2'` needs AUF U2
+- AS2-4 (sheet As, row 20), one-handed comment: `[U] L U2 R' U R U2 L' U' R' U R U' R' U2 R` needs AUF U2
+- AS2-9 (sheet As, row 25), one-handed comment: `L' U R U' z U R U' R z' R' U' L U R U' R'` needs AUF U
+- AS2-12 (sheet As, row 28), one-handed comment: `L' U2 R U' R' U2 L R U R' U' R U R' U' R U' R'` needs AUF U'
+- AS2-12 (sheet As, row 28), one-handed comment: `R' U' R U' R' U R U' R' U R L U2 R' U' R U2 L' / r'` needs AUF U'
+- AS3-3 (sheet As, row 31), one-handed comment: `R U2 R' U' R U R' U L' U2 R U' R' U2 r / L` needs AUF U2
+- AS3-6 (sheet As, row 34), two-handed comment: `R' U' R U' R' U R (U D') R2 U R' U R U' R U' R2' D` needs AUF U2
+- AS3-6 (sheet As, row 34), one-handed comment: `R' U' R U' R' U R (U D') R2 U R' U R U' R U' R2 D` needs AUF U2
+- AS3-8 (sheet As, row 36), two-handed comment: `[U2] r2' U' F U' R2 F' U2 r2' U F'` needs AUF none
+- AS3-8 (sheet As, row 36), one-handed comment: `[U2] r2 U' F U' R2 F' U2 r2 U F'` needs AUF none
+- AS4-7 (sheet As, row 47), two-handed comment: `R' U' R U' R' U2 R U2 R U R' U' R' F R2 U' R' U' R U R' F'` needs AUF U2
+- AS4-11 (sheet As, row 51), two-handed comment: `[U'] R' U' R U' R U R D R' U' R D' R U2 R` needs AUF U
+- AS5-2 (sheet As, row 54), one-handed: `[U] R U2 R' U2 R U' R' L U' R U R' L' / r'` needs AUF none
+- AS5-5 (sheet As, row 57), two-handed comment: `R U2 R' U' R U' (l' R2') F R F' R U2 r' U r U2` needs AUF U'
+- AS5-5 (sheet As, row 57), one-handed comment: `M' y R U R' U' R' F R S' R U R' U' F'` needs AUF U'
+- AS5-9 (sheet As, row 61), two-handed comment: `F U R' U' R F' R' U2 z U R' D R U'` needs AUF U
+- AS6-8 (sheet As, row 72), one-handed comment: `[U] R U R' U L' U2 R U L U2 R' z R U' R U` needs AUF U'
+
+## Left out (45)
+
+These do not solve their picture and no one-move repair does either.
+
+- T3-2 (sheet T, row 30), two-handed comment: `[U] r U R2' F R F' R U2 r' U r U r'` does not solve this picture
+- T4-5 (sheet T, row 45), two-handed comment: `[U'] R U2 R' U' R U' R' F U R U2 R' U' R U R' F'` does not solve this picture
+- T5-9 (sheet T, row 61), two-handed comment: `[U'] S U R U' R' S' R U2 R' U' R' F R F'` does not solve this picture
+- U2-2 (sheet U, row 18), one-handed comment: `z U' R' (U D) R2 U' R U R U R U' u' / D'` breaks F2L
+- U2-4 (sheet U, row 20), two-handed comment: `[U2] R U R2 F2 R U2 R U2 R' F2 R U' R'` does not solve this picture
+- U2-5 (sheet U, row 21), one-handed comment: `[U] z F' R U R' U' R' F U' R2 U` breaks F2L
+- U2-7 (sheet U, row 23), two-handed comment: `[U'] f R U R' U' f' R U R' U' M' U' R U r'` breaks F2L
+- U2-9 (sheet U, row 25), two-handed comment: `[U] R U R' U' M' U R U' R' F U R U' R'` breaks F2L
+- U2-9 (sheet U, row 25), one-handed comment: `[U] R U R' U' M' U R U' R' F U R U' R'` breaks F2L
+- U2-11 (sheet U, row 27), two-handed comment: `[U2] F R' U R' D U' R' U R D' R2 U' R' F'` does not solve this picture
+- U2-11 (sheet U, row 27), one-handed comment: `[U2] F R' U R' D U' R' U R D' R2 U' R' F'` does not solve this picture
+- U2-12 (sheet U, row 28), two-handed comment: `[U'] F R U R2 D R' U' R U D' R U' R F'` does not solve this picture
+- U2-12 (sheet U, row 28), one-handed comment: `[U'] F R U R2 D R' U' R U D' R U' R F'` does not solve this picture
+- U3-1 (sheet U, row 29), one-handed comment: `R U' R' U R U' x' U' z U' R U' R' U' z' U R2` breaks F2L
+- U4-4 (sheet U, row 44), two-handed comment: `[U] R U R2' U' R' F R U R2 U' R' F'` does not solve this picture
+- U5-3 (sheet U, row 55), two-handed comment: `[U2] F R U R' U2 R U R2 D' R U R' D R F'` does not solve this picture
+- U6-1 (sheet U, row 65), one-handed comment: `R' U z U' R z' R U' L U2 R' U R` does not solve this picture
+- L1-4 (sheet L, row 8), two-handed comment: `[U2] L U L' U L U2 L' R U2 R' U' R U' R U' R` breaks F2L
+- L2-7 (sheet L, row 23), two-handed comment: `r U2 r2' F R F' (r M') U2 r'` does not solve this picture
+- L3-7 (sheet L, row 35), two-handed comment: `[U] R' F R S R' F' R S' U R' F R U R' U' F' U R` does not solve this picture
+- L5-3 (sheet L, row 55), two-handed comment: `[U'] F R' D' R U' R' D R2 U' R' U2 R U' R' F'` does not solve this picture
+- L5-10 (sheet L, row 62), two-handed comment: `[U] R' U2 R' D' R U2 R' D R' U' R U R U R U' R2` breaks F2L
+- L6-12 (sheet L, row 76), two-handed comment: `R' D' R U2 R' D R U' R U' R' U R U R' U' R U R'` does not solve this picture
+- H1-7 (sheet H, row 11), one-handed comment: `[U'] R U' R' U R U' R' U' R U2 R' U2 R U R'` does not solve this picture
+- H2-5 (sheet H, row 17), two-handed comment: `[U] R' U2 R U R' U' R2 U R' F' R U R' U' R' F R2 U' R2' U R` does not solve this picture
+- H2-8 (sheet H, row 20), one-handed comment: `z U' R2 U R' U R' U' R' U R U' R F' R U R U' R' F` breaks F2L
+- H3-2 (sheet H, row 22), one-handed comment: `R U R' U R F' U2 R' U' R U' F U R'` does not solve this picture
+- H3-9 (sheet H, row 29), one-handed comment: `[U] R' U2 R2 U R D' R U R' z R U' z' U2 R'` breaks F2L
+- H4-4 (sheet H, row 36), one-handed comment: `z' F' R' U' R U F z R U R' U' R' F R F'` breaks F2L
+- Pi2-11 (sheet Pi, row 27), one-handed comment: `R U' R' U' f' z' U' R U R' B U R U R'` breaks F2L
+- Pi4-10 (sheet Pi, row 50), two-handed comment: `[U2] R U R' U R U2 x' U' R' D R U2 R' D' R' D' R U' l'` breaks F2L
+- Pi5-7 (sheet Pi, row 59), one-handed comment: `[U] L' U R U' L U R' U' R U2 R' U' R U' R'` does not solve this picture
+- S3-8 (sheet Sune, row 36), two-handed comment: `[U'] R' U2 R U R' U' R' D' R U' R' D R U R U' R'` breaks F2L
+- S3-8 (sheet Sune, row 36), one-handed comment: `[U'] R' U2 R U R' U' R' D' R U' R' D R U R U' R'` breaks F2L
+- AS1-1 (sheet As, row 5), two-handed comment: `R' U2 R U R' U R U R' U2 R U R' U R` does not solve this picture
+- AS1-1 (sheet As, row 5), two-handed comment: `R U2 R' U' R U' R' U' R U2 R' U' R U' R'` does not solve this picture
+- AS1-4 (sheet As, row 8), two-handed comment: `[U] R U2 R' U2 R' U2 R U R' U R2 U2 R'` does not solve this picture
+- AS1-4 (sheet As, row 8), one-handed comment: `[U] R U2 R' U2 R' U2 R U R' U R2 U2 R'` does not solve this picture
+- AS3-3 (sheet As, row 31), two-handed comment: `[U] R' U' R U F U' R' U' R U F' R' U R` does not solve this picture
+- AS3-9 (sheet As, row 37), one-handed comment: `[U] R U R' U R U' R2 D' R U R' D R2 U2 R'` does not solve this picture
+- AS5-1 (sheet As, row 53), one-handed comment: `[U2] R' U2 R U2 L U' R' U R L'` does not solve this picture
+- AS5-2 (sheet As, row 54), one-handed comment: `[U'] R' U2 R U R' U' R U R' U2 L U' R U L'` does not solve this picture
+- AS5-9 (sheet As, row 61), two-handed comment: `L' U' L U' L' U2 L U' R U R U R' F' R U R' U' R' F R2 U' R'` breaks F2L
+- AS5-12 (sheet As, row 64), two-handed comment: `[U'] F R U R2' U2 R2 U R2' U R F'` does not solve this picture
+- AS5-12 (sheet As, row 64), one-handed comment: `[U'] F R U R2 U2 R2 U R2 U R F'` does not solve this picture

@@ -1,0 +1,444 @@
+.crumbs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px 8px;
+}
+.crumbs nav {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  color: var(--ink-2);
+}
+.crumbs nav a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.crumbs nav a + a::before {
+  content: '/';
+  color: var(--ink-3);
+  margin-right: 8px;
+}
+.crumbs nav a:hover {
+  color: var(--ink);
+}
+.crumbs__step {
+  display: flex;
+  margin-right: -10px;
+}
+
+.steps {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 9px;
+}
+.steps a {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  padding-block: 6px;
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+.steps .cell {
+  width: 100%;
+  aspect-ratio: auto;
+  height: 10px;
+  border-radius: 4px;
+}
+.steps a:not([aria-current]):hover .cell {
+  scale: 1 1.3;
+}
+.steps a:hover span,
+.steps a[aria-current] span {
+  color: var(--ink);
+}
+.steps a[aria-current] span {
+  font-weight: 500;
+}
+.steps a[aria-current] .cell {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.case__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  padding-block: clamp(22px, 3vw, 38px) clamp(16px, 2vw, 26px);
+}
+.case__head h1 {
+  font-size: clamp(38px, 5.4vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+.case__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------------------ an angle */
+
+.angle {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+.angle__view {
+  position: relative;
+  border-radius: 34px;
+  padding: 13%;
+  background: var(--raised);
+  box-shadow: var(--shadow);
+  transition: background-color 0.6s var(--ease);
+}
+.case[data-s='2'] .angle__view {
+  background: color-mix(in oklab, var(--hue) var(--tint), var(--raised));
+}
+.angle__view .cube {
+  transition: scale 0.35s var(--spring);
+}
+.case:has(.btn--learn:active) .angle__view .cube {
+  scale: 0.955;
+  transition-duration: 0.12s;
+}
+.angle__turn {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  color: var(--ink-2);
+  transition: color 0.15s, background-color 0.15s, rotate 0.5s var(--spring);
+}
+.angle__turn:hover {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+}
+.angle__turn:active .icon {
+  rotate: 60deg;
+}
+.angle__turn .icon {
+  transition: rotate 0.4s var(--spring);
+}
+.angle__body {
+  min-width: 0;
+}
+.angle__name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  margin-bottom: 4px;
+}
+.angle__alg {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: clamp(19px, 2.1vw, 25px);
+  line-height: 1.5;
+}
+.angle__alg .auf {
+  translate: 0 -0.06em;
+}
+.angle__alg .auf--none {
+  display: none;
+}
+.angle__tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  min-height: 34px;
+  margin: 6px 0 18px -8px;
+  font-size: 14px;
+}
+.angle__setup {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.notes {
+  border-top: 1px solid var(--line);
+}
+.note {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  align-items: baseline;
+  border-bottom: 1px solid var(--line);
+  transition: border-color 0.2s;
+}
+.note:focus-within {
+  border-color: var(--hue);
+}
+.note label {
+  color: var(--ink-2);
+  font-size: 14px;
+  padding-block: 12px;
+  transition: color 0.2s;
+}
+.note:focus-within label {
+  color: var(--ink);
+}
+.note textarea {
+  width: 100%;
+  padding-block: 12px;
+  resize: none;
+  overflow: hidden;
+  outline: none;
+  line-height: 1.5;
+  display: block;
+}
+.note ::placeholder {
+  color: var(--ink-3);
+  opacity: 1;
+}
+
+.angles--two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.angles--two .angle {
+  transition: box-shadow 0.25s, background-color 0.6s var(--ease);
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+  align-content: start;
+  padding: 18px 22px 20px;
+  border-radius: 34px;
+  background: var(--raised);
+  box-shadow: var(--shadow);
+  cursor: default;
+}
+.angles--two .angle.is-active {
+  box-shadow: var(--shadow), 0 0 0 2px var(--hue);
+}
+.angles--two .angle__view {
+  background: none !important;
+  box-shadow: none;
+  padding: 0;
+  width: min(100%, 220px);
+  margin: 10px auto 0;
+}
+.case[data-s='2'] .angles--two .angle {
+  background: color-mix(in oklab, var(--hue) var(--tint), var(--raised));
+}
+.angles--two .angle__turn {
+  right: -54px;
+  bottom: -2px;
+}
+.angles--two .angle__alg {
+  font-size: clamp(17px, 1.7vw, 20px);
+}
+.angles--two .angle__name b {
+  color: var(--ink-2);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.notes--wide {
+  margin: 22px 24px 0;
+  border-top: 0;
+}
+.notes--wide .note {
+  border-bottom-color: transparent;
+}
+.notes--wide .note:focus-within {
+  border-bottom-color: var(--hue);
+}
+.add {
+  font-size: 14.5px;
+}
+.notes > .add {
+  margin: 14px 0 0 -10px;
+}
+
+/* ------------------------------------------------------------ algorithms */
+
+.algs {
+  margin-top: clamp(32px, 4vw, 52px);
+}
+.algs__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding-bottom: 14px;
+}
+.algs__head h2 {
+  font-size: 21px;
+  margin-right: auto;
+}
+.pick {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding-right: 4px;
+}
+.pick > button:first-child {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-block: 12px;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  transition: color 0.15s;
+}
+.pick > button:first-child:hover,
+.pick.is-on > button:first-child {
+  color: var(--ink);
+}
+.pick small {
+  flex: none;
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.pick small + small {
+  margin-left: 0;
+}
+.pick__dot {
+  flex: none;
+  align-self: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1.5px var(--cell);
+  transition: box-shadow 0.25s var(--ease), background-color 0.25s;
+}
+.pick > button:hover .pick__dot {
+  box-shadow: inset 0 0 0 1.5px var(--ink-3);
+}
+.pick.is-on .pick__dot {
+  box-shadow: inset 0 0 0 5px var(--hue);
+}
+.pick .mini {
+  opacity: 0;
+}
+.pick:hover .mini,
+.pick .mini:focus-visible {
+  opacity: 1;
+}
+@media (hover: none) {
+  .pick .mini {
+    opacity: 1;
+  }
+}
+.algs__foot {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 34px;
+}
+.algs__foot .add:first-child {
+  margin-left: -10px;
+}
+
+.own {
+  flex: 1 1 340px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+}
+.own input {
+  height: 44px;
+  padding-inline: 14px;
+  border-radius: 12px;
+  background: var(--raised);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+  font-family: var(--mono);
+  font-size: 16px;
+  outline: none;
+  min-width: 0;
+  transition: box-shadow 0.2s;
+}
+.own input:focus {
+  box-shadow: inset 0 0 0 1.5px var(--hue);
+}
+.own p {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  color: var(--ink-2);
+  padding-left: 2px;
+}
+.own p[data-ok='true'] {
+  color: var(--ink);
+}
+.own p .auf {
+  margin-left: 2px;
+}
+
+@media (max-width: 860px) {
+  .angle {
+    grid-template-columns: 1fr;
+  }
+  .angle__view {
+    width: min(100%, 340px);
+    justify-self: center;
+  }
+  .angles--two {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .steps {
+    gap: 5px;
+  }
+  .steps a[aria-current] .cell {
+    outline-width: 1.5px;
+    outline-offset: 1.5px;
+  }
+  .steps span {
+    font-size: 11px;
+  }
+  .note {
+    grid-template-columns: 96px 1fr;
+  }
+  .case {
+    padding-bottom: 150px;
+  }
+  .case__actions {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 15;
+    flex-wrap: nowrap;
+    padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in oklab, var(--bg) 90%, transparent);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  .case__actions .btn {
+    height: 50px;
+    border-radius: 14px;
+  }
+  .case__actions .btn--main {
+    flex: 1;
+  }
+  .pick > button:first-child {
+    gap: 9px;
+    font-size: 14.5px;
+  }
+}

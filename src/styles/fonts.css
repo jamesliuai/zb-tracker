@@ -1,0 +1,13 @@
+/* Rubik was drawn for a Rubik's Cube exhibition, to fit the squares of a cube. */
+@font-face {
+  font-family: 'Rubik Variable';
+  src: url('@fontsource-variable/rubik/files/rubik-latin-wght-normal.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  src: url('@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 800;
+  font-display: swap;
+}

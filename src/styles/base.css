@@ -1,0 +1,250 @@
+/*
+ * A wall of unlit stickers that you light up one at a time. Everything around it stays quiet:
+ * color on the page is either a cube or something you have learned.
+ * Corners are always a share of the thing they round, like a sticker's.
+ */
+:root {
+  --bg: #f5f6f8;
+  --raised: #ffffff;
+  --hover: #ebedf1;
+  --ink: #14171d;
+  --ink-2: #565d6b;
+  --ink-3: #676e7b;
+  --line: #e2e5ea;
+  --cell: #dde1e8;
+  --shadow: 0 1px 2px rgb(20 23 29 / 0.05), 0 8px 28px -12px rgb(20 23 29 / 0.14);
+
+  --cube-y: #ffd83a;
+  --cube-r: #e8343f;
+  --cube-o: #ff9420;
+  --cube-g: #1fae5b;
+  --cube-b: #2b6ef2;
+  --cube-edge: rgb(20 23 29 / 0.1);
+
+  --hue: #14171d;
+  --tint: 14%;
+
+  --sans: 'Rubik Variable', 'Rubik', ui-rounded, system-ui, sans-serif;
+  --mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  --gutter: max(clamp(18px, 4vw, 48px), env(safe-area-inset-left, 0px));
+  --page: 1180px;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --spring: linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50.1%, 1.015 55%, 1.017 63.9%, 1.001);
+  --pop: linear(0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163, 1.161, 1.154 29.9%, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1.004 83.8%, 1);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --raised: #171a21;
+  --hover: #1d2129;
+  --ink: #f1f3f6;
+  --ink-2: #a4abb9;
+  --ink-3: #838b9a;
+  --line: #262b34;
+  --cell: #262b35;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 36px -12px rgb(0 0 0 / 0.6);
+  --cube-y: #ffd83a;
+  --cube-r: #f0404a;
+  --cube-o: #ff9626;
+  --cube-g: #25b863;
+  --cube-b: #3d7df8;
+  --cube-edge: transparent;
+  --hue: #f1f3f6;
+  --tint: 20%;
+}
+
+/*
+ * A set runs from --a to --b across its subsets, and --m says how far along we are.
+ * The --a colors were checked with a color vision simulator in this order, the order on the wall.
+ */
+[data-set='T'] { --a: #ee3842; --b: #fb6a35; --hue-ink: #c81f2b; }
+[data-set='U'] { --a: #f29d34; --b: #f3c42c; --hue-ink: #8f5600; }
+[data-set='L'] { --a: #159543; --b: #16a883; --hue-ink: #0b7734; }
+[data-set='H'] { --a: #40bbd0; --b: #3c9fec; --hue-ink: #0a6f82; }
+[data-set='Pi'] { --a: #007efd; --b: #4b5cf3; --hue-ink: #0064cc; }
+[data-set='S'] { --a: #8734c5; --b: #b534bd; --hue-ink: #7a2bb5; }
+[data-set='AS'] { --a: #f846a6; --b: #fb5c86; --hue-ink: #bd1873; }
+:root[data-theme='dark'] {
+  [data-set='T'] { --hue-ink: #ff7a80; }
+  [data-set='U'] { --hue-ink: #f7b25d; }
+  [data-set='L'] { --a: #1aa64c; --b: #1db894; --hue-ink: #4ccf7c; }
+  [data-set='H'] { --hue-ink: #6dd3e4; }
+  [data-set='Pi'] { --a: #1b88ff; --b: #5f6dff; --hue-ink: #62aeff; }
+  [data-set='S'] { --a: #9a48da; --b: #c645cd; --hue-ink: #c48bf2; }
+  [data-set='AS'] { --hue-ink: #ff83c3; }
+}
+[data-set],
+[data-m] {
+  --hue: color-mix(in oklab, var(--a), var(--b) var(--m, 0%));
+  --wash: color-mix(in oklab, var(--hue) var(--tint), var(--bg));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  scrollbar-gutter: stable;
+}
+
+/* The page color is on html alone, so the wash can sit between it and everything else. */
+body {
+  color: var(--ink);
+  font: 400 15px/1.5 var(--sans);
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+h1,
+h2 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+i,
+em {
+  font-style: normal;
+}
+b {
+  font-weight: 500;
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+svg {
+  display: block;
+}
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--hue) 26%, transparent);
+}
+
+main {
+  max-width: calc(var(--page) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-bottom: 96px;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+.icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+.fx {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.wash {
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, currentColor, color-mix(in srgb, currentColor 34%, transparent) 55%, transparent);
+}
+
+/* ------------------------------------------------------------ moving between pages */
+
+@view-transition {
+  navigation: none;
+}
+::view-transition-group(*) {
+  animation-duration: 0.34s;
+  animation-timing-function: var(--ease);
+}
+::view-transition-old(root) {
+  animation: 0.14s ease both fade-out;
+}
+::view-transition-new(root) {
+  animation: 0.28s 0.04s ease both fade-in;
+}
+::view-transition-group(cube) {
+  animation-duration: 0.46s;
+  animation-timing-function: var(--spring);
+  z-index: 2;
+}
+::view-transition-old(cube),
+::view-transition-new(cube) {
+  height: 100%;
+  width: 100%;
+}
+[data-nav='step']::view-transition-old(root),
+[data-nav='step']::view-transition-new(root) {
+  animation-duration: 0.16s;
+  animation-delay: 0s;
+}
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,414 @@
+/* ------------------------------------------------------------ cube */
+
+.cube {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: visible;
+}
+.cube__layer {
+  transform-origin: 50px 50px;
+  transition: transform 0.5s var(--spring);
+}
+.cube rect {
+  stroke: var(--cube-edge);
+  stroke-width: 0.7;
+}
+.st-U { fill: var(--cube-y); }
+.st-F { fill: var(--cube-b); }
+.st-R { fill: var(--cube-r); }
+.st-B { fill: var(--cube-g); }
+.st-L { fill: var(--cube-o); }
+
+.glyph {
+  width: 24px;
+  aspect-ratio: 1;
+  flex: none;
+}
+.glyph .off { fill: var(--cell); }
+.glyph .on { fill: var(--hue); }
+
+/* ------------------------------------------------------------ one case, as a square */
+
+.cell {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 24%;
+  background: var(--cell);
+  transition: background-color 0.35s var(--ease), box-shadow 0.35s var(--ease), scale 0.4s var(--spring);
+}
+.cell[data-s='1'] {
+  background: var(--wash);
+  box-shadow: inset 0 0 0 max(1.5px, 0.1em) var(--hue);
+}
+.cell[data-s='2'] {
+  background: var(--hue);
+}
+
+/* ------------------------------------------------------------ rolling numbers */
+
+.roll {
+  white-space: nowrap;
+}
+.roll__digits {
+  user-select: none;
+}
+.roll__col {
+  position: relative;
+  display: inline-block;
+  line-height: 1.2;
+}
+.roll__ghost {
+  visibility: hidden;
+}
+.roll__window {
+  position: absolute;
+  inset: 0 -0.2em;
+  overflow: hidden;
+  mask-image: linear-gradient(transparent, #000 13%, #000 87%, transparent);
+}
+.roll__strip {
+  position: absolute;
+  top: 0;
+  left: 50%;
+}
+.roll__strip > span {
+  display: block;
+  height: 1.2em;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------ notation */
+
+.alg {
+  font-family: var(--mono);
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  word-spacing: -0.14em;
+  font-variant-ligatures: none;
+  text-wrap: balance;
+}
+.alg i {
+  color: var(--ink-3);
+}
+.auf {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: 2.1em;
+  height: 1.55em;
+  padding-inline: 0.4em;
+  border-radius: 0.42em;
+  font: 500 0.82em/1 var(--mono);
+  letter-spacing: -0.02em;
+  background: color-mix(in oklab, var(--ink) 8%, transparent);
+  color: var(--ink);
+}
+.auf--none {
+  background: none;
+  color: var(--ink-3);
+}
+.auf--none::before {
+  content: '·';
+}
+
+/* ------------------------------------------------------------ buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+  transition: background-color 0.2s, scale 0.35s var(--spring), opacity 0.2s;
+}
+.btn:hover {
+  background: color-mix(in oklab, var(--ink) 11%, transparent);
+}
+.btn:active {
+  scale: 0.965;
+  transition-duration: 0.2s, 0.08s;
+}
+.btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.btn .cell {
+  width: 13px;
+}
+.btn[aria-pressed='true'] {
+  background: var(--wash);
+}
+.btn--main {
+  background: var(--ink);
+  color: var(--bg);
+}
+.btn--main:hover {
+  background: color-mix(in oklab, var(--ink) 86%, var(--bg));
+}
+.btn--done {
+  background: var(--wash);
+  color: var(--ink);
+}
+.btn--done .icon {
+  color: var(--hue-ink);
+}
+.btn--done span {
+  color: var(--ink-2);
+  font-weight: 400;
+}
+.btn--done:hover {
+  background: color-mix(in oklab, var(--hue) calc(var(--tint) + 6%), var(--bg));
+}
+
+.quiet {
+  color: var(--ink-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  margin: -6px -10px;
+  border-radius: 8px;
+  transition: color 0.15s, background-color 0.15s;
+}
+.quiet:hover {
+  color: var(--ink);
+  background: var(--hover);
+}
+.mini,
+.tool {
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 9px;
+  color: var(--ink-2);
+  transition: color 0.15s, background-color 0.15s;
+}
+.mini {
+  width: 32px;
+  height: 32px;
+}
+.tool {
+  width: 38px;
+  height: 38px;
+}
+.mini:hover,
+.tool:hover {
+  color: var(--ink);
+  background: var(--hover);
+}
+.tool[aria-pressed='false'] {
+  color: var(--ink-3);
+}
+.tool[aria-disabled='true'] {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.check {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--cell);
+  transition: box-shadow 0.2s, background-color 0.25s, color 0.15s, scale 0.35s var(--spring);
+}
+.check:hover {
+  box-shadow: inset 0 0 0 1.5px var(--hue);
+  color: var(--hue-ink);
+}
+.check:active {
+  scale: 0.88;
+}
+.check[data-s='1'] {
+  box-shadow: inset 0 0 0 1.5px var(--hue);
+}
+.check[data-s='2'] {
+  background: var(--hue);
+  color: #fff;
+  box-shadow: none;
+}
+.check .icon path {
+  stroke-width: 2.1;
+  stroke-dasharray: 14;
+  stroke-dashoffset: 0;
+}
+.check[data-s='2'] .icon path {
+  animation: draw 0.34s 0.04s var(--ease) both;
+}
+[data-set='U'] .check[data-s='2'],
+[data-set='H'] .check[data-s='2'] {
+  color: #14171d;
+}
+@keyframes draw {
+  from { stroke-dashoffset: 14; }
+}
+
+.seg {
+  position: relative;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding: 3px;
+  border-radius: 11px;
+  background: color-mix(in oklab, var(--ink) 6%, transparent);
+}
+.seg::before {
+  content: '';
+  position: absolute;
+  inset: 3px auto 3px 3px;
+  width: calc((100% - 6px) / var(--n));
+  translate: calc(var(--at) * 100%) 0;
+  border-radius: 8px;
+  background: var(--raised);
+  box-shadow: 0 1px 2px rgb(20 23 29 / 0.1);
+  transition: translate 0.4s var(--spring);
+}
+:root[data-theme='dark'] .seg::before {
+  background: #2c323d;
+}
+.seg button {
+  position: relative;
+  padding: 5px 13px;
+  font-size: 14px;
+  border-radius: 8px;
+  color: var(--ink-2);
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.seg button[aria-checked='true'] {
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------ header */
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+  padding-top: env(safe-area-inset-top, 0px);
+  view-transition-name: top;
+}
+.top::after {
+  content: '';
+  position: absolute;
+  inset: 100% 0 auto;
+  height: 14px;
+  background: linear-gradient(var(--bg), transparent);
+  pointer-events: none;
+}
+.top__in {
+  max-width: calc(var(--page) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  height: 64px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(14px, 3vw, 36px);
+}
+.brand {
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+}
+.tabs {
+  display: flex;
+  gap: clamp(0px, 0.6vw, 6px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-block: 6px;
+}
+.tabs a {
+  position: relative;
+  flex: none;
+  min-width: 42px;
+  padding: 6px 10px 9px;
+  text-align: center;
+  color: var(--ink-2);
+  border-radius: 9px;
+  transition: color 0.15s, background-color 0.15s;
+}
+.tabs a:hover {
+  color: var(--ink);
+  background: var(--hover);
+}
+.tabs a[aria-current] {
+  color: var(--ink);
+  font-weight: 500;
+}
+.tabs i {
+  position: absolute;
+  inset: auto 10px 4px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--cell);
+  overflow: hidden;
+}
+.tabs i b {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--hue);
+  transform-origin: 0 50%;
+  transition: scale 0.6s var(--spring);
+}
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-right: -10px;
+}
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  margin-right: 4px;
+  border-radius: 9px;
+  font-weight: 500;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.15s;
+}
+.count:hover {
+  background: var(--hover);
+}
+.count .cell {
+  width: 12px;
+}
+.count em {
+  margin-left: -5px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+@media (max-width: 720px) {
+  .top__in {
+    height: auto;
+    grid-template-columns: 1fr auto;
+    row-gap: 0;
+    padding-top: 8px;
+  }
+  .tabs {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: space-between;
+    margin-inline: -10px;
+    padding-block: 2px 6px;
+  }
+  .tabs a {
+    min-width: 0;
+    flex: 1;
+    padding-inline: 4px;
+  }
+}

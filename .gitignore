@@ -1,0 +1,14 @@
+# Dependencies and builds
+node_modules
+dist
+.vercel
+__pycache__
+
+# Local files
+.DS_Store
+.claude
+.env*
+*.local
+
+# The source spreadsheet isn't ours to publish
+*.xlsx
