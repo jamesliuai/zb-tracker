@@ -15,16 +15,10 @@ A simple trainer for the full ZB method. Track every ZBLS and ZBLL case you know
 - **Search.** Jump to a case by name, or paste an algorithm to find the case it solves.
 - **No account.** Progress is saved in your browser, and you can export it at any time.
 
-<p>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/set-dark.png">
-    <img src="docs/set-light.png" alt="A set, with its cases grouped by subset" width="49%">
-  </picture>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/case-dark.png">
-    <img src="docs/case-light.png" alt="A case, with its algorithms and notes" width="49%">
-  </picture>
-</p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/pages-dark.png">
+  <img src="docs/pages-light.png" alt="A set with its cases grouped by subset, and a case with its algorithms and notes">
+</picture>
 
 ## Development
 
