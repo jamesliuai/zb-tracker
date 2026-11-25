@@ -358,21 +358,23 @@
 .brand {
   display: flex;
   align-items: center;
-  margin-left: -11px;
+  margin-left: -9px;
 }
 .brand__home {
-  padding: 5px 4px 5px 11px;
+  padding: 6px 9px 4px; /* capitals have nothing below the line, so they sit a little low to look centered */
   border-radius: 10px;
   font-weight: 600;
   font-size: 18px;
   letter-spacing: -0.015em;
   transition: background-color 0.15s;
 }
+/* tucked into the name's padding, so it sits close by while the name's highlight stays even */
 .brand__more {
   display: grid;
   place-items: center;
   width: 24px;
   height: 32px;
+  margin-left: -5px;
   border-radius: 9px;
   color: var(--ink-3);
   transition: color 0.15s, background-color 0.15s;
