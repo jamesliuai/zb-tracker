@@ -354,31 +354,46 @@
   align-items: center;
   gap: clamp(14px, 3vw, 36px);
 }
+/* Two things side by side: the name goes home, the arrow opens the other sets. */
 .brand {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 9px 6px 11px;
   margin-left: -11px;
+}
+.brand__home {
+  padding: 5px 4px 5px 11px;
   border-radius: 10px;
   font-weight: 600;
   font-size: 18px;
   letter-spacing: -0.015em;
   transition: background-color 0.15s;
 }
-.brand:hover,
-.brand:has(+ :popover-open) {
+.brand__more {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 32px;
+  border-radius: 9px;
+  color: var(--ink-3);
+  transition: color 0.15s, background-color 0.15s;
+}
+.brand__home:hover,
+.brand__more:hover,
+.brand__more:has(+ :popover-open) {
   background: var(--hover);
 }
-.brand .icon {
-  color: var(--ink-3);
+.brand__more:hover,
+.brand__more:has(+ :popover-open) {
+  color: var(--ink);
+}
+.brand__more .icon {
   translate: 0 0.5px;
   transition: rotate 0.35s var(--spring);
 }
-.brand .icon path {
+.brand__more .icon path {
   stroke-width: 1.8;
 }
-.brand:has(+ :popover-open) .icon {
+.brand__more:has(+ :popover-open) .icon {
   rotate: 180deg;
 }
 .tabs {

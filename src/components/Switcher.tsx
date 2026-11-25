@@ -25,7 +25,7 @@ function Choice({ deck, on, done }: { deck: Deck; on: boolean; done: () => void 
   )
 }
 
-/** The name at the top left. It opens into everything there is to learn. */
+/** The name at the top left goes home. The arrow beside it opens everything else there is to learn. */
 export function Switcher({ deck }: { deck: Deck }) {
   const pop = useRef<HTMLElement>(null)
   const close = () => pop.current?.hidePopover()
@@ -40,17 +40,20 @@ export function Switcher({ deck }: { deck: Deck }) {
     all[(at < 0 ? (d > 0 ? 0 : all.length - 1) : at + d + all.length) % all.length].focus()
   }
   return (
-    <div onKeyDown={step}>
-      <button className="brand" popoverTarget="decks" aria-label={`${deck.id}. Change what you’re learning`}>
+    <div className="brand">
+      <a className="brand__home" href={`#${homeOf(deck.id)}`} aria-label={`${deck.id}, home`}>
         {deck.id}
+      </a>
+      <button className="brand__more" popoverTarget="decks" aria-label="Switch to another algorithm set" title="Switch algorithm set" onKeyDown={step}>
         <Icon name="down" size={13} />
       </button>
       <nav
         className="menu decks"
         id="decks"
         popover="auto"
-        aria-label="What you’re learning"
+        aria-label="Algorithm sets"
         ref={pop}
+        onKeyDown={step}
         onBeforeToggle={(e) => {
           if (e.newState === 'closed') layerClosing()
         }}
