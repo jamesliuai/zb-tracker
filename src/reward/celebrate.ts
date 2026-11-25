@@ -1,4 +1,4 @@
-import { TOTAL, caseById, setById, subById, type Case } from '../data/index.ts'
+import { caseById, deckById, setById, subById, type Case } from '../data/index.ts'
 import { SOLVED_LL } from '../cube/geometry.ts'
 import { shade } from '../lib/text.ts'
 import { getStats, setStatus, statusOf, type Status } from '../state/store.ts'
@@ -26,22 +26,23 @@ const hueOf = (sub: string) => {
 
 const busy = new Set<string>()
 
-/** The picture of a case that is on screen, biggest first. */
-function picture(id: string): SVGSVGElement | null {
+/** The picture of a case that is on screen: the one beside what was pressed, or else the biggest. */
+function picture(id: string, from?: Element): SVGSVGElement | null {
   const all = [...document.querySelectorAll<SVGSVGElement>(`:is(main, main *)[data-case="${id}"] .cube`)].filter((el) => onScreen(el.getBoundingClientRect()))
-  return all.sort((a, b) => b.getBoundingClientRect().width - a.getBoundingClientRect().width)[0] ?? null
+  const near = from?.closest('[data-case]')
+  return all.find((el) => near?.contains(el)) ?? all.sort((a, b) => b.getBoundingClientRect().width - a.getBoundingClientRect().width)[0] ?? null
 }
 
 /** Mark a case as learned, with the full ceremony on its own page and a short one elsewhere. */
-export function learn(id: string, pace: 'full' | 'quick' = 'full') {
+export function learn(id: string, pace: 'full' | 'quick' = 'full', from?: Element) {
   if (busy.has(id) || statusOf(id) === 2) return
   const c = caseById.get(id)!
   const sub = subById.get(c.sub)!
-  const step = getStats().bySub.get(c.sub)! + 1
+  const step = getStats(c.deck).bySub.get(c.sub)! + 1
   playLearned(step, sub.cases.length, pace)
   navigator.vibrate?.(pace === 'full' ? [8, 60, 8] : 10)
 
-  const svg = picture(id)
+  const svg = picture(id, from)
   if (!svg || calm()) {
     setStatus([id], 2)
     milestones(c)
@@ -109,18 +110,20 @@ function flight(b: DOMRect | null, hue: string) {
   setTimeout(land, 1400)
 }
 
-/** Celebrate a finished subset, set, or all of it. Returns false when nothing was finished. */
+/** Celebrate a finished subset, set, or whole deck. Returns false when nothing was finished. */
 function milestones(c: Case, wait = 0, undo?: () => void): boolean {
   const sub = subById.get(c.sub)!
   const set = setById.get(c.set)!
-  if (getStats().bySub.get(sub.id) !== sub.cases.length) return false
+  const deck = deckById.get(c.deck)!
+  if (getStats(deck.id).bySub.get(sub.id) !== sub.cases.length) return false
   setTimeout(() => {
-    if (getStats().learned === TOTAL) finale.set('all')
-    else if (getStats().bySet.get(set.id) === set.cases.length) finale.set(set.id)
+    const { learned, bySet } = getStats(deck.id)
+    if (learned === deck.cases.length) finale.set(deck.id)
+    else if (!deck.flat && bySet.get(set.id) === set.cases.length) finale.set(set.id)
     else {
       playSubset()
       glow(sub.id)
-      say({ text: `${sub.id} complete`, sub: sub.id, cells: sub.cases.length, undo }, undo ? 7000 : 4600)
+      say({ text: `${sub.short} complete`, sub: sub.id, cells: sub.cases.length, undo }, undo ? 7000 : 4600)
       return
     }
     playSet()
@@ -168,12 +171,12 @@ export function learnMany(ids: string[]) {
 }
 
 /** Any other status change. */
-export function change(id: string, s: Status, pace: 'full' | 'quick' = 'full') {
-  if (s === 2) return learn(id, pace)
+export function change(id: string, s: Status, pace: 'full' | 'quick' = 'full', from?: Element) {
+  if (s === 2) return learn(id, pace, from)
   const before = statusOf(id)
   if (before === s) return
   const undo = setStatus([id], s)
   if (s === 1) playLearning()
   else playUndo()
-  if (before === 2) say({ text: `${id} is no longer marked as learned`, undo })
+  if (before === 2) say({ text: `${caseById.get(id)!.name} is no longer marked as learned`, undo })
 }

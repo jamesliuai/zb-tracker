@@ -6,14 +6,14 @@ import { Icon } from '../components/Icon.tsx'
 import { Note } from '../components/Note.tsx'
 import { Segmented } from '../components/Segmented.tsx'
 import { NotationError, moveCount, normalize, parse, setup, type Turn } from '../cube/engine.ts'
-import type { Case, Subset, ZSet } from '../data/index.ts'
+import { caseById, type Case, type Deck, type Subset, type ZSet } from '../data/index.ts'
 import { covered } from '../lib/layers.ts'
-import { go } from '../lib/router.ts'
+import { go, homeOf } from '../lib/router.ts'
 import { airy, date, shade } from '../lib/text.ts'
 import { change, learn } from '../reward/celebrate.ts'
 import { say } from '../reward/signals.ts'
 import { playTurn } from '../reward/sound.ts'
-import { chosen, need, offers, suggestAngle, type Row } from '../state/choose.ts'
+import { chosen, need, offers, suggestAngle, tipFor, type Row } from '../state/choose.ts'
 import { addAngle, anglesOf, nextUp, removeAngle, setPrefs, touch, updateAngle, updateEntry, useEntry, usePrefs, type Angle, type Entry } from '../state/store.ts'
 
 const hands = [['two', 'Two-handed'], ['oh', 'One-handed']] as const
@@ -48,6 +48,7 @@ function AngleView({ c, angle, i, of, active, onFocus, children }: { c: Case; an
   const { hand } = usePrefs()
   const [showSetup, setShowSetup] = useState(false)
   const pick = chosen(c, angle, hand)
+  const tip = tipFor(c, pick.text)
   const turn = () => {
     playTurn()
     updateAngle(c.id, i, { rot: ((angle.rot + 1) % 4) as Turn })
@@ -55,7 +56,7 @@ function AngleView({ c, angle, i, of, active, onFocus, children }: { c: Case; an
   return (
     <section className={active ? 'angle is-active' : 'angle'} onFocus={onFocus} onClick={onFocus} aria-label={of > 1 ? `Angle ${AB[i]}` : undefined}>
       <div className="angle__view">
-        <Cube ll={c.ll} rot={angle.rot} label={`${c.id} seen from above`} />
+        <Cube ll={c.ll} rot={angle.rot} label={`${c.name} seen from above`} />
         <button className="angle__turn" onClick={turn} aria-label="Turn the picture" title="See it from another side  U">
           <Icon name="turn" />
         </button>
@@ -96,6 +97,12 @@ function AngleView({ c, angle, i, of, active, onFocus, children }: { c: Case; an
           )}
         </div>
         <div className="notes">
+          {tip && (
+            <div className="note note--tip">
+              <span>Fingertricks</span>
+              <p>{tip}</p>
+            </div>
+          )}
           <Note label="Recognition" value={angle.rec} placeholder="What you look for" onSave={(rec) => updateAngle(c.id, i, { rec })} />
           <Note label="AUF" value={angle.auf} placeholder="How the AUF goes" onSave={(auf) => updateAngle(c.id, i, { auf })} />
           {children}
@@ -113,9 +120,15 @@ function AlgRow({ row, on, choose, remove }: { row: Row; on: boolean; choose: ()
       <button role="radio" aria-checked={on} onClick={choose}>
         <span className="pick__dot" />
         <Auf turn={row.need} />
-        <Alg text={row.text} />
-        {row.own && <small>Yours</small>}
-        <small>{moveCount(row.text)} moves</small>
+        <span className="pick__alg">
+          <Alg text={row.text} />
+          {row.tip && !on && <em>{row.tip}</em>}
+        </span>
+        <span className="pick__meta">
+          {row.own && <small>Yours</small>}
+          {row.by && <small>{row.by}</small>}
+          <small>{moveCount(row.text)} moves</small>
+        </span>
       </button>
       <Copy text={row.text} />
       {remove && (
@@ -262,17 +275,18 @@ function Algorithms({ c, entry, angles, active, setActive }: { c: Case; entry: E
 
 /* ------------------------------------------------------------------ the page */
 
-export function CasePage({ c, sub, set }: { c: Case; sub: Subset; set: ZSet }) {
+export function CasePage({ c, sub, set, deck }: { c: Case; sub: Subset; set: ZSet; deck: Deck }) {
   const entry = useEntry(c.id)
   const status = entry.s ?? 0
   const { hand } = usePrefs()
   const angles = anglesOf(entry)
   const [picked, setActive] = useState(0)
   const active = Math.min(picked, angles.length - 1)
-  const at = sub.cases.indexOf(c)
-  const before = sub.cases[at - 1]?.id
-  const after = sub.cases[at + 1]?.id
-  const onward = status === 2 ? nextUp(c.id) : null
+  const near = deck.flat ? deck : sub
+  const at = near.cases.indexOf(c)
+  const before = near.cases[at - 1]?.id
+  const after = near.cases[at + 1]?.id
+  const onward = status === 2 ? nextUp(deck.id, c.id) : null
   const note = <Note label="Notes" value={entry.note ?? ''} placeholder="Anything else about this case" onSave={(v) => updateEntry(c.id, { note: v })} />
 
   useEffect(() => touch(c.id), [c.id])
@@ -310,10 +324,8 @@ export function CasePage({ c, sub, set }: { c: Case; sub: Subset; set: ZSet }) {
     <main className="case" data-case={c.id} data-s={status} {...shade(sub)}>
       <div className="crumbs">
         <nav aria-label="You are here">
-          <a href={`#${set.id}`}>{set.name}</a>
-          <a href={`#${sub.id}`}>
-            {sub.id} <span>{airy(sub.name)}</span>
-          </a>
+          <a href={`#${deck.flat ? homeOf(deck.id) : set.id}`}>{deck.flat ? deck.id : set.name}</a>
+          <a href={`#${sub.id}`}>{deck.flat ? sub.name : `${sub.id} ${airy(sub.name)}`}</a>
         </nav>
         <div className="crumbs__step">
           <a className="tool" href={`#${before ?? c.id}`} aria-disabled={!before} aria-label="Previous case" title="Previous  ←">
@@ -324,10 +336,10 @@ export function CasePage({ c, sub, set }: { c: Case; sub: Subset; set: ZSet }) {
           </a>
         </div>
       </div>
-      <Steps sub={sub} current={c.id} />
+      <Steps subs={deck.flat ? deck.subs : [sub]} current={c.id} />
 
       <div className="case__head">
-        <h1>{c.id}</h1>
+        <h1>{c.name}</h1>
         <div className="case__actions">
           {status === 2 ? (
             <>
@@ -336,7 +348,7 @@ export function CasePage({ c, sub, set }: { c: Case; sub: Subset; set: ZSet }) {
               </button>
               {onward && (
                 <a ref={way} className="btn btn--main" href={`#${onward}`} title="Next unlearned case  N">
-                  Next up {onward} <Icon name="right" />
+                  Next up {caseById.get(onward)!.name} <Icon name="right" />
                 </a>
               )}
             </>

@@ -55,6 +55,62 @@
 :root[data-theme='dark'] .menu > .danger {
   color: #ff7a80;
 }
+/* ------------------------------------------------------------ what you're learning */
+
+.decks {
+  inset: 62px auto auto max(8px, calc(max(var(--gutter), (100vw - var(--page)) / 2) - 19px));
+  width: 268px;
+}
+.decks a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  row-gap: 8px;
+  padding: 10px 12px 13px;
+  border-radius: 11px;
+  color: var(--ink-2);
+  transition: color 0.15s, background-color 0.15s;
+}
+.decks a:hover,
+.decks a[aria-current] {
+  color: var(--ink);
+  background: var(--hover);
+}
+.decks a + a {
+  margin-top: 4px;
+}
+.decks a > b {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.015em;
+}
+.decks .num {
+  font-size: 14px;
+}
+.decks .num i {
+  color: var(--ink-3);
+}
+.decks__bars {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 3px;
+}
+.decks__bars > i {
+  flex-basis: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--cell);
+  overflow: hidden;
+}
+.decks__bars b {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--hue);
+  transform-origin: 0 50%;
+  transition: scale 0.6s var(--spring);
+}
+
 .keys {
   padding: 4px 12px 6px;
   font-size: 13.5px;
@@ -280,6 +336,17 @@ kbd {
 }
 @keyframes shine {
   40% { background: color-mix(in oklab, var(--hue) 55%, #fff); scale: 1.12; }
+}
+/* Seven by three, so a small deck makes a whole rectangle. */
+.finale__grid {
+  display: grid;
+  grid-template-columns: repeat(7, min(54px, 9vw, 7vh));
+  gap: 7px;
+  margin-bottom: 44px;
+}
+.finale__grid .cell {
+  background: var(--hue);
+  animation: cell-up 0.8s calc(0.3s + var(--i) * 90ms) var(--pop) backwards, shine 0.9s calc(1.9s + var(--i) * 70ms) ease;
 }
 .finale h2 {
   font-size: clamp(54px, 9vw, 104px);

@@ -12,6 +12,6 @@ export const date = (t: number) => {
 
 /** Spread onto an element to give it the shade of a subset. */
 export function shade(sub: Subset) {
-  const of = setById.get(sub.set)!.subs.length
-  return { 'data-set': sub.set, 'data-m': '', style: { '--m': `${Math.round(((sub.n - 1) / (of - 1)) * 100)}%` } as React.CSSProperties }
+  const last = setById.get(sub.set)!.subs.length - 1
+  return { 'data-set': sub.set, 'data-m': '', style: { '--m': `${last && Math.round(((sub.n - 1) / last) * 100)}%` } as React.CSSProperties }
 }

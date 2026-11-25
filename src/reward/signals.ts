@@ -23,7 +23,7 @@ export const inFlight = signal(0)
 /** A subset whose cells should ripple. */
 export const ripple = signal<string | null>(null)
 
-/** A finished set, or 'all', being celebrated over the whole page. */
+/** A finished set or deck, being celebrated over the whole page. */
 export const finale = signal<string | null>(null)
 
 export interface Toast {

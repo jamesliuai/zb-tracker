@@ -17,6 +17,9 @@ export interface Pick {
   picked: boolean
 }
 
+/** How an algorithm is turned, if that's known. */
+export const tipFor = (c: Case, text: string) => c.algs.two.main.find((a) => a.text === text)?.tip
+
 /** The algorithm an angle uses: the one picked, or the sheet's first choice. */
 export function chosen(c: Case, angle: Angle, hand: Hand): Pick {
   if (angle.alg) {

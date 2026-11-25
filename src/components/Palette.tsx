@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { AUF, NotationError, examine, parse, solves } from '../cube/engine.ts'
-import { caseByKey, caseById, setById, sets, subById, subsets, type Case } from '../data/index.ts'
-import { go } from '../lib/router.ts'
+import { caseByKey, caseById, deckById, decks, setById, subById, subsets, type Case, type Deck, type Subset, type ZSet } from '../data/index.ts'
+import { go, homeOf } from '../lib/router.ts'
 import { useStatus } from '../state/store.ts'
 import { Cube, Glyph } from './Cube.tsx'
 import { Icon } from './Icon.tsx'
@@ -11,42 +11,53 @@ interface Hit {
   title: string
   detail: string
   ll: string
-  set: string
+  set?: string
   isCase?: boolean
 }
 
 const setWords: Record<string, string> = { t: 'T', u: 'U', l: 'L', h: 'H', pi: 'Pi', p: 'Pi', s: 'S', sune: 'S', as: 'AS', a: 'AS', anti: 'AS', antisune: 'AS' }
 
-const subName = (c: Case) => subById.get(c.sub)!.name
-const hitSet = (id: string): Hit => {
-  const s = setById.get(id)!
-  return { id, title: s.name, detail: `${s.cases.length} cases`, ll: s.cases[0].ll, set: id }
-}
-const hitSub = (id: string): Hit => {
-  const s = subById.get(id)!
-  return { id, title: id, detail: s.name, ll: s.cases[0].ll, set: s.set, isCase: true }
-}
-const hitCase = (c: Case, detail = subName(c)): Hit => ({ id: c.id, title: c.id, detail, ll: c.ll, set: c.set, isCase: true })
+const hitDeck = (d: Deck): Hit => ({ id: homeOf(d.id), title: d.id, detail: `${d.cases.length} cases`, ll: d.cases[0].ll })
+const hitSet = (s: ZSet): Hit => ({ id: s.id, title: s.name, detail: `${s.cases.length} cases`, ll: s.cases[0].ll, set: s.id })
+const hitSub = (s: Subset): Hit => ({ id: s.id, title: s.id, detail: s.name, ll: s.cases[0].ll, set: s.set, isCase: true })
+const hitCase = (c: Case, detail = subById.get(c.sub)!.name): Hit => ({ id: c.id, title: c.name, detail, ll: c.ll, set: c.set, isCase: true })
 
-function search(text: string): { hits: Hit[]; message?: string } {
-  const q = text.trim()
-  if (!q) return { hits: sets.map((s) => hitSet(s.id)) }
-
+/** T, T3, T3-5 and the names of subsets. */
+function inZbll(q: string): Hit[] {
   const m = /^([a-z]+)\s*(\d)?(?:[\s\-./]+|(?<=\d))?(\d{1,2})?$/i.exec(q)
-  const set = m && setWords[m[1].toLowerCase()]
-  if (m && set) {
+  const set = m && setById.get(setWords[m[1].toLowerCase()])
+  if (set) {
     const [, , a, b] = m
-    if (a && b) {
-      const c = caseById.get(`${set}${a}-${b}`)
-      if (c) return { hits: [hitCase(c)] }
-    } else if (a) {
-      const sub = subById.get(`${set}${a}`)
-      if (sub) return { hits: [hitSub(sub.id), ...sub.cases.map((c) => hitCase(c))] }
-    } else return { hits: [hitSet(set), ...setById.get(set)!.subs.map((s) => hitSub(s.id))] }
+    const sub = subById.get(`${set.id}${a}`)
+    if (!a && !b) return [hitSet(set), ...set.subs.map(hitSub)]
+    const c = sub && b ? caseById.get(`${sub.id}-${b}`) : undefined
+    if (c) return [hitCase(c)]
+    if (sub && !b) return [hitSub(sub), ...sub.cases.map((x) => hitCase(x))]
   }
+  return subsets.filter((s) => s.deck === 'ZBLL' && s.name.toLowerCase().includes(q.toLowerCase())).map(hitSub)
+}
 
-  const named = subsets.filter((s) => s.name.toLowerCase().includes(q.toLowerCase()))
-  if (named.length) return { hits: named.map((s) => hitSub(s.id)) }
+/** Ja, J perm, and the names of the groups. */
+function inPll(q: string): Hit[] {
+  const pll = deckById.get('PLL')!
+  const name = q
+    .toLowerCase()
+    .replace(/\bpll\b|[\s-]*perms?$/g, ' ')
+    .trim()
+  if (!name) return [hitDeck(pll)]
+  const found = pll.cases.filter((c) => (name.length < 3 ? c.short.toLowerCase().startsWith(name) : subById.get(c.sub)!.name.toLowerCase().includes(name)))
+  return found.map((c) => hitCase(c))
+}
+
+function search(text: string, deck: Deck): { hits: Hit[]; message?: string } {
+  const q = text.trim()
+  const here = deck.flat ? deck.cases.map((c) => hitCase(c)) : deck.sets.map(hitSet)
+  if (!q) return { hits: [...here, ...decks.filter((d) => d !== deck).map(hitDeck)] }
+
+  const named = deck.id === 'PLL' ? [...inPll(q), ...inZbll(q)] : [...inZbll(q), ...inPll(q)]
+  if (named.length) return { hits: named }
+  const other = decks.find((d) => d.id.toLowerCase() === q.toLowerCase())
+  if (other) return { hits: [hitDeck(other)] }
 
   // anything else is read as an algorithm
   try {
@@ -57,15 +68,16 @@ function search(text: string): { hits: Hit[]; message?: string } {
       const c = caseByKey.get(v.key)
       if (c) {
         const auf = AUF[solves(q, c.ll)[0] ?? 0]
-        return { hits: [hitCase(c, `This solves ${c.id}${auf ? `, after ${auf.replace("'", '′')}` : ''}`)] }
+        return { hits: [hitCase(c, `This solves ${c.name}${auf ? `, after ${auf.replace("'", '′')}` : ''}`)] }
       }
-      return { hits: [], message: 'This solves the last layer, but the case isn’t a ZBLL. It’s a PLL, or the edges are flipped.' }
+      return { hits: [], message: 'This solves the last layer, but with edges to flip, so it’s neither a ZBLL nor a PLL.' }
     }
     if (v.kind === 'does-nothing') return { hits: [], message: 'This only turns the top layer' }
     return { hits: [], message: 'This doesn’t keep the first two layers solved' }
   } catch (e) {
     const near = e instanceof NotationError && /[UDRLFB]/.test(q) && q.length > 6 ? ` ${e.message}.` : ''
-    return { hits: [], message: `Nothing matches.${near} Try “T3”, “Pi 2-5”, “Niklas”, or paste an algorithm.` }
+    const names = deck.id === 'PLL' ? '“Ua”, “J perm”, “diagonal”' : '“T3”, “Pi 2-5”, “Niklas”'
+    return { hits: [], message: `Nothing matches.${near} Try ${names}, or paste an algorithm.` }
   }
 }
 
@@ -85,10 +97,10 @@ function Result({ hit, on, pick, hover }: { hit: Hit; on: boolean; pick: () => v
   )
 }
 
-function Search({ done }: { done: () => void }) {
+function Search({ deck, done }: { deck: Deck; done: () => void }) {
   const [text, setText] = useState('')
   const [at, setAt] = useState(0)
-  const { hits, message } = useMemo(() => search(text), [text])
+  const { hits, message } = useMemo(() => search(text, deck), [text, deck])
   const pick = (h: Hit) => {
     done()
     go(h.id)
@@ -135,7 +147,7 @@ function Search({ done }: { done: () => void }) {
 }
 
 /** Opens before the key that asked for it has finished, so nothing typed after it can go astray. */
-export function Palette({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function Palette({ open, deck, onClose }: { open: boolean; deck: Deck; onClose: () => void }) {
   const box = useRef<HTMLDialogElement>(null)
 
   useLayoutEffect(() => {
@@ -154,7 +166,7 @@ export function Palette({ open, onClose }: { open: boolean; onClose: () => void 
       onClick={(e) => e.target === box.current && onClose()}
       onKeyDown={(e) => e.stopPropagation()}
     >
-      {open && <Search done={onClose} />}
+      {open && <Search deck={deck} done={onClose} />}
     </dialog>
   )
 }

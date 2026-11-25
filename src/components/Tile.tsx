@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { subById, type Case } from '../data/index.ts'
+import { caseById, subById, type Case } from '../data/index.ts'
 import { shade } from '../lib/text.ts'
 import { change } from '../reward/celebrate.ts'
 import { useStatus } from '../state/store.ts'
@@ -11,17 +11,18 @@ const words = ['not started', 'learning', 'learned']
 /** The round check on a case. Pressing it is the quick way to mark it. */
 export function Check({ id, className = '' }: { id: string; className?: string }) {
   const s = useStatus(id)
+  const { name } = caseById.get(id)!
   return (
     <button
       className={`check ${className}`}
       aria-pressed={s === 2}
-      aria-label={s === 2 ? `${id} is learned. Take it back` : `Mark ${id} as learned`}
+      aria-label={s === 2 ? `${name} is learned. Take it back` : `Mark ${name} as learned`}
       title={s === 2 ? 'Learned' : 'Mark as learned'}
       data-s={s}
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        change(id, s === 2 ? 0 : 2, 'quick')
+        change(id, s === 2 ? 0 : 2, 'quick', e.currentTarget)
       }}
     >
       <Icon name="check" size={14} />
@@ -34,9 +35,9 @@ export const Tile = memo(function Tile({ c, i, named = false }: { c: Case; i: nu
   const look = shade(subById.get(c.sub)!)
   return (
     <div className="tile" data-case={c.id} data-s={s} {...look} style={{ ...look.style, '--i': i } as React.CSSProperties}>
-      <a className="tile__link" href={`#${c.id}`} aria-label={`${c.id}, ${words[s]}`}>
+      <a className="tile__link" href={`#${c.id}`} aria-label={`${c.name}, ${words[s]}`}>
         <Cube ll={c.ll} />
-        <span className="tile__n">{named ? c.id : c.n}</span>
+        <span className="tile__n">{named ? c.name : c.short}</span>
       </a>
       <Check id={c.id} className="tile__check" />
     </div>
@@ -49,7 +50,7 @@ export function tileKeys(e: React.KeyboardEvent<HTMLElement>) {
   if (!here || e.metaKey || e.ctrlKey || e.altKey) return
   if (e.key === 'l' || e.key === 'L') {
     e.preventDefault()
-    change(here.dataset.case!, here.dataset.s === '2' ? 0 : 2, 'quick')
+    change(here.dataset.case!, here.dataset.s === '2' ? 0 : 2, 'quick', here)
     return
   }
   if (!e.key.startsWith('Arrow')) return

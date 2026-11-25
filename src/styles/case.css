@@ -30,10 +30,18 @@
 }
 
 .steps {
+  --g: 9px;
+  display: flex;
+  gap: 22px;
+}
+/* Wide enough for its cases, so a step is the same size whichever run it's in. */
+.steps__run {
+  flex: calc(var(--of) * 1) 1 calc((var(--of) - 1) * var(--g));
+  min-width: 0;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
-  gap: 9px;
+  gap: var(--g);
 }
 .steps a {
   position: relative;
@@ -193,6 +201,14 @@
 .note:focus-within label {
   color: var(--ink);
 }
+.note--tip span {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.note--tip p {
+  padding-block: 12px;
+  text-wrap: pretty;
+}
 .note textarea {
   width: 100%;
   padding-block: 12px;
@@ -317,6 +333,18 @@
 .pick small + small {
   margin-left: 0;
 }
+.pick__meta {
+  display: contents;
+}
+.pick__alg {
+  min-width: 0;
+  display: grid;
+}
+.pick__alg em {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
 .pick__dot {
   flex: none;
   align-self: center;
@@ -325,6 +353,10 @@
   border-radius: 5px;
   box-shadow: inset 0 0 0 1.5px var(--cell);
   transition: box-shadow 0.25s var(--ease), background-color 0.25s;
+}
+.pick:has(em) .pick__dot {
+  align-self: start;
+  margin-top: 4px;
 }
 .pick > button:hover .pick__dot {
   box-shadow: inset 0 0 0 1.5px var(--ink-3);
@@ -405,7 +437,10 @@
 }
 @media (max-width: 560px) {
   .steps {
-    gap: 5px;
+    --g: 5px;
+  }
+  .steps__run:not(:only-child):not(:has([aria-current])) {
+    display: none;
   }
   .steps a[aria-current] .cell {
     outline-width: 1.5px;
@@ -437,8 +472,22 @@
   .case__actions .btn--main {
     flex: 1;
   }
+  /* what's said about an algorithm goes under it, so the moves keep the width */
   .pick > button:first-child {
-    gap: 9px;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 2px 9px;
     font-size: 14.5px;
+  }
+  .pick__dot {
+    grid-row: 1;
+  }
+  .pick__meta {
+    grid-column: 3;
+    display: flex;
+    gap: 10px;
+  }
+  .pick small {
+    margin-left: 0;
   }
 }

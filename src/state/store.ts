@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import { TOTAL, caseById, cases, sets, subsets, type Hand } from '../data/index.ts'
+import { caseById, deckById, setById, subById, type DeckId, type Hand } from '../data/index.ts'
 import type { Turn } from '../cube/engine.ts'
 
 /** 0 not started, 1 learning, 2 learned */
@@ -32,18 +32,20 @@ export interface Prefs {
   theme: Theme
   sound: boolean
   hand: Hand
+  /** The deck that was open last. */
+  deck: DeckId
 }
 
 export interface Data {
   v: 1
   cases: Record<string, Entry>
   prefs: Prefs
-  /** The last case that was opened or changed. */
-  last?: string
+  /** The last case that was opened or changed in each deck. */
+  last: Partial<Record<DeckId, string>>
 }
 
 const KEY = 'zbll-tracker'
-const blank = (): Data => ({ v: 1, cases: {}, prefs: { theme: 'system', sound: true, hand: 'two' } })
+const blank = (): Data => ({ v: 1, cases: {}, prefs: { theme: 'system', sound: true, hand: 'two', deck: 'ZBLL' }, last: {} })
 const NONE: Entry = Object.freeze({})
 
 /* ------------------------------------------------------------------ reading what was saved */
@@ -82,8 +84,13 @@ export function readData(x: unknown): Data | null {
     if (p.theme === 'light' || p.theme === 'dark') out.prefs.theme = p.theme
     if (p.sound === false) out.prefs.sound = false
     if (p.hand === 'oh') out.prefs.hand = 'oh'
+    if (deckById.has(p.deck as DeckId)) out.prefs.deck = p.deck as DeckId
   }
-  if (typeof x.last === 'string' && caseById.has(x.last)) out.last = x.last
+  // it was a single case while there was only one deck
+  for (const id of isObject(x.last) ? Object.values(x.last) : [x.last]) {
+    const c = typeof id === 'string' && caseById.get(id)
+    if (c) out.last[c.deck] = c.id
+  }
   return out
 }
 
@@ -145,7 +152,7 @@ export const useEntry = (id: string) => useSyncExternalStore(subscribe, () => ge
 export const useStatus = (id: string) => useSyncExternalStore(subscribe, () => statusOf(id))
 export const usePrefs = () => useSyncExternalStore(subscribe, () => data.prefs)
 export const useCases = () => useSyncExternalStore(subscribe, () => data.cases)
-export const useLast = () => useSyncExternalStore(subscribe, () => data.last)
+export const useLast = (deck: DeckId) => useSyncExternalStore(subscribe, () => data.last[deck])
 
 export interface Stats {
   learned: number
@@ -159,13 +166,10 @@ export interface Stats {
   pace: number
 }
 
-let statsFor: Data['cases'] | null = null
-let stats: Stats
-export function getStats(): Stats {
-  if (statsFor === data.cases) return stats
-  statsFor = data.cases
+function count(deck: DeckId): Stats {
+  const { sets, subs, cases } = deckById.get(deck)!
   const bySet = new Map(sets.map((s) => [s.id, 0]))
-  const bySub = new Map(subsets.map((s) => [s.id, 0]))
+  const bySub = new Map(subs.map((s) => [s.id, 0]))
   const learning: string[] = []
   const now = Date.now()
   const day = 86_400_000
@@ -192,25 +196,25 @@ export function getStats(): Stats {
     }
   }
   const weeks = Math.min(4, Math.max(1, (now - first) / (7 * day)))
-  stats = { learned, learning, bySet, bySub, today, week, pace: month / weeks }
-  return stats
+  return { learned, learning, bySet, bySub, today, week, pace: month / weeks }
 }
-export const useStats = () => useSyncExternalStore(subscribe, getStats)
 
-/** The next case to learn: same subset first, then same set, then anything. */
-export function nextUp(after?: string): string | null {
-  const open = (id: string) => statusOf(id) !== 2
+let statsFor: Data['cases'] | null = null
+const stats = new Map<DeckId, Stats>()
+export function getStats(deck: DeckId): Stats {
+  if (statsFor !== data.cases) stats.clear()
+  statsFor = data.cases
+  if (!stats.has(deck)) stats.set(deck, count(deck))
+  return stats.get(deck)!
+}
+export const useStats = (deck: DeckId) => useSyncExternalStore(subscribe, () => getStats(deck))
+
+/** The next case to learn in a deck: same subset first, then same set, then anything. */
+export function nextUp(deck: DeckId, after?: string): string | null {
   const from = after ? caseById.get(after) : undefined
-  if (from) {
-    const sub = subsets.find((s) => s.id === from.sub)!.cases
-    const set = sets.find((s) => s.id === from.set)!.cases
-    const all = [...sub.slice(from.n), ...sub.slice(0, from.n), ...set, ...cases]
-    return all.find((c) => c.id !== after && open(c.id))?.id ?? null
-  }
-  return cases.find((c) => open(c.id))?.id ?? null
+  const near = from ? [...subById.get(from.sub)!.cases.slice(from.n), ...subById.get(from.sub)!.cases.slice(0, from.n), ...setById.get(from.set)!.cases] : []
+  return [...near, ...deckById.get(deck)!.cases].find((c) => c.id !== after && statusOf(c.id) !== 2)?.id ?? null
 }
-
-export const isDone = (learned: number) => learned === TOTAL
 
 /* ------------------------------------------------------------------ writing */
 
@@ -227,6 +231,8 @@ const clean = (e: Entry): Entry | undefined => {
   return Object.keys(out).length ? out : undefined
 }
 
+const lastIs = (id?: string): Data['last'] => (id ? { ...data.last, [caseById.get(id)!.deck]: id } : data.last)
+
 function patch(changes: Record<string, Entry>, last?: string) {
   const next = { ...data.cases }
   for (const [id, e] of Object.entries(changes)) {
@@ -234,7 +240,7 @@ function patch(changes: Record<string, Entry>, last?: string) {
     if (c) next[id] = c
     else delete next[id]
   }
-  commit({ ...data, cases: next, last: last ?? data.last })
+  commit({ ...data, cases: next, last: lastIs(last) })
 }
 
 /** Set one status on many cases. Returns a function that puts things back. */
@@ -269,11 +275,11 @@ export function removeAngle(id: string, i: number): () => void {
 }
 
 export function touch(id: string) {
-  if (data.last !== id) commit({ ...data, last: id })
+  if (data.last[caseById.get(id)!.deck] !== id) commit({ ...data, last: lastIs(id) })
 }
 
 export function setPrefs(change: Partial<Prefs>) {
-  commit({ ...data, prefs: { ...data.prefs, ...change } })
+  if (Object.entries(change).some(([k, v]) => data.prefs[k as keyof Prefs] !== v)) commit({ ...data, prefs: { ...data.prefs, ...change } })
 }
 
 export function replaceData(next: Data): () => void {

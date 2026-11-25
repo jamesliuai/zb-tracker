@@ -56,8 +56,10 @@ export function solveDiagram(svg: SVGElement, ll: string, o: { there: number; ho
     cancelAnimationFrame(frame)
     running.delete(svg)
     list.forEach((p) => place(p, 0))
+    svg.removeAttribute('data-moving')
   }
   running.set(svg, stop)
+  svg.setAttribute('data-moving', '') // the arrows on it have nothing left to say
   const step = (now: number) => {
     const t = now - start
     if (t < o.there) list.forEach((p) => place(p, t / o.there))

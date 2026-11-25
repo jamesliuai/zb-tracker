@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { decks } from '../data/index.ts'
 import { layerClosing } from '../lib/layers.ts'
 import { say } from '../reward/signals.ts'
 import { canSave, emptyData, exportText, readData, replaceData, setPrefs, usePrefs } from '../state/store.ts'
@@ -18,7 +19,7 @@ export function Menu() {
   function save() {
     const day = new Date().toISOString().slice(0, 10)
     const url = URL.createObjectURL(new Blob([exportText()], { type: 'application/json' }))
-    const a = Object.assign(document.createElement('a'), { href: url, download: `zbll-progress-${day}.json` })
+    const a = Object.assign(document.createElement('a'), { href: url, download: `zb-progress-${day}.json` })
     a.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
     close()
@@ -33,7 +34,7 @@ export function Menu() {
     } catch {
       // handled below
     }
-    if (!next) return say({ text: 'That file isn’t a ZBLL progress export' })
+    if (!next) return say({ text: 'That file isn’t a progress export' })
     const undo = replaceData(next)
     say({ text: 'Progress imported', undo }, 8000)
   }
@@ -85,7 +86,7 @@ export function Menu() {
               say({ text: 'Progress cleared', undo }, 10000)
             }}
           >
-            Clear everything, including notes
+            Clear {decks.map((d) => d.id).join(' and ')}, including notes
           </button>
         ) : (
           <button onClick={() => setSure(true)}>Clear progress</button>

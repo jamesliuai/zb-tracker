@@ -1,15 +1,16 @@
-import { TOTAL, sets } from '../data/index.ts'
-import { useRoute } from '../lib/router.ts'
+import { homeOf, useRoute } from '../lib/router.ts'
 import { inFlight } from '../reward/signals.ts'
 import { playLearning } from '../reward/sound.ts'
 import { setPrefs, usePrefs, useStats } from '../state/store.ts'
 import { Icon } from './Icon.tsx'
 import { Menu } from './Menu.tsx'
 import { Roll } from './Roll.tsx'
+import { Switcher } from './Switcher.tsx'
 
 export function Header({ onSearch }: { onSearch: () => void }) {
   const route = useRoute()
-  const stats = useStats()
+  const { deck } = route
+  const stats = useStats(deck.id)
   const { sound } = usePrefs()
   const shown = stats.learned - inFlight.use()
   const here = route.page === 'home' ? null : route.set.id
@@ -17,13 +18,11 @@ export function Header({ onSearch }: { onSearch: () => void }) {
   return (
     <header className="top">
       <div className="top__in">
-        <a className="brand" href="#" aria-label="ZBLL, home">
-          ZBLL
-        </a>
+        <Switcher deck={deck} />
         <nav className="tabs" aria-label="Sets">
-          {sets.map((s) => (
-            <a key={s.id} href={`#${s.id}`} data-set={s.id} aria-current={here === s.id ? 'true' : undefined} aria-label={`${s.name}, ${stats.bySet.get(s.id)} of ${s.cases.length} learned`} title={s.name}>
-              {s.id}
+          {deck.sets.map((s) => (
+            <a key={s.id} href={`#${s.id}`} data-set={s.id} data-label={s.short} aria-current={here === s.id ? 'true' : undefined} aria-label={`${s.name}, ${stats.bySet.get(s.id)} of ${s.cases.length} learned`} title={s.name}>
+              {s.short}
               <i>
                 <b style={{ scale: `${stats.bySet.get(s.id)! / s.cases.length} 1` }} />
               </i>
@@ -32,12 +31,12 @@ export function Header({ onSearch }: { onSearch: () => void }) {
         </nav>
         <div className="tools">
           {route.page !== 'home' && (
-            <a className="count" href="#" data-counter data-set={here ?? undefined} aria-label={`${stats.learned} of ${TOTAL} learned`}>
+            <a className="count" href={`#${homeOf(deck.id)}`} data-counter data-set={here ?? undefined} aria-label={`${stats.learned} of ${deck.cases.length} learned`}>
               <i className="cell" data-s="2" />
               <span>
                 <Roll value={shown} />
               </span>
-              <em>/{TOTAL}</em>
+              <em>/{deck.cases.length}</em>
             </a>
           )}
           <button className="tool" onClick={onSearch} aria-label="Search" title="Search  /">

@@ -1,24 +1,40 @@
 import { useSyncExternalStore } from 'react'
 import { flushSync } from 'react-dom'
-import { caseById, setById, subById, type Case, type Subset, type ZSet } from '../data/index.ts'
+import { caseById, deckById, setById, subById, type Case, type Deck, type DeckId, type Subset, type ZSet } from '../data/index.ts'
+import { getData } from '../state/store.ts'
 
 export type Route =
-  | { page: 'home' }
-  | { page: 'set'; set: ZSet }
-  | { page: 'sub'; set: ZSet; sub: Subset }
-  | { page: 'case'; set: ZSet; sub: Subset; case: Case }
+  | { page: 'home'; deck: Deck; part?: ZSet }
+  | { page: 'set'; deck: Deck; set: ZSet }
+  | { page: 'sub'; deck: Deck; set: ZSet; sub: Subset }
+  | { page: 'case'; deck: Deck; set: ZSet; sub: Subset; case: Case }
 
-/** Plain hashes: #T is a set, #T3 a subset, #T3-5 a case. */
+/** The plain address is ZBLL. Another deck has its own name. */
+export const homeOf = (deck: DeckId) => (deck === 'ZBLL' ? '' : deck)
+
+/**
+ * Plain hashes: #T is a set, #T3 a subset, #T3-5 a case, and #PLL the other deck, with #PLL-Ja a
+ * case in it and #PLL-edges a part of its one page.
+ */
 function read(hash: string): Route {
   const id = decodeURIComponent(hash.replace(/^#/, ''))
   const c = caseById.get(id)
-  if (c) return { page: 'case', set: setById.get(c.set)!, sub: subById.get(c.sub)!, case: c }
-  const sub = subById.get(id)
-  if (sub) return { page: 'sub', set: setById.get(sub.set)!, sub }
-  const set = setById.get(id)
-  if (set) return { page: 'set', set }
-  return { page: 'home' }
+  const sub = c ? subById.get(c.sub) : subById.get(id)
+  const set = sub ? setById.get(sub.set) : setById.get(id)
+  const deck = deckById.get(set?.deck ?? (id.toUpperCase() as DeckId)) ?? deckById.get('ZBLL')!
+  if (!set) return { page: 'home', deck }
+  if (c) return { page: 'case', deck, set, sub: sub!, case: c }
+  if (deck.flat) return { page: 'home', deck, part: set }
+  return sub ? { page: 'sub', deck, set, sub } : { page: 'set', deck, set }
 }
+
+/** A fresh visit to the plain address picks up in the deck that was open last. */
+function start() {
+  const { deck } = getData().prefs
+  const [visit] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[]
+  if (!location.hash && homeOf(deck) && visit?.type === 'navigate') history.replaceState(history.state, '', `#${homeOf(deck)}`)
+}
+start()
 
 let route = read(location.hash)
 let depth = (history.state as { depth?: number } | null)?.depth ?? 0
@@ -35,17 +51,34 @@ export const getRoute = () => route
 const calm = matchMedia('(prefers-reduced-motion: reduce)')
 const diagram = (id: string) => document.querySelector<SVGElement>(`:is(main, main *)[data-case="${id}"] .cube`)
 
+/** How far down the page a route starts. Only a part of a page is anywhere but the top. */
+function topOf(r: Route) {
+  const part = r.page === 'home' && r.part && document.getElementById(r.part.id)
+  if (!part) return 0
+  return part.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(part).scrollMarginTop)
+}
+
+/** Once the first page is drawn, start it in the right place. */
+export function settle() {
+  scrollTo({ top: topOf(route), behavior: 'instant' })
+}
+
 /** Swap pages. When one of them is a case, its picture glides between the two. */
-function show(next: Route, top: number) {
+function show(next: Route, top?: number) {
   const from = route
   const shared = next.page === 'case' && from.page !== 'case' ? next.case.id : from.page === 'case' && next.page !== 'case' ? from.case.id : null
   const update = () => {
     route = next
     listeners.forEach((l) => l())
   }
+  if (from.page === 'home' && next.page === 'home' && from.deck === next.deck) {
+    flushSync(update)
+    scrollTo({ top: top ?? topOf(next), behavior: calm.matches ? 'instant' : 'smooth' })
+    return
+  }
   const swap = () => {
     flushSync(update)
-    scrollTo({ top, behavior: 'instant' })
+    scrollTo({ top: top ?? topOf(next), behavior: 'instant' })
   }
   if (!document.startViewTransition || calm.matches || document.hidden) return swap()
 
@@ -67,19 +100,17 @@ function show(next: Route, top: number) {
     })
 }
 
-export const href = (id: string) => `#${id}`
-
-/** Go to a set, subset or case by id. An empty id is home. */
+/** Go to a deck, set, subset or case by id. An empty id is the first deck. */
 export function go(id: string) {
   const hash = id ? `#${id}` : location.pathname + location.search
   if ((location.hash || '') === (id ? `#${id}` : '')) {
-    scrollTo({ top: 0, behavior: calm.matches ? 'instant' : 'smooth' })
+    scrollTo({ top: topOf(route), behavior: calm.matches ? 'instant' : 'smooth' })
     return
   }
   scrolls.set(depth, scrollY)
   depth++
   history.pushState({ depth }, '', hash)
-  show(read(location.hash), 0)
+  show(read(location.hash))
 }
 
 history.scrollRestoration = 'manual'
@@ -87,7 +118,7 @@ addEventListener('popstate', (e) => {
   scrolls.set(depth, scrollY)
   const to = (e.state as { depth?: number } | null)?.depth ?? 0
   depth = to
-  show(read(location.hash), scrolls.get(to) ?? 0)
+  show(read(location.hash), scrolls.get(to))
 })
 
 /** In-page links run through go() so every page change is handled the same way. */

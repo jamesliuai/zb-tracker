@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { caseById, sets, subById, type ZSet } from '../data/index.ts'
+import { caseById, subById, type Deck, type ZSet } from '../data/index.ts'
 import { go } from '../lib/router.ts'
 import { airy, shade } from '../lib/text.ts'
 import { useStats, useStatus } from '../state/store.ts'
@@ -24,7 +24,7 @@ function Tip({ spot }: { spot: Spot }) {
   return (
     <div className={spot.below ? 'tip tip--below' : 'tip'} data-set={c.set} style={{ left: spot.x, top: spot.y }} aria-hidden="true">
       <Cube ll={c.ll} />
-      <b>{c.id}</b>
+      <b>{c.name}</b>
       <span>{airy(subById.get(c.sub)!.name)}</span>
       <em data-s={s}>{words[s]}</em>
     </div>
@@ -32,7 +32,7 @@ function Tip({ spot }: { spot: Spot }) {
 }
 
 function Block({ set, onSpot }: { set: ZSet; onSpot: (s: Spot | null) => void }) {
-  const n = useStats().bySet.get(set.id)!
+  const n = useStats(set.deck).bySet.get(set.id)!
   const id = (e: React.PointerEvent | React.MouseEvent) => (e.target as HTMLElement).closest<HTMLElement>('.cell')?.dataset.id
   return (
     <section className={n === set.cases.length ? 'block is-full' : 'block'} data-set={set.id} style={{ '--cols': set.subs.length } as React.CSSProperties}>
@@ -70,8 +70,8 @@ function Block({ set, onSpot }: { set: ZSet; onSpot: (s: Spot | null) => void })
   )
 }
 
-/** Every ZBLL case as one square. Columns are subsets, and a square lights up when it's learned. */
-export function Wall() {
+/** Every case of a deck as one square. Columns are subsets, and a square lights up when it's learned. */
+export function Wall({ deck }: { deck: Deck }) {
   const [spot, setSpot] = useState<Spot | null>(null)
   const last = useRef('')
   const onSpot = (s: Spot | null) => {
@@ -82,7 +82,7 @@ export function Wall() {
   }
   return (
     <div className="wall">
-      {sets.map((s) => (
+      {deck.sets.map((s) => (
         <Block key={s.id} set={s} onSpot={onSpot} />
       ))}
       {/* in body, because a size container can trap fixed elements in some browsers */}

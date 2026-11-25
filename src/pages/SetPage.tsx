@@ -9,7 +9,7 @@ import { useStats } from '../state/store.ts'
 
 /** One bar per subset. On a subset's own page they carry names and work as tabs. */
 export function Subnav({ set, sub }: { set: ZSet; sub?: Subset }) {
-  const stats = useStats()
+  const stats = useStats(set.deck)
   return (
     <nav className={sub ? 'subnav' : 'subnav subnav--bars'} aria-label={`${set.name} subsets`}>
       {set.subs.map((s) => {
@@ -31,7 +31,7 @@ export function Subnav({ set, sub }: { set: ZSet; sub?: Subset }) {
 }
 
 function Row({ sub }: { sub: Subset }) {
-  const n = useStats().bySub.get(sub.id)!
+  const n = useStats(sub.deck).bySub.get(sub.id)!
   const waving = ripple.use() === sub.id
   return (
     <section className={waving ? 'row is-waving' : 'row'} aria-label={`${sub.id} ${airy(sub.name)}`}>
@@ -55,7 +55,7 @@ function Row({ sub }: { sub: Subset }) {
 
 /** The whole set at once. Each row is a COLL, and only the edges change along it. */
 export function SetPage({ set }: { set: ZSet }) {
-  const n = useStats().bySet.get(set.id)!
+  const n = useStats(set.deck).bySet.get(set.id)!
   return (
     <main className="set" data-set={set.id}>
       <div className="sethead">

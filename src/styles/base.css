@@ -67,6 +67,9 @@
 [data-set='Pi'] { --a: #007efd; --b: #4b5cf3; --hue-ink: #0064cc; }
 [data-set='S'] { --a: #8734c5; --b: #b534bd; --hue-ink: #7a2bb5; }
 [data-set='AS'] { --a: #f846a6; --b: #fb5c86; --hue-ink: #bd1873; }
+[data-set='PLL-edges'] { --a: #12a58c; --b: #1db4c6; --hue-ink: #07705f; }
+[data-set='PLL-adjacent'] { --a: #1479f7; --b: #5560f2; --hue-ink: #0a5fc9; }
+[data-set='PLL-diagonal'] { --a: #b23cc6; --b: #f0489f; --hue-ink: #8f279f; }
 :root[data-theme='dark'] {
   [data-set='T'] { --hue-ink: #ff7a80; }
   [data-set='U'] { --hue-ink: #f7b25d; }
@@ -75,6 +78,9 @@
   [data-set='Pi'] { --a: #1b88ff; --b: #5f6dff; --hue-ink: #62aeff; }
   [data-set='S'] { --a: #9a48da; --b: #c645cd; --hue-ink: #c48bf2; }
   [data-set='AS'] { --hue-ink: #ff83c3; }
+  [data-set='PLL-edges'] { --a: #17b398; --b: #22bfd2; --hue-ink: #4fd6bf; }
+  [data-set='PLL-adjacent'] { --a: #2b88ff; --b: #6673ff; --hue-ink: #6bb0ff; }
+  [data-set='PLL-diagonal'] { --a: #c14fd6; --b: #fb5cae; --hue-ink: #e08df0; }
 }
 [data-set],
 [data-m] {

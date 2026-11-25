@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { Finale } from './components/Finale.tsx'
 import { Header } from './components/Header.tsx'
 import { Palette } from './components/Palette.tsx'
 import { Toast } from './components/Toast.tsx'
-import { useRoute } from './lib/router.ts'
+import { settle, useRoute } from './lib/router.ts'
 import { CasePage } from './pages/CasePage.tsx'
 import { Home } from './pages/Home.tsx'
 import { SetPage } from './pages/SetPage.tsx'
 import { SubsetPage } from './pages/SubsetPage.tsx'
 import { finale } from './reward/signals.ts'
-import { usePrefs } from './state/store.ts'
+import { setPrefs, usePrefs } from './state/store.ts'
 
 function useTheme() {
   const { theme } = usePrefs()
@@ -33,9 +33,12 @@ export function App() {
   const [searching, setSearching] = useState(false)
   const celebrating = finale.use() !== null
 
+  useLayoutEffect(settle, [])
   useEffect(() => {
-    document.title = route.page === 'home' ? 'ZBLL Tracker' : `${route.page === 'set' ? route.set.name : route.page === 'sub' ? route.sub.id : route.case.id} · ZBLL Tracker`
+    const page = `${route.deck.id} Tracker`
+    document.title = route.page === 'home' ? page : `${route.page === 'set' ? route.set.name : route.page === 'sub' ? route.sub.id : route.case.name} · ${page}`
   }, [route])
+  useEffect(() => setPrefs({ deck: route.deck.id }), [route.deck])
 
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
@@ -54,12 +57,12 @@ export function App() {
     <>
       <div inert={celebrating}>
         <Header onSearch={() => setSearching(true)} />
-        {route.page === 'home' && <Home />}
+        {route.page === 'home' && <Home key={route.deck.id} deck={route.deck} />}
         {route.page === 'set' && <SetPage key={route.set.id} set={route.set} />}
         {route.page === 'sub' && <SubsetPage key={route.sub.id} set={route.set} sub={route.sub} />}
-        {route.page === 'case' && <CasePage key={route.case.id} c={route.case} sub={route.sub} set={route.set} />}
+        {route.page === 'case' && <CasePage key={route.case.id} c={route.case} sub={route.sub} set={route.set} deck={route.deck} />}
       </div>
-      <Palette open={searching} onClose={() => setSearching(false)} />
+      <Palette open={searching} deck={route.deck} onClose={() => setSearching(false)} />
       <Toast />
       <Finale />
     </>

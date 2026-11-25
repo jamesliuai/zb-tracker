@@ -1,6 +1,6 @@
 import { memo, useRef } from 'react'
 import type { Turn } from '../cube/engine.ts'
-import { bold, slots } from '../cube/geometry.ts'
+import { arrows, bold, slots } from '../cube/geometry.ts'
 
 /** Degrees that always turn the short way, so three quarter turns become one back. */
 function useSpin(rot: Turn) {
@@ -13,6 +13,24 @@ function useSpin(rot: Turn) {
   return ref.current.deg
 }
 
+/** Where the pieces go. A rim of sticker color keeps arrows apart where they cross, and whole across the gaps. */
+const Arrows = memo(function Arrows({ ll }: { ll: string }) {
+  const list = arrows(ll)
+  if (!list.length) return null
+  return (
+    <g className="cube__arrows">
+      {list.map(({ line, heads }) => (
+        <g key={line}>
+          <path className="arrow arrow--rim" d={line} />
+          <path className="arrow__head arrow__head--rim" d={heads} />
+          <path className="arrow" d={line} />
+          <path className="arrow__head" d={heads} />
+        </g>
+      ))}
+    </g>
+  )
+})
+
 /** The last layer seen from above. */
 export const Cube = memo(function Cube({ ll, rot = 0, label }: { ll: string; rot?: Turn; label?: string }) {
   const deg = useSpin(rot)
@@ -22,6 +40,7 @@ export const Cube = memo(function Cube({ ll, rot = 0, label }: { ll: string; rot
         {slots.map((s, i) => (
           <rect key={i} data-i={i} className={`st-${ll[i]}`} x={s.x} y={s.y} width={s.w} height={s.h} rx={s.r} />
         ))}
+        <Arrows ll={ll} />
       </g>
     </svg>
   )

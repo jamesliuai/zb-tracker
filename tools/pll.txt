@@ -1,0 +1,262 @@
+# The PLL algorithms. Run tools/build_pll.py after changing anything here.
+#
+#   yiheng   Yiheng Wang's, the first one being the main algorithm. A fingertrick can follow a |
+#   two      other two-handed algorithms, and two+ for the ones behind "more"
+#   oh       one-handed algorithms, and oh+ for the ones behind "more"
+#
+# The first algorithm of a case decides which way its picture faces, so that it needs no AUF.
+#
+# Where they come from
+#   Yiheng Wang's are from the description of https://www.youtube.com/watch?v=vSOp5nAudys by CubeMaster,
+#   and the fingertricks are from what is said in it.
+#   Gb and Y follow the comment by @Zephorex there: by 2025 Yiheng had switched to the RUD algorithm for Gb,
+#   which the video still has second, and does Y from home grip.
+#   The rest are from https://speedcube.quest/algorithms/3x3/pll, most used in real solves first.
+#
+# What was changed
+#   Gb was written with R2' U D at the end, and the third H with a U at the end. That U is the final AUF, so it's gone.
+#   The second Ua had a dot in the middle of it, for a regrip.
+#   Algorithms from SpeedcubeQuest lost the rotations and U turns around them that only set the AUF.
+
+== PLL-edges | Edges | Edges only
+
+Ua
+yiheng  R U R' U R' U' R2 U' R' U R' U R | Starts and ends in home grip. The U2 AUF is built in.
+yiheng  R U' R U R U R U' R' U' R2 | Starts with the thumb on the bottom and has regrips, so it locks up more easily. Yiheng would rather do a U2 and the first one.
+two     M2 U M U2 M' U M2
+two     R2 U' R' U' R U R U R U' R
+two     M2 U M' U2 M U M2
+two     R2 U' S' U2 S U' R2
+two+    L U' L U L U L U' L' U' L2
+oh      R U' R U R U R U' R' U' R2
+oh      R2 U' R' U' R U R U R U' R
+
+Ub
+yiheng  R' U R' U' R3 U' R' U R U R2 | Thumb on top. R3 is an R and then an R2, instead of R′.
+yiheng  R2' U R U R' U' R3 U' R' U R' | Thumb on top, with the same R3.
+two     M2 U' M U2 M' U' M2
+two     M2 U' M' U2 M U' M2
+two     L2 U L U L' U' L' U' L' U L'
+two+    L' U L' U' L' U' L' U L U L2
+two+    F2 U M' U2 M U F2
+two+    R2 U' S R2 S' R2 U R2
+oh      R' U R' U' R' U' R' U R U R2
+oh      R2 U R U R' U' R' U' R' U R'
+oh+     L' U L' U' L' U' L' U L U L2
+oh+     L2 U L U L' U' L' U' L' U L'
+
+Z
+yiheng  M' U M2' U M2' U M' U2 M2' | M moves with the left hand, the same as in the H perm.
+two     M2 U M2 U M' U2 M2 U2 M'
+two     R' U' R U' R U R U' R' U R U R2 U' R'
+two     M' U' M2 U' M2 U' M' U2 M2
+two     M2 U' M2 U' M' U2 M2 U2 M'
+two+    M2 U' M' U2 M2 U2 M' U M2
+two+    R' U' R2 U R U R' U' R U R U' R U' R'
+oh      R' U' R U' R U R U' R' U R U R2 U' R'
+oh      R U R' U R' U' R' U R U' R' U' R2 U R
+oh+     R' U' R2 U R U R' U' R U R U' R U' R'
+
+H
+yiheng  M2' U2 M2' U M2' U2 M2' | M2 with the left hand, ring then middle. The middle U does the AUF as well, so it becomes U′ when the corners are a U′ away.
+yiheng  M2' U2 M2' U' M2' U2 M2' | For when the corners are a U′ away.
+yiheng  M2' U M2' U2 M2' U M2' | For when the corners are already lined up.
+two     M2 U' M2 U2 M2 U' M2
+two+    R2 U2 R U2 R2 U2 R2 U2 R U2 R2
+two+    R2 S2 R2 U' R2 S2 R2
+oh      M2 U' M2 U2 M2 U' M2
+oh      R2 U2 R U2 R2 U2 R2 U2 R U2 R2
+oh      M' U2 M2 U' M2 U2 M2 U' M'
+oh+     R U R' U2 R U' R' U' R U' R' U2 R U' R' U' R U2 R'
+oh+     R2 U2 R2 U2 R2 U' R2 U2 R2 U2 R2
+
+== PLL-adjacent | Adjacent | Adjacent swap
+
+Aa
+yiheng  x' R2 D2 R' U' R D2 R' U R' | D2 with the ring finger, then the pinky. Do the AUF before the rotation. Left until the end, it’s an F move.
+yiheng  x R' U R' D2 R U' R' D2 R2 | Do the AUF before the rotation.
+two     R U R' F' r U R' U' r' F R2 U' R'
+two     R' D' R U' R' D R U' R' D' R U2 R' D R
+two     x L2 D2 L' U' L D2 L' U L'
+two+    r U r' U' r' F r2 U' r' U' r U r' F'
+two+    R' B' R2 D R' U' R D' R' U R' B R
+two+    R' D R U2 R' D' R U' R' D R U' R' D' R
+oh      x R' U R' D2 R U' R' D2 R2 x'
+oh      x' R2 D2 R' U' R D2 R' U R' x
+oh+     R' x U z' U' R2 U z U' z' U' R2 U2 x'
+
+Ab
+yiheng  x' R U' R D2 R' U R D2 R2' | Do the AUF before the rotation. Left until the end, it’s an F move.
+yiheng  x R2' D2 R U R' D2 R U' R | Do the AUF before the rotation.
+two     x L U' L D2 L' U L D2 L2
+two     R' D R U2 R' D' R U R' D R U R' D' R
+two     R' D' R U2 R' D R U R' D' R U R' D R
+two+    R U R2 F' r U R U' r' F R U' R'
+two+    R' B' R U' R D R' U R D' R2 B R
+two+    R' D' R U R' D R U R' D' R U2 R' D R
+oh      x R2 D2 R U R' D2 R U' R x'
+oh      x' R U' R D2 R' U R D2 R2 x
+
+Ja
+yiheng  L' U' L F L' U' L U L F' L2 U L | Left-handed, in home grip. Keep the right pinky firm on the bottom, so the F stays consistent.
+two     R' U L' U2 R U' R' U2 R L
+two     L' U R' U2 L U' L' U2 L R
+two     x R2 F R F' R U2 r' U r U2 x'
+two+    R2 U' R2 D R2 U' R2 U R2 U D' R2
+two+    L U' R' U L' U2 R U' R' U2 R
+two+    R' U2 R U R' U2 L U' R U L'
+oh      R' U z U' z' U2 R U' R' U2 r x' R
+oh      R' U L' U2 R U' R' U2 R L
+oh      R' U z U' R2 z' R U' R' U2 R L
+
+Jb
+yiheng  R U R' F' R U R' U' R' F R2 U' R' | The mirror of Ja, also in home grip.
+two     R U R2 F' R U R U' R' F R U' R'
+two     R U2 R' U' R U2 L' U R' U' L
+two     R U' F U' R' U' R U F' U2 R'
+two+    L' U R U' L U2 R' U R U2 R'
+two+    R' U L U' R U2 L' U L U2 L'
+oh      R U R' F' R U R' U' R' F R2 U' R'
+oh      R U' F U' R' U' R U F' U2 R'
+oh      R U R2 F' R U R U' R' F R U' R'
+
+T
+yiheng  R U R' U' R' F R2 U' R' U' R U R' F' | In home grip.
+yiheng  R U R' U' R' F R2 U' R' U F' L' U L | For a U2 AUF. It starts the same, and the new ending does the U2 as well.
+two     L' U' L U L F' L2 U L U L' U' L F
+two     R2 u R2 u' R2 F2 u' F2 u F2
+two     F R U' R' U R U R2 F' R U R U' R'
+two+    R2 U R2 U' R2 U' D R2 U' R2 U R2 D'
+two+    R2 u' R2 u R2 y R2 u R2 u' R2
+oh      R U R' U' R' F R2 U' R' U' R U R' F'
+oh      R U R' U' R' F R2 U' R' U' R U R' y' R'
+
+F
+yiheng  R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R | Starts in home grip, with a regrip partway through.
+two     R' U2 R' d' R' F' R2 U' R' U R' F R U' F
+two     R' F R f' R' F R2 U R' U' R' F' R2 U R' S
+two     R' U R U' R2 F' U' F U R F R' F' R2
+two+    R2 F R F' R' U' F' U F R2 U R' U' R
+two+    L U F L' U' L U L F' L2 U L U L' U' L U' L'
+oh      R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R
+oh      R U R' U' R' U R U2 L' R' U R U' L U' R U' R'
+oh+     R U R' U' R' U R U2 z U' z' R' U R U' z U R' z' R U' R'
+
+Ra
+yiheng  R U' R' U' R U R D R' U' R D' R' U2 R' | Starts with the thumb on the bottom. It can also start in front, with a regrip.
+two     R U R' F' R U2 R' U2 R' F R U R U2 R'
+two     R U' R' U' R U R' U R' D' R U' R' D R2 U R'
+two     R U' R2 D' R U R' D R U' R U' R' U R U R'
+two     L U2 L' U2 L F' L' U' L U L F L2
+two+    R U2 R' U2 l U' l' U' R U l U l' R'
+oh      R U' R' U' R U R D R' U' R D' R' U2 R'
+oh      R U R' F' R U2 R' U2 R' F R U R U2 R'
+oh+     R U' R' U' R U R z' R U' z U' R D' R' U2 R'
+
+Rb
+yiheng  R' U2' R U2' R' F R U R' U' R' F' R2 | The left hand does both U2s at the start, middle then index, which keeps the right hand steady in home grip.
+two     R' U2 R' D' R U' R' D R U R U' R' U' R
+two     R2 F R U R U' R' F' R U2 R' U2 R
+two     R' U R U R' U' R' D' R U R' D R U2 R
+two+    L' U' L F L' U2 L U2 L F' L' U' L' U2 L
+oh      R' U2 R U2 R' F R U R' U' R' F' R2
+oh      R' U2 R' D' R U' R' D R U R U' R' U' R
+
+Ga
+yiheng  D' R2 U R' U R' U' R U' R2 U' D R' U R | D′ first, so no D turn is left at the end to cost a +2. R2 is an R, then a second R from underneath.
+two     R2 U R' U R' U' R U' R2 D U' R' U R D'
+two     R2 u R' U R' U' R u' R2 y' R' U R
+two     R2 u R' U R' U' R u' R2 F' U F
+two+    R2 u R' U R' U' R u' R2 y L' U L
+two+    L2 F2 L' U2 L' U2 L F' L' U' L U L F' L2
+oh      R2 U R' U R' U' R U' R2 D U' R' U R D'
+oh      R2 u R' U R' U' R u' R2 y' R' U R
+
+Gb
+yiheng  R' U' R U D' R2 U R' U R U' R U' R2' D | There’s a regrip, and it’s the only G perm that leaves a D turn for the end.
+yiheng  F' U' F R2 u R' U R U' R u' R2'
+two     R' d' F R2 u R' U R U' R u' R2
+two     R' U' R y R2 u R' U R U' R u' R2
+two     D R' U' R U D' R2 U R' U R U' R U' R2
+two+    l' f' U l R u R' U R U' R u' R2
+two+    r U r' F U R U' F' r U R' U2 r'
+oh      R' U' R U D' R2 U R' U R U' R U' R2 D
+oh      R' U' R y R2 u R' U R U' R u' R2
+
+Gc
+yiheng  R2' F2 R U2 R U2' R' F R U R' U' R' F R2 | On the F2 the thumb lifts out of home grip, to make room for it.
+two     R2 U' R U' R U R' U R2 D' U R U' R' D
+two     R2 u' R U' R U R' u R2 y R U' R'
+two     R2 u' R U' R U R' u R2 f R' f'
+two+    D R2 U' R U' R U R' U R2 U D' R U' R'
+two+    L2 U' L U' L U L' U L2 D' U L U' L' D
+oh      R2 U' R U' R U R' U R2 D' U R U' R' D
+oh      R2 u' R U' R U R' u R2 y R U' R'
+
+Gd
+yiheng  D' R U R' U' D R2 U' R U' R' U R' U R2 | D′ first, as in Ga. Where an R could be pulled with one finger, Yiheng regrips instead.
+two     R U R' U' D R2 U' R U' R' U R' U R2 D'
+two     R U R' y' R2 u' R U' R' U R' u R2
+two     f R f' R2 u' R U' R' U R' u R2
+two+    R2 F' R U R U' R' F' R U2 R' U2 R' F2 R2
+oh      R U R' y' R2 u' R U' R' U R' u R2
+oh      R U R' U' D R2 U' R U' R' U R' U R2 D'
+oh      D' R U R' U' D R2 U' R U' R' U R' U R2
+
+== PLL-diagonal | Diagonal | Diagonal swap
+
+Na
+yiheng  R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'
+two     L U' R U2 L' U R' L U' R U2 L' U R'
+two     F' R U R' U' R' F R2 F U' R' U' R U F' R'
+two     R F U' R' U R U F' R2 F' R U R U' R' F
+two+    r' D r U2 r' D r U2 r' D r U2 r' D r U2 r' D r
+oh      R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'
+oh      z U z' U' R U2 z U' R U z' R' U' R U2 z U' R z' R'
+oh      R U R' U R U2 R' U' R U2 z U' z' U R' U' r x' U' R U' R'
+
+Nb
+yiheng  R' U R U' R' F' U' F R U R' U' R U' f R f' | Yiheng no longer uses the thumb for this one.
+two     R' U R U' R' F' U' F R U R' F R' F' R U' R
+two     r' D' F r U' r' F' D r2 U r' U' r' F r F'
+two     R' U L' U2 R U' R' L U L' U2 R U' L
+two+    R' U R U' R' F' U' F R U R' U' R d' R U R'
+two+    R' U R' F R F' R U' R' F' U F R U R' U' R
+oh      R' U R U' R' F' U' F R U R' U' R d' R U R'
+oh      z U' R D' R2 U R' U' D R D' R2 U z' U' R
+oh      R' U' R U' R' U2 R U R' U2 r x' U' R U z U' z' U R' U R
+
+V
+yiheng  R' U R' U' R D' R' D R' U D' R2 U' R2' D R2 | Starts with the thumb on top.
+yiheng  R U' R U R' D R D' R U' D R2' U R2 D' R2'
+two     R' U R' d' R' F' R2 U' R' U R' F R F
+two     R' U R' d' x R' F R' F' R2 U' R' U R U x'
+two     R' U R U' R' f' U' R U2 R' U' R U' R' f R
+two+    R U2 R' D R U' R U' R U R2 D R' U' R D2
+two+    R' U2 R U2 L U' R' U L' U L U' R U L'
+two+    R2 D' R2 U R2 D U' R D' R D R' U R U' R
+oh      R' U2 R U2 L U' R' U L' U L U' R U L'
+oh      R' U R U' R' f' U' R U2 R' U' R U' R' y R U x'
+oh      R' U R' U' R D' R' D R' U D' R2 U' R2 D R2
+oh+     R U2 R' D R U' R U' R U R2 D R' U' R D2
+
+Y
+yiheng  F R U' R' U' R U R' F' R U R' U' R' F R F' | Normally from home grip, though the thumb can also start on the bottom.
+two     F R' F R2 U' R' U' R U R' F' R U R' U' F'
+two     F' L' U L U L' U' L F L' U' L U L F' L' F
+two     R2 U' R2 U' R2 U R' F' R U R2 U' R' F R
+two+    R' U' R U' L R U2 R' U' R U2 L' U R2 U R
+two+    R2 U' R2 U' R2 U F U F' R2 F U' F'
+oh      F R U' R' U' R U R' F' R U R' U' R' F R F'
+oh      R2 U' R' U R U' x' U' z' U' R U' R' U' r y R
+
+E
+yiheng  x' R U' R' D R U R' D' R U R' D R U' R' D' | Do the AUF before the rotation. Left until the end, it’s an F move.
+two     R' U' R' D' R U' R' D R U R' D' R U R' D R2
+two     R2 U F' R' U R U' R' U R U' R' U R U' F U' R2
+two     r U R U' r' F R' F' r U R' U' r' F R F'
+two+    x' L' U L D' L' U' L D L' U' L D' L' U L D
+two+    R' D' R U' R' D R U R' D' R U2 R' D R U' R' D' R U R' D R
+oh      R2 U R' U' y R U R' U' R U R' U' R U R' y' R U' R2
+oh      R' U' R' D' R U' R' D R U R' D' R U R' D R2
+oh      F U' R U' R U R' U R U2 R' U R' U' R U2 R' F'
