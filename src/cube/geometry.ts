@@ -44,6 +44,8 @@ const pieces = [
   [4],
 ]
 export const SOLVED_LL = 'UUUUUUUUUBBBRRRFFFLLL'
+/** A ZBLS case done: the pair in, and every edge on top yellow side up. The rest is for the ZBLL. */
+export const SOLVED_SLOT = 'XUXUUUXUX' + 'X'.repeat(12) + 'FRFRD'
 
 /** For each sticker of a case, the slot it belongs in once the case is solved. */
 export function homes(ll: string): number[] {
@@ -58,6 +60,31 @@ export function homes(ll: string): number[] {
 
 /** True where the top face already shows yellow. */
 export const oriented = (ll: string) => three.flatMap((r) => three.map((c) => ll[r * 3 + c] === 'U'))
+
+/* ------------------------------------------------------------------ ZBLS, from above the front right corner */
+
+const SIDE = 16 // a sticker and its gap, along an edge of the cube
+const COS = Math.cos(Math.PI / 6)
+const matrix = (m: number[]) => `matrix(${m.map((n) => +n.toFixed(3)).join(' ')})`
+/**
+ * Each face drawn as a 3 by 3 grid centered on 0, a sticker apart, then laid onto the cube. The
+ * top is seen from above with the back row first, and the sides as they face you.
+ */
+export const faces = {
+  U: matrix([SIDE * COS, SIDE / 2, -SIDE * COS, SIDE / 2, 50, 50 - 1.5 * SIDE]),
+  F: matrix([SIDE * COS, SIDE / 2, 0, SIDE, 50 - 1.5 * SIDE * COS, 50 + 0.75 * SIDE]),
+  R: matrix([SIDE * COS, -SIDE / 2, 0, SIDE, 50 + 1.5 * SIDE * COS, 50 + 0.75 * SIDE]),
+}
+/** A sticker in its face's grid. Small icons want a wider gap. */
+export const facet = (row: number, col: number, gap = 0.11) => ({ x: col - 1.5 + gap / 2, y: row - 1.5 + gap / 2, w: 1 - gap, h: 1 - gap, r: 0.19 })
+
+/**
+ * Which character of a ZBLS picture each sticker of the front and right faces shows, row by row, or
+ * the face's own color where the first two layers are always solved. The top row comes from the
+ * picture turned the way it's seen, as the top turns.
+ */
+export const front = [15, 16, 17, 'F', 'F', 21, 'F', 'F', 23] as const
+export const right = [14, 13, 12, 22, 'R', 'R', 24, 'R', 'R'] as const
 
 /* ------------------------------------------------------------------ arrows */
 

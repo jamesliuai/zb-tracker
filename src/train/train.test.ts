@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { AUF, caseKey, layerAfter, plain, solves, tidy, turnU, undo } from '../cube/engine.ts'
-import { SOLVED_LL } from '../cube/geometry.ts'
+import { AUF, caseKey, isSlot, layerAfter, plain, slotAfter, solves, tidy, turnU, undo } from '../cube/engine.ts'
+import { SOLVED_LL, SOLVED_SLOT } from '../cube/geometry.ts'
 import { cases, deckById } from '../data/index.ts'
 import { chosen, need } from '../state/choose.ts'
 import { readData, type Data } from '../state/store.ts'
+import { average, timed } from './drill.ts'
 import { DAY, plan, practised, ROUND } from './schedule.ts'
 import { scramble } from './scramble.ts'
 
@@ -20,6 +21,9 @@ function seeded(seed: number) {
 
 const solvedUpToU = new Set([0, 1, 2, 3].map((k) => turnU(SOLVED_LL, k)))
 const dropLastU = (moves: string[]) => (moves.at(-1)?.[0] === 'U' ? moves.slice(0, -1) : moves)
+const after = (ll: string, moves: string) => (isSlot(ll) ? slotAfter : layerAfter)(moves)
+/** Solved, for a ZBLS case, is the slot in and the edges oriented, whatever the last layer does. */
+const done = (ll: string, seen: string | null) => !!seen && (isSlot(ll) ? seen === SOLVED_SLOT : solvedUpToU.has(seen))
 
 test('turns of the six faces alone do what every algorithm does', () => {
   for (const c of cases)
@@ -41,13 +45,15 @@ test('every case gets a scramble that sets it up, seen from the side the trainer
     const moves = s.moves.split(' ')
     assert.match(s.moves, /^([UDRLFB]['2]?)( [UDRLFB]['2]?)*$/, c.id)
     assert.ok(moves.length <= 28, `${c.id} ${s.moves}`)
-    const layer = layerAfter(s.moves)
-    assert.ok(layer && caseKey(layer) === caseKey(c.ll), `${c.id} ${s.moves}`)
+    const seen = after(c.ll, s.moves)
+    assert.ok(seen && caseKey(seen) === caseKey(c.ll), `${c.id} ${s.moves}`)
+    // a ZBLS case is its picture turned that way, sticker for sticker
+    if (isSlot(c.ll)) assert.equal(turnU(c.ll, s.view), seen, `${c.id} ${s.moves}`)
     // what the reveal says to do from there, done on the scrambled cube, solves it
     const pick = chosen(c, { rot: 0, alg: null, rec: '', auf: '' }, 'two')
     const turn = need(c, pick.text, s.view)!
-    const after = layerAfter([...moves, ...(AUF[turn] ? [AUF[turn]] : []), ...plain(pick.text)].join(' '))
-    assert.ok(after && solvedUpToU.has(after), `${c.id} ${s.moves} then ${AUF[turn]} ${pick.text}`)
+    const then = after(c.ll, [...moves, ...(AUF[turn] ? [AUF[turn]] : []), ...plain(pick.text)].join(' '))
+    assert.ok(done(c.ll, then), `${c.id} ${s.moves} then ${AUF[turn]} ${pick.text}`)
   }
 })
 
@@ -63,7 +69,7 @@ test('a scramble never undoes one of the case’s own algorithms', () => {
 
 test('a case doesn’t come from any of its last six scrambles', () => {
   const random = seeded(3)
-  for (const id of ['T1-1', 'S1-3', 'H3-2', 'PLL-T', 'PLL-H', 'PLL-Ra']) {
+  for (const id of ['T1-1', 'S1-3', 'H3-2', 'PLL-T', 'PLL-H', 'PLL-Ra', 'ZBLS-1-8', 'ZBLS-4-8', 'ZBLS-37-1']) {
     const c = cases.find((x) => x.id === id)!
     const list = Array.from({ length: 21 }, () => dropLastU(scramble(c, random).moves.split(' ')).join(' '))
     list.forEach((s, i) => assert.ok(!list.slice(Math.max(0, i - 6), i).includes(s), `${id} repeats ${s}`))
@@ -119,6 +125,20 @@ test('a round of what’s due: what you’re learning, then learned cases by how
   assert.deepEqual(plan(zbll, 'pick', ['PLL-T', 'T1-2', 'T1-1'], data, now).ids, ['T1-1', 'T1-2'])
 })
 
+test('an algorithm timed on its own keeps its fastest ever and its latest times', () => {
+  let d = timed(undefined, 250, 1)
+  assert.deepEqual(d, { n: 1, times: [250], best: 250, at: 1 })
+  d = timed(timed(d, 300, 2), 210, 3)
+  assert.deepEqual([d.n, d.times, d.best, d.at], [3, [250, 300, 210], 210, 3])
+  for (let i = 0; i < 20; i++) d = timed(d, 400 + i, 10 + i)
+  // the fastest stays even once it's no longer among the latest twelve
+  assert.deepEqual([d.n, d.times.length, d.times[0], d.best], [23, 12, 408, 210])
+  // an average leaves out the fastest and the slowest of the last n, the way cubers average
+  assert.equal(average([500, 100, 300, 200, 400], 5), 300)
+  assert.equal(average([900, 100, 300, 200, 400, 500], 5), 300)
+  assert.equal(average([100, 200, 300, 400], 5), null)
+})
+
 test('saved practice survives an export, and nothing odd gets in', () => {
   const back = readData({
     cases: {},
@@ -139,5 +159,21 @@ test('saved practice survives an export, and nothing odd gets in', () => {
   assert.ok(odd['T1-2'].at <= Date.now() + DAY && Number.isFinite(new Date(odd['T1-2'].due).getTime()))
   // an export from before there was a trainer
   const old = readData({ cases: { 'T1-1': { s: 2 } }, prefs: { theme: 'dark' } })!
-  assert.deepEqual([old.practice, old.prefs.way, old.prefs.pick], [{}, 'cube', []])
+  assert.deepEqual([old.practice, old.prefs.way, old.prefs.pick, old.drills], [{}, 'cube', [], {}])
+})
+
+test('times for single algorithms survive an export, and nothing odd gets in', () => {
+  const back = readData({
+    cases: {},
+    drills: {
+      'T1-1': { "R U R' U R U2 R'": { n: 3, times: [300, -2, 'x', 250], best: 400, at: 5 }, "R U R'": { n: 2, times: [] } },
+      'ZBLS-12-3': { "R U' R'": { times: [180] } },
+      nope: { R: { n: 1, times: [100], best: 100, at: 1 } },
+    },
+  })!
+  assert.deepEqual(back.drills, {
+    // a best slower than a time it still has can't be right
+    'T1-1': { "R U R' U R U2 R'": { n: 3, times: [300, 250], best: 250, at: 5 } },
+    'ZBLS-12-3': { "R U' R'": { n: 1, times: [180], best: 180, at: 0 } },
+  })
 })

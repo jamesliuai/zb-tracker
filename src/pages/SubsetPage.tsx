@@ -5,7 +5,7 @@ import { Roll } from '../components/Roll.tsx'
 import { tileKeys } from '../components/Tile.tsx'
 import { TrainThese } from '../components/TrainThese.tsx'
 import type { Subset, ZSet } from '../data/index.ts'
-import { airy, shade } from '../lib/text.ts'
+import { airy, shade, subName } from '../lib/text.ts'
 import { ripple } from '../reward/signals.ts'
 import { usePrefs, useStats } from '../state/store.ts'
 import { Subnav } from './SetPage.tsx'
@@ -22,7 +22,7 @@ export function SubsetPage({ set, sub }: { set: ZSet; sub: Subset }) {
       <div className="crumbs">
         <nav aria-label="You are here">
           <a href={`#${set.id}`}>{set.name}</a>
-          <a href={`#${sub.id}`}>{sub.id}</a>
+          <a href={`#${sub.id}`}>{sub.short}</a>
         </nav>
         <div className="crumbs__step">
           <a className="tool" href={`#${before ?? sub.id}`} aria-disabled={!before} aria-label="Previous subset">
@@ -36,7 +36,7 @@ export function SubsetPage({ set, sub }: { set: ZSet; sub: Subset }) {
       <Subnav set={set} sub={sub} />
       <div className="subhead">
         <h1>
-          {sub.id} <span>{airy(sub.name)}</span>
+          {subName(sub)} <span>{airy(sub.name)}</span>
         </h1>
         <p className="sethead__n">
           <Roll value={n} />

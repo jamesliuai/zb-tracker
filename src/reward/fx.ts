@@ -20,9 +20,11 @@ function setup() {
     canvas = document.createElement('canvas')
     canvas.className = 'fx'
     canvas.setAttribute('aria-hidden', 'true')
-    document.body.append(canvas)
     ctx = canvas.getContext('2d')
   }
+  // in full screen, only what's inside the full screen element is drawn
+  const host = document.fullscreenElement ?? document.body
+  if (canvas.parentElement !== host) host.append(canvas)
   const scale = Math.min(2, devicePixelRatio || 1)
   const w = Math.round(innerWidth * scale)
   const h = Math.round(innerHeight * scale)

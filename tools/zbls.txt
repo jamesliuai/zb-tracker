@@ -1,0 +1,1659 @@
+# The ZBLS algorithms. Run tools/build_zbls.py after changing anything here.
+#
+# tools/gather_zbls.py wrote this from the sources below. Running it again starts this file over.
+#
+#   == id | tab | name   a set of cases
+#   5-3                  a case, the third of the eight in F2L case 5, which differ in their edges
+#   main                 an algorithm shown with the case. The first is the one it starts with.
+#   more                 an algorithm behind "more"
+#   After a | comes who uses it, or how many use it on solved.no.
+#
+# Every algorithm is written with the AUF it needs from the case as the library draws it, after any
+# y turn. The first of a case also decides which way its picture faces.
+#
+# Where they come from
+#   The library: https://cyrickyarar.github.io/zbls_site_static/ by CYRickyArAr, with its cases
+#   numbered as on https://www.speedcubingtips.eu/zbls-zborowski-bruchem-last-slot/
+#   The sheet: Yota Ueda's (2016UEDA01) collection of the ZBLS that Xuanyi Geng, Qixian Cai and Tymon
+#   Kolasinski did in solves reconstructed on https://reco.nz/
+#   solved.no: https://solved.no/algs/3x3/zbls, with how many people there use each one.
+#
+# Xuanyi's come first, in the library's order and then by how often he did them in the sheet. The
+# other pros' follow, the ones more of them use first.
+
+== ZBLS-basic | Basic | Basic inserts
+
+1-1
+main  U2 R' F R F' U2 R' F R F'                      | Xuanyi, Yufang, Yunzhi
+main  y' r' U' r U2 r' R U' M'                       | Tymon
+more  M' U R U' r2 U2 R U R' U r                     | 8 on solved.no
+more  y R' F' R U2 M' U' M                           | 5 on solved.no
+
+1-2
+main  U S' R U' R' S                                 | Xuanyi, Yunzhi
+main  U2 F R' F' R U' R U' R'                        | Xuanyi
+main  U2 F R' F' R2 U2 R'                            | Yufang
+main  y U F U' R U R' U' F'                          | Yunzhi
+more  U2 R U' B U' B' R'                             | 8 on solved.no
+
+1-3
+main  R' F R2 U R' U' F'                             | Xuanyi, Qixian, Tymon, Yufang, Bofan
+main  U2 R U' R' U' R' F R F'                        | Xuanyi
+main  y' R' U2 R' D' r U r' D R2                     | Tymon
+
+1-4
+main  U R U R' U2 R' F R F'                          | Xuanyi, Qixian, Yufang, Yunzhi
+main  R' U' F U R2 U' R' F'                          | Tymon
+more  U R U R' U2 M' U R U' r'                       | 55 on solved.no
+
+1-5
+main  U2 R' F R F' R U2 R'                           | Xuanyi, Yufang, Yunzhi
+main  U2 R' F R F' U' R U' R'                        | Xuanyi, Yufang
+main  y U F R U' R' F'                               | Xuanyi, Yunzhi
+main  U F' U F R U' R'                               | Zhaokun
+more  U R B U' B' R'                                 | 81 on solved.no
+more  y' U2 R2 F R F' R                              | 12 on solved.no
+
+1-6
+main  R' F R F'                                      | Xuanyi, Tymon, Yufang, Zhaokun
+main  y F' L F L'                                    | Tymon, Yunzhi
+more  M' U R U' r'                                   | 5 on solved.no
+
+1-7
+main  U F' L' U' L F                                 | Xuanyi, Yunzhi
+main  y U L' U' L U' F' L F L'                       | Xuanyi
+more  R' U' F U R U' F'                              | 71 on solved.no
+
+1-8
+main  U R U' R'                                      | Xuanyi, Tymon
+main  U2 R U2 R'                                     | Xuanyi
+main  y U F U' F'                                    | Xuanyi, Yunzhi
+main  y U2 F U2 F'                                   | Yunzhi
+main  y2 U2 L U2 L'                                  | Yunzhi
+
+2-1
+main  r U r' U2 M' U M                               | Xuanyi, Qixian
+main  y U2 L F' L' F U2 L F' L' F                    | Xuanyi
+main  U' R U' R2 D' r U r' D R                       | Yufang, Yunzhi
+main  r U R' U' r' R2 U2 R2 F R F' R U2 R'           | Tymon
+
+2-2
+main  U' R' D' r U r' D R                            | Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun
+main  y U' S L' U L S'                               | Xuanyi
+more  U' S R' U' R U R S'                            | 6 on solved.no
+
+2-3
+main  F R' F2 U' F U R                               | Xuanyi
+main  y L F' L2 U' L U F                             | Xuanyi
+main  U' R U R2 D' r U r' D R                        | Yunzhi
+more  R U2 R D r' U' r D' R2                         | 11 on solved.no
+
+2-4
+main  y U' L' U' L U2 L F' L' F                      | Xuanyi
+main  U R' D' r U' r' D R                            | Yufang, Yunzhi, Zhaokun
+
+2-5
+main  U' r U' r' U r U r'                            | Xuanyi
+main  y U' F U' F' L' U L                            | Zhaokun, Bofan
+main  U' F R' F' R2 U' R'                            | Yufang
+main  U' F' L' U L F                                 | Yunzhi
+main  y' U' R' F' U F R                              | Yunzhi
+
+2-6
+main  F R' F' R                                      | Xuanyi, Tymon
+main  y L F' L' F                                    | Xuanyi, Tymon, Yufang, Yunzhi
+more  r U R' U' M                                    | 5 on solved.no
+
+2-7
+main  U' R U R' U F R' F' R                          | Xuanyi, Yunzhi
+main  y U' F R U R' F'                               | Xuanyi, Yunzhi, Zhaokun
+main  U' R B U B' R'                                 | Tymon
+main  U' R U2 R' F' U F                              | Yufang
+more  F U R' U' F' U R                               | 54 on solved.no
+
+2-8
+main  U' F' U F                                      | Xuanyi, Yunzhi
+main  y U' L' U L                                    | Xuanyi, Tymon, Yunzhi
+main  y' U' R' U R                                   | Tymon
+main  y U2 L' U2 L                                   | Yunzhi
+more  U2 F' U2 F                                     | 5 on solved.no
+
+3-1
+main  y' R D r' U' r D' R2 U' R                      | Tymon, Yufang
+more  y' R D r' U r D' R2 U' R                       | 29 on solved.no
+more  R' F R2 U' M' U2 r' U' F'                      | 5 on solved.no
+
+3-2
+main  U2 R' D' r U' r' D R2 U' R'                    | Xuanyi, Yufang
+main  y L' U2 L F R U R' F'                          | Xuanyi, Yunzhi
+main  U2 F' U' L' U L U F                            | Tymon, Yunzhi
+more  y' R' U2 F R' F' R U R                         | 24 on solved.no
+
+3-3
+main  y' R' U2 F' U F R                              | Xuanyi
+main  U' R' D' r U' r' D R2 U2 R'                    | Yufang
+main  F' U2 L' U L F                                 | Yufang
+more  U R2 D r' U' r D' R2                           | 10 on solved.no
+
+3-4
+main  F' U' L' U' L U F                              | Xuanyi, Yunzhi, Zhaokun
+main  y S L' U' L S'                                 | Xuanyi
+main  y' S' R' U' R S                                | Yufang
+
+3-5
+main  U R U2 R' F R' F' R                            | Xuanyi, Zhaokun
+main  y L' U2 L U L F' L' F                          | Xuanyi, Yunzhi
+main  y' R' U' R2 U R' U' M' U R U' r'               | Tymon
+main  S U R U' R' S'                                 | Yufang
+more  y' R' U' R F R U R' U' F'                      | 26 on solved.no
+
+3-6
+main  U R U2 R' U' F' U F                            | Xuanyi
+main  y L' U' L F' U' L' U L F                       | Xuanyi
+main  F' r U' r' F2 R U' R'                          | Yufang, Zhaokun
+main  y U F U2 F' U' L' U L                          | Yunzhi
+main  y L' U2 L U L F' L2 U' L U F                   | Yunzhi
+more  U2 S' R U' R' S R U' R'                        | 5 on solved.no
+
+3-7
+main  y U2 R' F R U R' F' R                          | Yunzhi, Bofan
+more  U' R' F R U R U' R2 F' R                       | 41 on solved.no
+
+3-8
+main  F' U' F                                        | Xuanyi, Yunzhi
+main  y L' U' L                                      | Xuanyi, Tymon, Yunzhi
+main  y' R' U' R                                     | Xuanyi, Tymon
+
+4-1
+main  R' D' r U r' D R2 U R'                         | Xuanyi, Yufang
+main  y2 L' D' l U l' D L2 U L'                      | Tymon
+main  y L' U L U' F R U R' U F'                      | Yunzhi
+
+4-2
+main  R U' R2 F R F' R U2 R'                         | Tymon, Yufang, Zhaokun
+main  y U2 F U R U' R' U' F'                         | Yunzhi
+
+4-3
+main  U F U R U' R2 F' R                             | Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun
+main  y F U2 R U' R' F'                              | Xuanyi, Yunzhi
+main  y U' L2 D' l U l' D L2                         | Tymon
+more  R U2 B U' B' R'                                | 28 on solved.no
+
+4-4
+main  S' R U R' S                                    | Xuanyi, Qixian, Tymon, Yufang, Yunzhi
+main  y F U R U R' U' F'                             | Xuanyi
+
+4-5
+main  y U' L' U2 L F' L F L'                         | Xuanyi
+main  R U2 R' U' R' F R F'                           | Yufang, Zhaokun
+main  U r' R U' R U M' R'                            | Tymon
+main  U M U' R U R2 r                                | Tymon
+more  R U R' F R U R' U' F'                          | 28 on solved.no
+more  S R U R' U' S'                                 | 12 on solved.no
+
+4-6
+main  y U' L' U2 L U F U' F'                         | Xuanyi
+main  U' F' U2 F U R U' R'                           | Yunzhi
+more  R U R' F U R U' R' F'                          | 29 on solved.no
+more  R U R2 U' F' U F R                             | 7 on solved.no
+
+4-7
+main  U2 r U' r' U' r U r'                           | Xuanyi, Tymon, Yunzhi
+main  R U' R' U2 R' F R F'                           | Yufang
+main  y U L F' L' U' L' U L2 F L'                    | Yunzhi
+
+4-8
+main  R U R'                                         | Xuanyi, Tymon, Yunzhi
+main  y F U F'                                       | Xuanyi, Yunzhi
+
+== ZBLS-side | Side | White to the side
+
+5-1
+main  y U' L' U L F R U2 R' U F'                     | Xuanyi
+main  y2 U2 L2 D l' U' l D' L' U' L'                 | Tymon
+main  U' F' U F U R U' R2 F R F'                     | Yufang
+main  U' r U' r' U2 r U r' R U2 R'                   | Yunzhi
+more  U2 R2 D r' U' r D' R' U' R'                    | 15 on solved.no
+
+5-2
+main  U' r U R' U' r' R2 U2 R'                       | Xuanyi, Yunzhi
+main  U' R U R' U R' F R2 U R' U' F'                 | Yufang
+main  y U L F' L' F L' U2 L2 F' L' F                 | Yunzhi
+main  U' r U R' U' R M U2 R'                         | Qixian
+more  U' r U R' U' R2 r' U2 R'                       | 7 on solved.no
+
+5-3
+main  y U2 F R U R' U2 F'                            | Xuanyi
+main  U' R U R' U' R' F R F' R U2 R'                 | Yufang
+main  U R U' R' U' R' F R F' R U R'                  | Yufang
+
+5-4
+main  U' R U R' U R' F R F'                          | Xuanyi, Tymon, Yufang, Yunzhi, Bofan
+main  y U' F U R U' R' U F'                          | Yunzhi, Zhaokun
+
+5-5
+main  y U R' F r U' r' F' R                          | Xuanyi, Yunzhi
+main  U' R U R' U2 S' R U' R' S                      | Tymon
+main  U' R U R' U' F R' F' R2 U2 R'                  | Yufang
+
+5-6
+main  U' R U R' U2 F' L' U' L F                      | Yunzhi
+main  y F R U2 R' U' R U2 R' F'                      | Yunzhi
+more  R' D' R U R' D F R F'                          | 21 on solved.no
+
+5-7
+main  U' R U R' U2 R U R' U2 R' F R F'               | Xuanyi, Yunzhi
+main  y U L F' L2 U' L U F L' U' L                   | Xuanyi
+main  U' F' U F U R U' R' U R U' R'                  | Yufang
+main  y U' r' U r U r' F' U' r                       | Yunzhi
+main  U2 R U' R' U2 R U' R' U R' F R F'              | Zhaokun
+more  R' D' R U R' U' D F U R U' F'                  | 13 on solved.no
+more  F R' F' R U R U' R2 F R F'                     | 7 on solved.no
+
+5-8
+main  U' R U R' U2 R U' R'                           | Xuanyi, Qixian, Tymon, Yufang, Yunzhi, Zhaokun
+main  U' R U R' U' R U2 R'                           | Xuanyi
+main  y U' F U R U' R' U2 R U' R' F'                 | Yunzhi
+
+6-1
+main  U R U' R' F' L' U2 L U' F                      | Xuanyi, Yunzhi
+main  y U R' F R U2 R' F' R U L' U L                 | Tymon
+main  y U R' F R U2 R' F' R L' U2 L                  | Yunzhi
+
+6-2
+main  U' R' F R F' R U2 R2 F R F'                    | Xuanyi, Yunzhi
+main  U2 R' D' r U M U R' D R                        | Yufang
+more  R2 D r' U' r D' R' U R'                        | 14 on solved.no
+
+6-3
+main  U2 F' L' U' L U2 F                             | Xuanyi, Yufang, Yunzhi
+main  y U L' U' L U2 L' B' U B L                     | Yunzhi
+more  U R U R2 F R F' r U' r' U' r U r'              | 10 on solved.no
+
+6-4
+main  U F' U' L' U L U' F                            | Xuanyi, Yunzhi
+main  y U L' U' L U' L F' L' F                       | Xuanyi, Tymon, Yufang, Yunzhi
+
+6-5
+main  U' r U' R' U R U r'                            | Xuanyi, Tymon, Yunzhi
+main  y U2 L F' L' F U2 F U F'                       | Xuanyi, Yunzhi
+main  y U L' U' L U2 S L' U L S'                     | Tymon
+main  U2 F R' F' R U2 R U R'                         | Yufang
+
+6-6
+main  y U r' U' R' F R U r U L' U L                  | Tymon
+main  U' F R' F' R U2 R U' R' U2 R U' R'             | Yufang
+main  y U L' U' L U2 F R U R' F'                     | Yunzhi
+more  R' D' R U' R' D R F R' F' R                    | 12 on solved.no
+
+6-7
+main  R' U' R x U R' U' x' U R                       | Xuanyi
+main  y U L' U' L U2 L' U' L U2 L F' L' F            | Xuanyi
+more  R U R' U' R U R' U' F' U' F                    | 13 on solved.no
+
+6-8
+main  y' U R' U' R U R' U2 R                         | Xuanyi, Tymon
+main  y U L' U' L U L' U2 L                          | Tymon
+main  y U L' U' L U2 L' U L                          | Tymon
+main  U F' U' L' U L U2 L' U L F                     | Yunzhi
+main  y' U R' U' R U2 R' U R                         | Zhaokun
+
+7-1
+main  M' U' M U2 r U' r'                             | Xuanyi, Tymon, Yunzhi
+main  y R' F' R U L' U L R' F' R                     | Xuanyi
+main  y U' L' U L U F U R U R' U F'                  | Yunzhi
+
+7-2
+main  U' R U2 R' U2 F' L' U' L F                     | Xuanyi, Yunzhi
+main  y F U R U2 R' U2 R U' R' F'                    | Xuanyi, Yunzhi
+main  U R U' R' U R' F R F' R U R'                   | Tymon, Yufang, Zhaokun
+more  U' R U2 R' U R' U' F U R U' F'                 | 8 on solved.no
+
+7-3
+main  U' R U2 R' U R' F R F'                         | Xuanyi, Tymon, Yufang, Yunzhi
+main  y U' F U2 R U' R' U F'                         | Xuanyi, Yunzhi
+
+7-4
+main  y U' F' L F L2 U2 L U' L F' L' F               | Tymon, Yunzhi
+main  F R' F' R U2 R U' R' U R U' R'                 | Yufang
+
+7-5
+main  R' D' R U2 R' D F R F'                         | Xuanyi, Yufang, Yunzhi
+main  y l U2 L2 U' L2 U' l'                          | Yunzhi
+more  y' r U2 R2 U' R2 U' r'                         | 7 on solved.no
+
+7-6
+main  U' R U2 R' U R' F R2 U R' U' F'                | Xuanyi, Qixian
+main  y l U2 L2 U' L U L U2 l'                       | Xuanyi
+main  R' D' r U2 r' D F R F'                         | Tymon, Yufang, Yunzhi
+
+7-7
+main  R U R' U R U' R2 F R F'                        | Xuanyi, Yufang, Yunzhi
+main  y F U R U2 R' U F'                             | Yunzhi
+more  y' F R U R2 U' R F'                            | 14 on solved.no
+
+7-8
+main  U' R U2 R' U2 R U' R'                          | Tymon, Yufang, Yunzhi
+main  R U R' U R U' R' U R U' R'                     | Zhaokun
+
+8-1
+main  r U r' U' R U' R' r U r'                       | Xuanyi, Zhaokun
+main  y M' U M U2 R' F R                             | Xuanyi, Tymon, Yunzhi
+
+8-2
+main  F' U' L' U2 L U2 L' U L F                      | Xuanyi, Tymon
+main  U' R' D' r U' r' R U2 R' D R                   | Yufang
+main  U R U R' F' L' U' L U2 F                       | Zhaokun
+more  y U L' U2 L U2 F R U R' F'                     | 9 on solved.no
+
+8-3
+main  U F' U2 L' U L U' F                            | Xuanyi, Tymon, Yunzhi, Zhaokun
+main  y U L' U2 L U' L F' L' F                       | Tymon, Yufang
+more  y' U R' U2 F' U F U' R                         | 11 on solved.no
+
+8-4
+main  U R' D' r U M U2 R' D R                        | Yufang
+main  U F R' F' R2 U2 R' U R' F R F'                 | Yunzhi
+main  y U L' U2 L U2 L' U' L U2 L F' L' F            | Yunzhi
+main  F R' F' R U' R U R' U' F' U' F                 | Zhaokun
+more  U R' D' r U R r' U2 R' D R                     | 10 on solved.no
+
+8-5
+main  U2 F R' F' D' R U2 R' D R                      | Yufang
+main  r' U2 R2 U R2 U r                              | Yunzhi
+
+8-6
+main  y U L' U2 L U' L F' L2 U' L U F                | Xuanyi
+more  U F R' F' R2 U2 R' U2 R U' R'                  | 13 on solved.no
+
+8-7
+main  y L' U' L U' L' U L2 F' L' F                   | Xuanyi
+main  F' U' L' U2 L U' F                             | Tymon, Yunzhi, Zhaokun
+main  U R U' R' U R U2 R' F' U2 F                    | Yufang
+more  y R' F' U' F2 U F' R                           | 8 on solved.no
+
+8-8
+main  y U L' U2 L U2 L' U L                          | Tymon, Yufang, Yunzhi
+main  y' U R' U2 R U R' U2 R                         | Tymon, Yufang
+more  y' U R' U2 R U2 R' U R                         | 27 on solved.no
+
+9-1
+main  U' R' F R2 U R' U' F2 U' F                     | Xuanyi
+main  y U2 R' F R U2 r R' U' r' F' R                 | Xuanyi, Yunzhi
+main  U r U r' U2 r R' U r' R2 U' R'                 | Tymon
+main  U2 R U R' U' R' F R F' R U2 R2 F R F'          | Yufang
+main  U' R U' R' U F' U2 L' U L F                    | Yunzhi
+main  U r U r' U2 M' U R M U' R'                     | Tymon
+more  R' F2 R2 U' R' U' R' F' R2 U R' F2             | 9 on solved.no
+
+9-2
+main  F' U L' U' L U2 F                              | Xuanyi, Yufang
+more  U' R U' R' d S' R' U' R S                      | 8 on solved.no
+
+9-3
+main  U r U' r' U2 r U r' R U' R'                    | Xuanyi, Yunzhi
+main  y U2 L' U L U' R' F R U R' F' R                | Xuanyi, Yunzhi
+main  U r U' r' U2 r U M U' R'                       | Xuanyi, Qixian
+main  U' R' F R F' U2 F R' F' R2 U' R'               | Yufang
+main  U' R U' R' U' R' D' r U' r' D R2 U' R'         | Zhaokun
+
+9-4
+main  F' U L' U' L U L' U L F                        | Xuanyi, Yunzhi, Zhaokun
+main  y U L' U' L U R' F R U R' F' R                 | Yunzhi
+
+9-5
+main  U' R U' R' U F' U' F                           | Yufang
+main  y U2 R' F r U r' F' R                          | Yunzhi
+more  U' R U' R' d R' U' R                           | 25 on solved.no
+
+9-6
+main  U r U R' U' r' R2 U' R'                        | Xuanyi, Tymon, Yunzhi
+main  y L F' L' F U2 L' U' L U L' U' L               | Xuanyi
+main  U F R' F' R U' R U R' U R U' R'                | Yufang
+main  U r U R' U' R M U' R'                          | Tymon
+more  R' F R U2 r U2 r' U2 F'                        | 7 on solved.no
+
+9-7
+main  F R U R' U' F' R U' R'                         | Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun, Bofan
+main  y F' L F L' U' L F' L' F L' U' L               | Yunzhi
+
+9-8
+main  y U2 L' U L U L' U' L                          | Xuanyi, Tymon, Yunzhi
+main  y' U2 R' U R U R' U' R                         | Xuanyi, Tymon
+more  y U L' U' L U' L' U' L                         | 41 on solved.no
+
+10-1
+main  U2 r U' r' U2 M' U R U r'                      | Xuanyi, Yunzhi
+main  y U L' U L U' F U2 R U' R' F'                  | Xuanyi
+main  R U' R D r' U' r D' R' U' R'                   | Tymon
+more  R' D' R U R' r U r' D R2 U R'                  | 11 on solved.no
+
+10-2
+main  U F R' F' R U2 R U' R'                         | Xuanyi, Yufang, Yunzhi
+main  y F U' R U R' U2 F'                            | Xuanyi, Yunzhi
+main  U F R' F' R U' R U2 R'                         | Yufang
+
+10-3
+main  U2 R U' R' U r U' r' U' r U r'                 | Xuanyi, Tymon, Yunzhi, Zhaokun
+main  U F R' F' R U' R' F R F' R U2 R'               | Yufang
+main  y U' R' F R U2 R' F' R L' U L                  | Yunzhi
+
+10-4
+main  U' R U R' U' r U' r' U' r U r'                 | Xuanyi
+main  y F U' R U R' U' R U' R' F'                    | Xuanyi, Yunzhi
+main  U' R U R' U R U' R' U2 R' F R F'               | Yufang
+main  F R' F' R U2 R' F' R U R U' R' F               | Yufang
+main  U2 R U' R' U' S' R U R' S                      | Yufang
+
+10-5
+main  U2 r U' R' U' R U r'                           | Xuanyi, Qixian, Tymon, Yunzhi
+main  U F R' F' R U R' F R F'                        | Yufang
+main  U F' U F U' R U R'                             | Zhaokun
+main  y U L' U L U' F U F'                           | Yunzhi
+
+10-6
+main  R' F R F' U2 R U R' U' R U R'                  | Xuanyi, Yufang
+main  y U' R' F' r U R r2 F r                        | Tymon, Yunzhi
+main  U2 R U' R' U' R U' R2 F R F' U' R U' R'        | Zhaokun
+main  U2 R U' R' U' R U' R2 F R F' R U2 R'           | Zhaokun
+
+10-7
+main  F R' F' R U R' F R F' R U R'                   | Xuanyi, Yunzhi
+main  U2 R U' R' F U R U' R2 F' R                    | Yufang, Zhaokun
+main  r' D' r U r' D r R U R'                        | Tymon
+main  r' D' r U r' D R r U R'                        | Tymon
+
+10-8
+main  U' R U R' U R U R'                             | Tymon, Yufang, Yunzhi
+main  U2 R U' R' U' R U R'                           | Tymon, Yunzhi
+
+11-1
+main  F R' F' R U' R U' R2 F R F'                    | Xuanyi, Yufang, Zhaokun
+
+11-2
+main  y' R U2 R2 U' R U' R' F R F'                   | Xuanyi, Tymon
+main  U' R U2 R' U' F' U' L' U L U F                 | Yunzhi
+main  y U2 r U2 R' U' R U' r2 F' r                   | Yunzhi
+more  R U' R' U' R U' R2 F R F2 U' F                 | 6 on solved.no
+
+11-3
+main  F' U L' U2 L U2 F                              | Xuanyi, Yufang, Yunzhi
+main  y U' L' U L U F' L F L' F' L F L'              | Xuanyi, Yunzhi
+more  F' U r' F2 r U2 F                              | 9 on solved.no
+
+11-4
+main  F' L' U' L U' L' U L U' F                      | Xuanyi, Yufang, Yunzhi
+main  y L' U' L U' L F' L' F L' U' L                 | Xuanyi
+more  R' D' r U r U R U' r2 D                        | 7 on solved.no
+
+11-5
+main  U' R U2 R' U F' U' F                           | Xuanyi, Qixian, Yufang
+main  y U' F U2 F' U L' U' L                         | Xuanyi, Yunzhi
+more  U' R U2 R' U y' R' U' R                        | 278 on solved.no
+
+11-6
+main  y L' U L U' L' U L U' L F' L' F                | Xuanyi, Tymon, Yunzhi
+main  F R' F' R U' R U' R' U R U' R'                 | Tymon, Yufang, Yunzhi, Zhaokun
+main  U' R U R' U' R U R' d' L' U L                  | Tymon
+main  F R' F' R U' R U' R' U2 R U2 R'                | Bofan
+
+11-7
+main  R U' R' U R U' R2 F R F' R U' R'               | Xuanyi, Yufang, Yunzhi
+main  U' R U' R' y' U' R' U R U R' U' R              | Tymon
+
+11-8
+main  y' R U2 R2 U' R2 U' R'                         | Xuanyi, Tymon, Yufang, Yunzhi
+main  y L U2 L2 U' L2 U' L'                          | Yufang, Yunzhi
+main  y L' U L U' L' U L U2 L' U L                   | Tymon
+
+12-1
+main  U F' U L' U L F U R U' R'                      | Xuanyi, Yunzhi
+main  U F R' F' R2 U R' U R' F R F'                  | Tymon, Yufang
+main  R' D' R U2 M' U r' D R2 U R'                   | Tymon
+main  y F' L F L' U L' U L2 F' L' F                  | Yunzhi
+more  R U2 R' U' M' U' M U2 r U' r'                  | 10 on solved.no
+
+12-2
+main  U2 R' F2 r U r' F R2 U R'                      | Xuanyi
+main  R U' R' U R U' R' U2 S' R U' R' S              | Yufang
+
+12-3
+main  U R U' R' U' F R' F' R F R' F' R               | Xuanyi, Yunzhi
+main  y F U' R U2 R' U2 F'                           | Yufang, Yunzhi
+more  R' U2 R2 U R2 F' U F R                         | 9 on solved.no
+
+12-4
+main  R U R' U R' F R F' R U R'                      | Xuanyi
+main  y F R U R' U R U' R' U F'                      | Xuanyi, Yunzhi, Zhaokun
+more  R U' R' U R U' R' U2 R B U' B' R'              | 8 on solved.no
+more  U F R' F' R2 U R' U2 R U' R'                   | 5 on solved.no
+
+12-5
+main  U F' U2 F U' R U R'                            | Xuanyi, Yufang
+main  y U L' U2 L U' F U F'                          | Yunzhi
+
+12-6
+main  R U' R' U R U' R' U R' F R F'                  | Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun
+main  y F' L F L' U L' U L U' L' U L                 | Xuanyi, Tymon
+
+12-7
+main  R U' r' U R U' R' U' r U2 R'                   | Xuanyi
+main  y L' U L U' L' U L2 F' L' F L' U L             | Xuanyi, Tymon
+main  F' U' L' U L U' L' U L U' F                    | Yufang
+main  U2 R U R' U' F R' F' R U' R U R'               | Zhaokun
+more  R U' R' U R U' R' U R' F R2 U R' U' F'         | 10 on solved.no
+
+12-8
+main  R' U2 R2 U R2 U R                              | Xuanyi, Yufang, Yunzhi
+main  R U' R' U R U' R' U2 R U' R'                   | Tymon, Yufang
+
+13-1
+main  y U2 R' F R U' M' U2 r' F' R                   | Xuanyi
+main  y' U R' U R U' R D r' U' r D' R2 U' R          | Tymon
+main  R U' R' U' F R' F' R U F R' F' R               | Yufang
+main  U R' F R F' U2 F' U2 L' U L U' F               | Yunzhi
+main  y U2 R' F R U L' U2 L R' F R                   | Yunzhi
+more  y U2 R' F R U2 R' F' R U' L' U' L              | 9 on solved.no
+more  U2 R U R D r' U r D' R' U R'                   | 5 on solved.no
+
+13-2
+main  U2 F' L' U L U' L' U2 L F                      | Xuanyi, Yufang, Yunzhi
+main  y U2 l' U' L U' L' U2 l U' L' U L              | Tymon
+more  M' U' R U' r' U2 r U' r'                       | 10 on solved.no
+
+13-3
+main  R' D' r U r' D R U R U' R'                     | Yufang
+main  y L' U' L U L F' L' F L' U' L                  | Yunzhi
+main  F' U' F U R U' R' F R' F' R                    | Zhaokun
+more  U' S' U' R B U B' U2 R' U' S                   | 5 on solved.no
+
+13-4
+main  R' F R U2 r U' r' U2 F'                        | Xuanyi, Tymon
+main  y U L' U L U' L' U L U2 L F' L' F              | Tymon
+main  y U L' U L U R' F R U R' F' R                  | Bofan
+
+13-5
+main  y U2 L' U' L U' L' U2 L2 F' L' F               | Xuanyi, Yunzhi
+main  R' F' r U R U2 r' F2                           | Yufang
+more  M' U' R U R' U' R U2 r'                        | 9 on solved.no
+
+13-6
+main  R U' R' U R' F R F' R U' R'                    | Yufang, Yunzhi
+more  M' U' R U R' U2 R U' r'                        | 13 on solved.no
+
+13-7
+main  R U' R' U F' U2 F R U R'                       | Xuanyi
+main  R U R' U' R' F R F' U R U' R'                  | Tymon, Zhaokun
+main  y U L F' L2 U' L U L F L'                      | Yunzhi
+
+13-8
+main  y' U R' U R U' R' U' R                         | Xuanyi, Tymon, Yufang, Yunzhi
+main  y U L' U L U' L' U' L                          | Yufang, Yunzhi
+
+14-1
+main  U2 r U' r' U r R' U2 R U r'                    | Xuanyi, Tymon
+main  R' F R F' R U' R' U R U2 R2 F R F'             | Yufang
+main  y U' L F' L' F U2 F U2 R U' R' U F'            | Yunzhi
+main  U2 r U' r' U M' U2 R U r'                      | Qixian
+more  U2 r U' r' U2 r U r' U R U R'                  | 12 on solved.no
+
+14-2
+main  U2 F R' F' R U R U' R' U R U R'                | Yufang, Bofan
+main  y U2 F R U' R' U R U2 R' F'                    | Yunzhi
+more  U' R U' R' U R U R' F R U R' U' F'             | 6 on solved.no
+
+14-3
+main  R U R' U' R' F R F' R U R'                     | Xuanyi, Yufang
+
+14-4
+main  U' R U' R' U R U' R' U2 R' F R F'              | Yufang
+main  U' R' U' F' U F R2 U R'                        | Yunzhi
+main  y L F' L' U2 R' F R U2 F                       | Yunzhi
+more  U' R U' R' U' r U' r' U' r U r'                | 9 on solved.no
+
+14-5
+main  U2 R U R' U R U2 R2 F R F'                     | Tymon, Yunzhi
+main  U' R U' R' U2 F U R U' R2 F' R                 | Yufang
+
+14-6
+main  U' R U' R' U S' R U R' S                       | Xuanyi, Yufang, Zhaokun
+main  y L' U L U' L F' L' F L' U L                   | Xuanyi
+
+14-7
+main  U' R' F R2 U R' U' R' F' R                     | Xuanyi, Yufang, Yunzhi
+main  y L' U L U' F U2 F' L' U' L                    | Xuanyi
+main  U' R' F R F' U R U R' U R U' R'                | Zhaokun
+
+14-8
+main  U' R U' R' U R U R'                            | Xuanyi, Yufang, Yunzhi, Bofan
+main  y2 U' L U' L' U L U L'                         | Tymon
+
+15-1
+main  y U l' U L U L' l U2 l' U' l                   | Tymon
+main  U' F' U L' U2 L F R U R'                       | Yunzhi
+main  y' R' U R2 D r' U r D' R2 U R                  | Zhaokun
+more  U R U' R D r' U r D' R' U' R'                  | 9 on solved.no
+
+15-2
+main  R U2 R2 F R F' U' R U2 R'                      | Xuanyi
+main  y F U R' F R F' U2 F'                          | Xuanyi
+main  R U2 R2 F R F' U2 R U' R'                      | Yufang, Yunzhi
+main  y U' R' F R U2 R' F' R U L' U' L               | Tymon
+
+15-3
+main  R U R' U2 R U' R2 F R F'                       | Tymon, Yunzhi, Bofan
+main  y U' R' F R U2 R' F' R U' R' F R U R' F' R     | Tymon
+main  R' D' R U' R' D R U2 R U' R' U' R' F R F'      | Zhaokun
+
+15-4
+main  U R' F R F' U R U2 R' U' R' F R F'             | Yufang, Zhaokun
+main  U F R' F' R U2 R U2 R' U R U' R'               | Yunzhi
+main  y U2 L' U' L F R U2 R' F'                      | Yunzhi
+more  R' D' R U' R' D R U S' R U' R' S               | 8 on solved.no
+
+15-5
+main  R' D' R U' R' D F R F'                         | Yufang
+main  y U' F' U' L' U L F L' U' L                    | Yunzhi
+
+15-6
+main  U R' F R F' U R U R'                           | Yufang, Yunzhi, Zhaokun, Bofan
+main  y F U2 R U R' U F'                             | Tymon
+main  y L' U L U2 F U F'                             | Yunzhi
+main  U2 F' U' F U2 R U R' U R U' R'                 | Zhaokun
+more  F' U F U2 R U R'                               | 15 on solved.no
+
+15-7
+main  l U r U' r' U' l'                              | Xuanyi, Zhaokun
+main  r' R U r U' r' U' M'                           | Tymon
+main  F D R U R U' R2 D' F'                          | Yufang
+main  y L' U L F U R U2 R' F'                        | Yunzhi
+main  M U r U' r' U' M'                              | Tymon
+more  R' D' R U' R' U' D F U R U' F'                 | 8 on solved.no
+
+15-8
+main  R' D' R U' R' D R U R U' R'                    | Xuanyi, Tymon, Yufang
+main  R U R' U2 R U' R' U R U' R'                    | Tymon, Yufang
+main  y F R U' R' U2 R U' R' U' F'                   | Yunzhi
+
+16-1
+main  U R U2 R' F' L' U2 L F                         | Xuanyi
+main  y U F U' R U2 R' F' L' U' L                    | Xuanyi, Yunzhi
+main  R U' R2 D' r U' r' D R2 U' R'                  | Yufang, Zhaokun
+main  U' r U' R' U' M U2 r U r'                      | Tymon
+main  R U' R' F' U' L' U L U F                       | Yunzhi
+more  U R U2 R' r U' r' U2 r U r'                    | 9 on solved.no
+
+16-2
+main  F' U' L F' L' F U2 F                           | Xuanyi, Yunzhi
+main  U2 R' D' r U' M U' R' D R                      | Yufang
+main  y L' U2 L2 F' L' F U2 L' U L                   | Yunzhi
+main  R U R' U R' D' r U r' D R U' R U R'            | Zhaokun
+more  U r U' r' U2 r U r' U' R U R'                  | 9 on solved.no
+
+16-3
+main  r U' r' U l' U2 R U' R' U2 l                   | Xuanyi
+main  y L' U' L U2 L' U L2 F' L' F                   | Xuanyi, Tymon, Yunzhi
+main  r U' r' U R' F2 R F' R' F2 R                   | Xuanyi
+main  U R U' R' U R U' R' r U' r' U2 r U r'          | Yufang
+more  R U' R' U2 y' S' R' U' R S                     | 6 on solved.no
+
+16-4
+main  U2 R U R' F' L' U2 L F                         | Xuanyi, Yi
+main  U2 R U R' r U' r' U2 r U r'                    | Tymon
+main  F' U R U R' U' R' F2 R F'                      | Yufang
+main  U2 R U M' U' r' U2 r U r'                      | Tymon
+
+16-5
+main  y F U' R U' R' U' R U' R' F'                   | Xuanyi, Bofan
+main  y' R' U2 R U' R' U' r' R2 U' R' U r            | Tymon
+main  U F R' F' R2 U' R' U2 R U' R'                  | Yufang
+main  U F U R U' R' F' R U R'                        | Yunzhi
+main  R' D' R U R' D R F R' F' R                     | Zhaokun
+
+16-6
+main  R U' R' U2 F' U' F                             | Tymon, Yunzhi, Bofan
+main  R U' R' U2 y' R' U' R                          | Yufang
+main  R U' R' U d R' U' R                            | Tymon
+
+16-7
+main  R U' R' U' R U2 R' F R' F' R                   | Xuanyi
+main  y r' U' R' F R U r                             | Tymon, Yunzhi, Zhaokun
+main  U F R U R' U' F' U R U' R'                     | Yufang
+
+16-8
+main  r U r' U r U2 r' U' r U' r'                    | Xuanyi
+main  y L' U' L U2 L' U L U' L' U L                  | Xuanyi, Tymon, Yunzhi
+main  U F R' F' R2 U' R' U R' F R F'                 | Yufang
+main  F' L' U L U2 L' U L U F                        | Yunzhi
+more  y' U2 R' U' R' D' R U R' D R U' R              | 10 on solved.no
+
+== ZBLS-up | Up | White facing up
+
+17-1
+main  U' F' L' U2 L U' F U' R U R'                   | Xuanyi
+main  y F' L F L2 U L U' L' U2 L2 F' L' F            | Tymon
+main  F' r U' r' F2 R U2 R2 F R F'                   | Yufang
+more  R U2 R' U' R' D' r U r' D R2 U R'              | 11 on solved.no
+
+17-2
+main  R U' R' U' F R' F' R U2 R U' R'                | Xuanyi
+main  y U2 R U2 R' U2 R' F R U2 F'                   | Yunzhi
+main  U2 F R' F' R U2 R U2 R' U' R U R'              | Zhaokun
+
+17-3
+main  y L' U L2 F' L' F l' U l U l' U' l             | Xuanyi, Tymon
+main  R U2 R' F U R U' R2 F' R                       | Yufang, Zhaokun
+main  U' R U' R' U2 R U2 R2 F R F'                   | Yunzhi
+
+17-4
+main  R U2 r' U' R U R2 r                            | Xuanyi, Yunzhi, Yi
+main  R U' R' r U' R' U' R U r'                      | Tymon
+main  F' U' F U R U' R2 F R F'                       | Yufang
+main  R U' M' U' R' U' R U r'                        | Tymon
+more  U' F R' F' R U R U' R' U' R U R'               | 6 on solved.no
+
+17-5
+main  y L F' L' F L' U L2 F' L' F                    | Yunzhi
+more  R U2 R' U' S' R U R' S                         | 9 on solved.no
+
+17-6
+main  R U R' U' F R' F' R2 U R'                      | Xuanyi, Yufang, Bofan
+main  y U' L' U L2 F' L' F U' L' U L                 | Xuanyi
+main  y U' F R U R' U' R U' R' U' F'                 | Yunzhi
+
+17-7
+main  R U2 R' U r U' r' U' r U r'                    | Xuanyi, Tymon
+main  y L' U L F U F' U' L' U L                      | Xuanyi
+main  F' U' F U R U' R' U R U' R'                    | Yufang, Zhaokun
+main  y U' L' U L2 F' L' F L F' L' F                 | Yunzhi
+
+17-8
+main  R U2 R' U' R U R'                              | Xuanyi, Tymon, Yufang, Yunzhi
+main  y L F' L' F L' U L U' L' U L                   | Tymon
+
+18-1
+main  F R U R' U' F' R U2 R2 F R F'                  | Xuanyi
+main  y U F R U2 R' U F' U L' U' L                   | Xuanyi, Yunzhi
+main  F R' F' R2 U' R' U R U2 R2 F R F'              | Yufang
+main  U R U' R' U F' U L' U2 L F                     | Yunzhi
+
+18-2
+main  U' F' L' U' L U L' U' L U2 F                   | Xuanyi
+main  U2 R U R2 D' r U' r' D R U R U' R'             | Yufang
+main  U2 L' U2 L U2 L F' L' U2 F                     | Yunzhi
+main  y U L' U2 L U F U F' L' U' L                   | Yunzhi
+more  R U2 R' r U r' U2 r U R' U R r'                | 5 on solved.no
+
+18-3
+main  y U L' U L U2 L' U2 L2 F' L' F                 | Xuanyi, Yunzhi
+main  R U' R2 F R F' r U' r' U' r U r'               | Yufang
+main  R' F R F' R U' R2 F R2 U R' U' F'              | Zhaokun
+more  R' D R2 U2 r' U2 R U r D' R2                   | 5 on solved.no
+
+18-4
+main  R U R' F' L' U2 L U' F                         | Xuanyi, Tymon, Yufang
+main  y L' U2 l U L' U' L2 l'                        | Yunzhi
+main  y U F' L F L' U' L' U L U L' U' L              | Zhaokun
+more  R' F R F' R U' R' U S' R U' R' S               | 7 on solved.no
+
+18-5
+main  R' F R F' R U' R2 F R F'                       | Xuanyi, Tymon, Yunzhi, Bofan
+main  y L' U2 L U S L' U' L S'                       | Xuanyi
+main  y F' L F L' U' F R U2 R' U F'                  | Yunzhi
+
+18-6
+main  U R U' R2 F R F' U R U' R'                     | Xuanyi
+main  y L' U' L U F' L F L2 U' L                     | Xuanyi, Yunzhi
+main  U F' L' U' L U L' U L U F                      | Yunzhi
+more  U R' F R F' R U' R' U F' U' F                  | 6 on solved.no
+
+18-7
+main  y L' U2 L U' R' F R U R' F' R                  | Xuanyi, Tymon, Yunzhi
+main  U R U' R2 F R F' R' F R F'                     | Yunzhi
+
+18-8
+main  y L' U2 L U L' U' L                            | Xuanyi, Tymon, Yufang, Yunzhi
+main  y' R' U2 R U R' U' R                           | Tymon, Yufang, Yunzhi
+main  R' F R F' R U' R' U R U' R'                    | Tymon, Yunzhi
+
+19-1
+main  U F' U L' U2 L F U2 R U' R'                    | Xuanyi
+main  U2 R U R' M' U' R r' U2 r U' r'                | Tymon
+main  R' U' F' U F2 R2 U R' U' R' F' R               | Yufang
+main  y U L' U L2 F' L' F U L F' L' F                | Yunzhi
+main  U2 R U R2 r U' M U2 r U' r'                    | Tymon
+
+19-2
+main  U R U2 R2 F R F'                               | Xuanyi, Tymon, Yunzhi, Bofan
+
+19-3
+main  U F R U R' U' F' R U R'                        | Xuanyi
+main  y F U' R U' R' U R U2 R' F'                    | Yunzhi, Zhaokun
+main  U R U2 R2 F R2 U R' U' F'                      | Zhaokun
+
+19-4
+main  F R' F' R U R U R' U' R U R'                   | Tymon, Yufang
+main  U R U2 R' U F' U F R U' R'                     | Yunzhi
+more  U R U2 R' U R B U' B' R'                       | 6 on solved.no
+
+19-5
+main  U R U2 R' U R U R' U2 R' F R F'                | Xuanyi, Yunzhi
+main  y U L' U L2 F' L' F L' U L                     | Yunzhi, Zhaokun
+
+19-6
+main  U R' F R F' R U' R' U2 R U' R'                 | Yunzhi
+more  U R U2 R' U S' R U' R' S                       | 8 on solved.no
+
+19-7
+main  y U' F U R U R' U' R U2 R' F'                  | Xuanyi, Yunzhi
+main  U R U2 R' U F' L' U' L F                       | Yunzhi, Zhaokun
+more  U R U2 R2 U' F U R U' F'                       | 9 on solved.no
+
+19-8
+main  U R U2 R' U R U' R'                            | Tymon, Yufang, Yunzhi
+
+20-1
+main  U' R U' R2 F R F' U' R' F R F'                 | Yufang, Yunzhi
+main  U' R U R' U r U' r' U2 r U r'                  | Tymon
+
+20-2
+main  y U' L' U2 L2 F' L' F                          | Xuanyi, Yufang, Yunzhi, Bofan
+
+20-3
+main  F' U L' U L U' L' U2 L F                       | Yufang, Zhaokun
+main  y U' L' U2 L2 F' L2 U' L U F                   | Yunzhi
+more  F D R2 U' R' U2 R U R2 D' F'                   | 6 on solved.no
+
+20-4
+main  F' L' U L U' L' U2 L U2 F                      | Xuanyi, Yunzhi
+main  y U' L' U2 L U' F U' F' L' U L                 | Xuanyi
+main  y F' L F L' U' L' U' L U L' U' L               | Zhaokun
+more  U' r U' r' U2 r U r' R U R' U R U' R'          | 6 on solved.no
+
+20-5
+main  U' R U' R2 F R F' R U' R'                      | Xuanyi, Yufang, Yunzhi, Bofan
+
+20-6
+main  y U' L F' L' F L' U L U2 L' U L                | Xuanyi, Yunzhi
+main  U' F R' F' D' R U' R' D R                      | Yufang
+more  S R U2 R' U' R U R' U S'                       | 5 on solved.no
+
+20-7
+main  U2 r U' R' U R U r' F' U' F                    | Xuanyi
+main  y U' L' U2 L U' F R U R' F'                    | Xuanyi, Yunzhi
+main  y U L' U L U' l' U L U2 L' U' l                | Tymon
+
+20-8
+main  y U' L' U2 L U' L' U L                         | Xuanyi, Tymon, Yunzhi
+main  y' U' R' U2 R U' R' U R                        | Tymon, Yufang
+
+21-1
+main  U2 F' L' U2 L2 F' L' F2                        | Xuanyi, Tymon, Yunzhi
+main  y U F' L F L' U2 R' F R U' R' F' R             | Tymon
+main  F R' F' R U F R' F' R2 U R'                    | Yufang
+main  y U F' L F L' U2 F R U' R' F'                  | Yunzhi
+more  U M' U R U' r' U R U R2 F R F'                 | 9 on solved.no
+
+21-2
+main  U F R' F' R2 U' R' U R U R'                    | Xuanyi, Yunzhi, Zhaokun
+main  y U2 L F' L' F L' U' L2 F' L' F                | Xuanyi, Yunzhi
+main  U2 R U R' U S' R U' R' S                       | Yi
+main  U R U' R' U2 R U' R2 F R2 U R' U' F'           | Tymon
+
+21-3
+main  U2 R U R' U F' L' U' L F                       | Xuanyi, Tymon
+main  y U F R U R' U F'                              | Xuanyi, Zhaokun
+main  U2 F R U R' U' F' U2 R U' R'                   | Tymon
+main  U2 R U R2 U' F U R U' F'                       | Yufang
+
+21-4
+main  r U' R' U2 R U r'                              | Xuanyi
+main  y F R U2 R' F'                                 | Xuanyi, Yunzhi
+main  F R' F' R U2 R U R' U' R U R'                  | Yufang
+main  U2 R U R' U2 R' F R F' U' R U' R'              | Yufang
+more  U2 R U R' U R B U' B' R'                       | 5 on solved.no
+
+21-5
+main  U R' F R F' U R' F R F'                        | Yufang, Yunzhi
+main  U R U' R' U2 R U' R2 F R F'                    | Tymon
+main  U2 R U R' U R U R' U2 R' F R F'                | Zhaokun
+more  U2 F' r U R' U' r' F2 R F'                     | 6 on solved.no
+
+21-6
+main  U2 R U R2 F R F'                               | Xuanyi, Qixian, Tymon, Yunzhi
+main  y U2 F R' F R F2                               | Xuanyi
+main  R U' R' r U' r' U' r U r'                      | Bofan
+
+21-7
+main  U2 F' U' F R U R'                              | Xuanyi, Tymon, Yufang, Yunzhi
+
+21-8
+main  U2 R U R' U R U' R'                            | Xuanyi, Tymon, Yufang, Yunzhi
+
+22-1
+main  U' F R' F' R U2 r U' r' U r U r'               | Xuanyi
+main  U' F R' F' R U2 F R' F' R2 U' R'               | Yufang
+more  M' U R U' r' F2 r U r' U2 F                    | 8 on solved.no
+
+22-2
+main  y U' F' L F L2 U L U' L' U' L                  | Xuanyi, Tymon
+main  U2 R' F R F' R U R2 F R F'                     | Tymon, Yunzhi
+main  F' L' U' L U' F R U' R'                        | Zhaokun
+more  r U' r' U2 y' R U R U' R' y                    | 5 on solved.no
+
+22-3
+main  U' F' L' U' L U' F                             | Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun, Bofan
+main  y U2 L' U' L U' F R U R' F'                    | Yunzhi
+more  y' U2 R' U' R U' R' F R' F' R U R              | 5 on solved.no
+
+22-4
+main  F' L' U2 L F                                   | Xuanyi, Yunzhi, Zhaokun
+main  y R' F r U2 r' F' R                            | Xuanyi, Tymon
+main  y' U2 R' U' R U' R' F' U F R                   | Tymon
+more  r U' r' U2 r U r'                              | 218 on solved.no
+
+22-5
+main  U' F R' F' R U' F R' F' R                      | Xuanyi, Yufang, Yunzhi
+main  y U' L F' L' F U' L F' L' F                    | Xuanyi, Yunzhi
+more  R2 U2 R2 F R F' R U2 R2                        | 7 on solved.no
+
+22-6
+main  U2 F' r U' r' F2                               | Xuanyi, Tymon, Zhaokun
+main  U F R' F' R2 U R' U R U R'                     | Yufang
+main  y U2 L' U' L2 F' L' F                          | Yunzhi
+more  y' U2 R' F R' F' R2                            | 9 on solved.no
+
+22-7
+main  F' L' U L U F                                  | Xuanyi
+main  y U2 F U F' L' U' L                            | Xuanyi
+main  U2 R U R' F' U' F                              | Tymon, Yufang, Yunzhi
+more  y' R' F' U F U R y                             | 6 on solved.no
+
+22-8
+main  y U2 L' U' L U' L' U L                         | Xuanyi, Tymon, Yunzhi, Zhaokun
+main  y' U2 R' U' R U' R' U R                        | Xuanyi, Tymon, Yufang
+more  y' R' U R U2 R' U' R                           | 8 on solved.no
+
+23-1
+main  U' F' U' L' U L U' F R U R'                    | Qixian, Yunzhi
+main  F' U' F U' R U' R2 F R F'                      | Yufang
+more  U F R' F' R U S' R U R' S                      | 12 on solved.no
+
+23-2
+main  U2 r U' r' U r U r' U R U' R'                  | Xuanyi, Tymon
+main  y U' F U' R U' R' F' L' U' L                   | Xuanyi, Yunzhi
+
+23-3
+main  R U2 R' U r U' R' U' R U r'                    | Xuanyi, Tymon
+main  y F R U' R' U R U R' U2 F'                     | Xuanyi, Yunzhi
+main  y R' F R U R' F' R2 F R' U2 R F' R'            | Tymon
+main  R U R' U F R' F' R2 U R'                       | Yufang
+main  R U2 R' F' U F U' R U R'                       | Zhaokun
+
+23-4
+main  U F R' F' R U R U R'                           | Xuanyi, Tymon, Yunzhi
+main  y U L' U L U' R' F R U2 R' F' R                | Tymon
+main  y L' U L F R U R' U2 F'                        | Yunzhi
+
+23-5
+main  y U' F R U' R' F' L' U' L                      | Xuanyi, Yunzhi
+main  U R U' R' U' R U' R2 F R F'                    | Tymon, Yufang, Yunzhi
+
+23-6
+main  U R' F R F' R U R' U2 R U' R'                  | Xuanyi, Qixian, Tymon, Yufang, Yunzhi
+more  F U R U' R' F' U' F' U' F                      | 7 on solved.no
+
+23-7
+main  U2 R U2 R' U' R U' R2 F R F'                   | Xuanyi, Yunzhi
+main  U2 R U R' U' R U' R' U R' F R F'               | Yufang
+main  y L' U L U' R' F r U' r' F' R                  | Yunzhi
+
+23-8
+main  R U' R2 D' R U2 R' D R                         | Xuanyi, Tymon
+main  y2 L U' L' U L U2 L' U L U L'                  | Tymon
+main  U R U' R' U' R U' R' U R U' R'                 | Tymon
+main  y U L' U' L2 F' L' F L' U L                    | Yunzhi
+
+24-1
+main  R U R' U2 F' r' F2 r U' F                      | Xuanyi
+main  F R' F' R U2 F R' F' R2 U R'                   | Yufang, Zhaokun
+main  y U' F' L F L' U' S L' U' L S'                 | Tymon
+more  R U' R2 D' r U R r' U R' D R                   | 8 on solved.no
+
+24-2
+main  U F' U L' U L F R U R'                         | Xuanyi, Yunzhi
+main  F' U F U R U' R' U R' F R F'                   | Zhaokun
+more  U' F' U r' F r U r' F r U' F                   | 6 on solved.no
+
+24-3
+main  r U R' U R U r' U' r U r'                      | Xuanyi
+main  F' U2 F R U' R' U F' U' F                      | Zhaokun
+more  r U' r' U' r U r' F' U2 F                      | 6 on solved.no
+
+24-4
+main  U' R U' R' U r U' r' U2 r U r'                 | Tymon
+main  U' R U R2 F R F' U' R' F R F'                  | Yufang
+main  U' R' F R F' U' F' U' F                        | Yunzhi
+main  y U' F' L F L' U' L' U' L                      | Yunzhi
+more  F U R U' R' F' U' R' F R F'                    | 11 on solved.no
+
+24-5
+main  U F' L' U L F R U R'                           | Xuanyi, Yunzhi
+main  U F R' F' D' R U R' D R                        | Yufang, Zhaokun
+main  y U' L' U L U L' U L2 F' L' F                  | Tymon
+more  U F R' F' R2 U2 R' U R U R'                    | 9 on solved.no
+
+24-6
+main  F U R U' R' F' R U' R'                         | Xuanyi, Yufang, Yunzhi, Zhaokun
+
+24-7
+main  R U' R' F R' F' R U2 R U R'                    | Xuanyi, Yufang
+main  U' R U R' U2 F R' F' R y' R' U R               | Tymon
+main  U F R U R' U' F' U' R U' R' U R U R'           | Yufang
+main  R U' R' U r U' R' U R U r'                     | Yunzhi
+
+24-8
+main  U' R U R2 F R F' R U' R'                       | Xuanyi, Yunzhi
+main  y' R U R' U R U2 R2 U2 R                       | Tymon
+more  y U' L' U L U L' U L U' L' U L                 | 37 on solved.no
+
+== ZBLS-corner | Corner | Corner in the slot
+
+25-1
+main  U R2 D r' U r D' R' U' R'                      | Tymon, Yi
+
+25-2
+main  U f' U2 L' U L U2 f                            | Xuanyi
+main  U2 r U2 R' U R U' R' U2 R U' r'                | Yufang
+main  y U R' F2 U' F U F2 R                          | Yunzhi
+more  r' U' R' U' R' U R U r                         | 7 on solved.no
+
+25-3
+main  y R' F2 U' F' U F2 R                           | Xuanyi, Yunzhi
+more  R U' R' U' R' F R2 U R' U' R' F' R             | 8 on solved.no
+
+25-4
+main  U' F R' F' R U' R U R' U2 R U' R'              | Xuanyi, Qixian, Yunzhi
+main  U' F R' F' R U' R U R' U' R U2 R'              | Xuanyi
+main  y U2 F U2 R U2 R' U2 F'                        | Xuanyi, Yunzhi
+more  U' R' F R F' U2 r U' r' U' r U r'              | 14 on solved.no
+
+25-5
+main  U' F' U' F U R U R'                            | Xuanyi, Yunzhi, Bofan
+main  y U' L' U L U R' F R U' R' F' R                | Tymon
+
+25-6
+main  U' F' U F U R U' R'                            | Tymon, Zhaokun
+main  y U' L' U L U F U' F'                          | Yunzhi
+
+25-7
+main  U' R' F R F' R U R'                            | Xuanyi, Yufang, Yunzhi
+main  U' F' U F R' F R F'                            | Tymon
+main  y U' L' U L F' L F L'                          | Tymon
+
+25-8
+main  R' F' R U R U' R' F                            | Xuanyi, Yufang, Yunzhi
+main  U' F' R U R' U' R' F R                         | Tymon, Yufang
+more  R' U' R' U' R' U R U R                         | 8 on solved.no
+
+26-1
+main  U R U R D r' U' r D' R2                        | Yufang, Yunzhi, Max
+more  y' U' R2 D' r U' r' D R U R                    | 10 on solved.no
+
+26-2
+main  r U r' U2 r U' R' U2 R U' r'                   | Xuanyi
+main  U R U R' U F' U' L' U L U F                    | Yunzhi
+more  U R U' R' r U r' U2 M' U M                     | 11 on solved.no
+
+26-3
+main  y f U2 R U R' U2 f'                            | Xuanyi
+main  R' D' r U r' D R U' R U R'                     | Yufang, Zhaokun
+main  U R U' R' U' R' D' r U r' D R                  | Yunzhi
+main  y U F U' F' U' S L' U L S'                     | Yunzhi
+
+26-4
+main  U2 F' U2 L' U2 L U2 F                          | Xuanyi
+main  y U F' L F L' U L' U' L U2 L' U L              | Xuanyi, Yunzhi
+main  U R U' R' U R' D' r U' r' D R                  | Yunzhi
+
+26-5
+main  U R U R' U' F' U' F                            | Xuanyi, Yufang, Yunzhi
+main  U R U' R' U' r U' r' U r U r'                  | Tymon
+main  U R U' R' U' F R' F' R2 U' R'                  | Yufang
+main  y U F U F' U' L' U' L                          | Yunzhi
+
+26-6
+main  U R U' R' U' F' U F                            | Xuanyi, Yufang
+main  y U F U' F' U' L' U L                          | Yunzhi, Yiheng
+
+26-7
+main  U R U' R' F R' F' R                            | Xuanyi, Qixian, Tymon, Yufang, Yunzhi, Bofan
+main  y U L F' L' F L' U' L                          | Tymon, Yunzhi
+
+26-8
+main  U2 R U' R' U' r U' R' U R U r'                 | Xuanyi
+main  y r U r' U' r' F r F'                          | Xuanyi, Tymon
+main  y U F L' U' L U L F' L'                        | Tymon
+more  U R U' R' F U R' U' F' U R                     | 10 on solved.no
+
+27-1
+main  U' R U' R' M' U' M U2 r U' r'                  | Xuanyi
+main  y L' U2 L F U' R U' R' F'                      | Xuanyi, Yunzhi
+main  U' R' D' r U' r' D R U' R U2 R'                | Yufang
+main  U' R' D' r U' r' D R U2 R U' R'                | Yufang
+
+27-2
+main  R U' R' U R U R' U2 R' F R F'                  | Xuanyi, Yufang, Zhaokun
+main  y U2 F U R U R' U F'                           | Xuanyi, Yunzhi
+main  U R M U' R' U r U' R'                          | Qixian, Tymon
+main  U r' R2 U' R' U r U' R'                        | Tymon
+
+27-3
+main  R U' R' U F' L' U' L F                         | Xuanyi, Bofan
+main  R U' R2 U' F U R U' F'                         | Yufang
+
+27-4
+main  y F U' R U' R' F' U2 L' U L                    | Xuanyi
+main  R U' R2 F R F'                                 | Tymon, Yufang, Yunzhi
+
+27-5
+main  F' U2 F R U2 R'                                | Xuanyi, Yufang, Yunzhi
+main  y L' U2 L F U2 F'                              | Xuanyi
+main  R U' R' U S' R U' R' S                         | Yufang, Bofan
+main  R U' r' U R U' R' U' M'                        | Tymon
+
+27-6
+main  R U' R' U F' U F R U' R'                       | Xuanyi, Zhaokun
+main  y L' U2 L U' F R U' R' F'                      | Xuanyi, Yunzhi
+main  R U' R' U R B U' B' R'                         | Tymon
+main  R' D' R U R' D R U' R' F R F'                  | Yufang
+
+27-7
+main  F' U' F U' R U2 R'                             | Xuanyi
+main  F' U' F U2 R U' R'                             | Tymon, Yufang, Yunzhi
+main  R U' R2 F R2 U R' U' F'                        | Tymon, Zhaokun
+main  U' R' F R F' U' R U R' U2 R U' R'              | Yufang
+main  y L' U' L U' F U2 F'                           | Yunzhi
+
+27-8
+main  R U' R' U R U' R'                              | Tymon, Yufang, Yunzhi
+
+28-1
+main  y U L' U L2 R' F L' R U2 R' F R                | Xuanyi, Tymon
+main  R U2 R' U R' D' r U r' D R                     | Yufang
+main  R U2 R' F' U L' U L F                          | Yunzhi
+main  y L' U L U2 L F' L' F U2 L F' L' F             | Yunzhi
+more  R U R' U2 R' D' r U r' D R                     | 9 on solved.no
+
+28-2
+main  R U2 R' U' R' D' r U' r' D R                   | Yufang, Zhaokun
+main  y L' U L U' L' U' L U2 L F' L' F               | Yunzhi, Zhaokun
+main  U2 F' U' L' U' L U' F                          | Yunzhi
+more  R U R' F R U R' U' F2 U' F                     | 7 on solved.no
+
+28-3
+main  y L' U L U' F R U R' F'                        | Tymon, Yufang, Yunzhi, Yi
+main  R U2 R' U R U R2 D' r U r' D R                 | Zhaokun
+
+28-4
+main  U F' L' U2 L U' F                              | Xuanyi, Yunzhi
+main  y L' U L2 F' L' F                              | Xuanyi, Tymon, Yunzhi
+
+28-5
+main  R U2 R' F' U2 F                                | Xuanyi, Yunzhi
+main  y F U2 F' L' U2 L                              | Xuanyi, Yunzhi
+main  R U2 R' d R' U R                               | Tymon
+main  R U2 R' U F' U F                               | Zhaokun
+
+28-6
+main  R U2 R B' R' B R'                              | Tymon
+main  R U2 R' U F R' F' R2 U' R'                     | Yufang
+main  R U2 R' U F' L' U L F                          | Yunzhi
+more  R U R' U' F U R' U' F' U R                     | 7 on solved.no
+
+28-7
+main  R U R' U F' U2 F                               | Xuanyi, Yunzhi
+main  F U R U' R2 F' R2 U R'                         | Xuanyi
+main  R U R' U2 y' R' U R                            | Tymon
+
+28-8
+main  y L' U L U' L' U L                             | Xuanyi, Tymon, Yunzhi
+main  y' R' U R U' R' U R                            | Yufang, Yunzhi
+more  R U R' U' F R' F' R                            | 29 on solved.no
+
+29-1
+main  U2 R U' R' F' U' L' U' L U F                   | Xuanyi, Yunzhi
+main  r R' U' R r' U2 r U' R' U R U' r'              | Tymon
+main  y' R' U' R U R D r' U' r D' R2 U' R            | Zhaokun
+main  M' U' M U2 r U' R' U R U' r'                   | Tymon
+
+29-2
+main  U2 R U' R' U2 R' D' r U' r' D R2 U' R'         | Xuanyi
+main  R' F R F' U S' R U' R' S                       | Yufang, Yi
+main  y' R' U' r U R' U' R2 r'                       | Yunzhi
+
+29-3
+main  U F' U L' U2 L F                               | Xuanyi, Yunzhi, Zhaokun
+main  y L' U' L U' R' F R U R' F' R                  | Xuanyi, Tymon
+main  R' D' r U' r' D R2 U R' U2 R U' R'             | Yufang
+
+29-4
+main  U2 R U' R' F' U2 L' U L F                      | Xuanyi
+main  y U F' L F L2 U' L                             | Xuanyi, Tymon, Yunzhi
+main  U R' D' r U r' D R2 U' R'                      | Yufang
+more  U R' F R F2 U' F                               | 9 on solved.no
+
+29-5
+main  U' R U R' U R U R' F' U' F                     | Xuanyi, Qixian, Yunzhi
+main  y U2 L F' L' F U2 L' U' L U' L' U L            | Xuanyi, Tymon
+main  y U2 L F' L' F L' U L U2 L' U' L               | Xuanyi
+main  R' F R F' U R U R' U2 R' F R F'                | Zhaokun
+
+29-6
+main  R' F R F' R' F R F'                            | Xuanyi, Tymon, Yufang, Yunzhi
+main  y2 l L' U L U' L' U L U' l'                    | Tymon
+main  y F' L F L' F' L F L'                          | Yunzhi
+more  x R' U R U' R' U R U' x'                       | 9 on solved.no
+
+29-7
+main  U2 R U' R' F' U' F                             | Xuanyi, Tymon, Yufang, Yunzhi
+main  y U2 F U' F' L' U' L                           | Xuanyi, Yunzhi
+
+29-8
+main  R' F R F' U R U' R'                            | Xuanyi, Tymon, Bofan
+main  y' R' U' R U R' U' R                           | Xuanyi, Yunzhi
+main  y L' U' L U L' U' L                            | Yunzhi
+
+30-1
+main  R U R' U' R' D' r U r' D R2 U R'               | Xuanyi, Zhaokun
+main  y U2 L' U L F U R U R' U' F'                   | Xuanyi, Yunzhi
+
+30-2
+main  R U R' U' S R U R' U' S'                       | Xuanyi
+main  y U2 L' U L U2 F U R U' R' U' F'               | Xuanyi
+main  R U r' U' R U R' M'                            | Tymon, Zhaokun
+main  U2 F R' F' R U' R U R' U R U R'                | Yufang
+main  R U r' U' R U R2 r                             | Tymon
+
+30-3
+main  R U R' U r U' r' U' r U r'                     | Xuanyi, Yunzhi
+main  y U' F U' R U2 R' F'                           | Xuanyi, Yunzhi
+main  R U R' U' R U' R' U2 R' F R F'                 | Yufang
+
+30-4
+main  U' F R' F' R2 U R'                             | Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun
+
+30-5
+main  y U L' U' L U' L' U' L F U F'                  | Xuanyi
+main  U2 R' F R F' U2 R U R' U R U' R'               | Tymon
+main  R U R' U' R U R2 U' F' U F R                   | Yufang
+main  R U R' U' R U R' F U R U' R' F'                | Yufang
+main  U2 R' F R F' R U' R' U2 R U R'                 | Yunzhi
+main  F R' F' R U R' D' r U' r' D R                  | Zhaokun
+
+30-6
+main  F R' F' R F R' F' R                            | Xuanyi, Tymon, Yufang, Yunzhi
+main  y L F' L' F L F' L' F                          | Yunzhi
+
+30-7
+main  U2 F' U F R U R'                               | Xuanyi, Zhaokun
+main  y U2 L' U L y' R U R'                          | Tymon
+main  R U R' F U R U' R2 F' R                        | Yufang
+main  y U2 L' U L F U F'                             | Yunzhi
+
+30-8
+main  R U R' U' R U R'                               | Xuanyi, Qixian, Tymon, Yufang, Bofan
+main  y L F' L' F U' L' U L                          | Xuanyi
+main  y2 L U L' U' L U L'                            | Tymon
+
+== ZBLS-edge | Edge | Edge in the slot
+
+31-1
+main  U' R' F R F' U' R' F R F'                      | Yufang, Yunzhi
+
+31-2
+main  R U' R' U R' D' r U r' D R                     | Xuanyi
+main  y F U' R U' R' F' L' U2 L                      | Xuanyi, Yunzhi
+main  r U' r' U r R' U R U r'                        | Tymon
+main  U' R' F R F2 L' U' L F                         | Yunzhi
+main  r U' r' U M' U R U r'                          | Tymon
+
+31-3
+main  F' U L' U L F R U2 R'                          | Xuanyi, Yunzhi
+main  y L' U L F U' R U' R' F'                       | Xuanyi, Yunzhi
+main  U F R' F' R2 U2 R' F' U F                      | Yufang
+main  y U L F' L' F2 R U R' F'                       | Yunzhi
+more  r U' R' U' M U' r U r'                         | 11 on solved.no
+
+31-4
+main  U F R' F' R U F R' F' R                        | Xuanyi, Yufang, Yunzhi
+main  y U L F' L' F U L F' L' F                      | Tymon, Yufang, Yunzhi
+
+31-5
+main  R U' R' F' U2 F                                | Xuanyi, Yufang, Yunzhi
+main  y F U' F' L' U2 L                              | Xuanyi, Yunzhi
+main  R U' R' d R' U R                               | Tymon
+main  R U' R' U F' U F                               | Zhaokun
+more  R U' R' U y' R' U R y                          | 16 on solved.no
+
+31-6
+main  F' U F R U2 R'                                 | Xuanyi, Yunzhi
+main  F' U F U' R U' R'                              | Xuanyi, Bofan
+main  y L' U L U' F U' F'                            | Xuanyi
+main  y L' U L F U2 F'                               | Yunzhi, Zhaokun
+main  y L' U L U' y' R U' R'                         | Tymon
+
+31-7
+main  y U L F' L' F L' U L                           | Xuanyi, Tymon, Yunzhi
+main  y U L F' L' F U' L' U2 L                       | Tymon
+more  R U2 R' U' F R' F' R                           | 5 on solved.no
+
+31-8
+main  U' R' F R F' R U' R'                           | Xuanyi, Tymon, Yufang, Yunzhi
+main  y U' F' L F L' F U' F'                         | Xuanyi
+
+32-1
+main  U2 r U2 r' U2 r U' r' U2 r U2 r'               | Yunzhi
+main  y U2 R' F2 R U2 R' F R U2 R' F2 R              | Yunzhi
+main  R U R' U R U' R' U F R' F' R U S' R U R' S     | Tymon
+more  r U M U2 r R2 U2 R U r'                        | 10 on solved.no
+
+32-2
+main  U' F R' F' R U' R U R'                         | Xuanyi, Yufang, Yunzhi
+
+32-3
+main  F R' F' R2 U R' U' R U R'                      | Xuanyi, Yufang, Yunzhi
+more  R' F R F' R' F R F' U R U' R'                  | 10 on solved.no
+
+32-4
+main  U2 F' U L' U' L U' F                           | Xuanyi, Tymon
+main  U R' F R F' U F' U' F                          | Zhaokun
+more  U R' F R F' U y' R' U' R                       | 15 on solved.no
+
+32-5
+main  U2 F R' F' R2 U R' U R U' R'                   | Xuanyi, Tymon, Yufang
+main  y U2 F' L F L2 U' L U' L' U L                  | Yunzhi
+
+32-6
+main  U R U' R' U R U' R2 F R F'                     | Xuanyi, Yufang, Yunzhi, Zhaokun
+main  y U F U' R U2 R' U F'                          | Yunzhi
+
+32-7
+main  y U' L' U L U' L' U L2 F' L' F                 | Xuanyi, Tymon, Yunzhi
+main  U' F' U L' U2 L U' F                           | Yunzhi
+more  U R U' R' U R U' R' U S' R U' R' S             | 9 on solved.no
+
+32-8
+main  U R U' R' U R U' R' U R U' R'                  | Xuanyi, Tymon, Yufang, Yunzhi
+main  y' R' U' R U R' U' R U R' U' R                 | Xuanyi
+main  y' U' R' U' R U R' U2 R U' R' U R              | Xuanyi
+
+33-1
+main  U' F R' F' R2 U2 R2 F R F'                     | Xuanyi, Tymon, Yunzhi
+main  y U' R' F2 R U2 R' F' R U2 R' F2 R             | Tymon
+more  D' r U' r' F2 U R' F R F2 D                    | 7 on solved.no
+
+33-2
+main  U' R U' R' U R' F R F'                         | Xuanyi, Tymon, Yufang
+main  y U' F U' R U' R' U F'                         | Xuanyi
+more  U' R U' R' U M' U R U' r'                      | 7 on solved.no
+
+33-3
+main  U R U' R2 F R F' R U R'                        | Xuanyi
+main  y U' l' U L U' L' U' l U L' U' L               | Xuanyi
+main  F R' F' R2 U' R' U R U' R'                     | Yufang, Yunzhi
+
+33-4
+main  U r U' r' U r U r' R U' R'                     | Xuanyi
+main  U r U' r' U r U M U' R'                        | Xuanyi
+main  U R U' R' F' U F U R U' R'                     | Yufang
+main  U' R U' R' U' F R' F' R2 U2 R'                 | Yufang
+more  U' R U' R' U2 S' R U' R' S                     | 10 on solved.no
+
+33-5
+main  U' F' U2 L' U2 L F                             | Xuanyi
+main  y U2 F R U2 R' U2 F'                           | Xuanyi, Yunzhi
+
+33-6
+main  U' R U' R' U2 R U R' U2 R' F R F'              | Xuanyi, Qixian
+main  y' r' U' r U R' U' R r' U r                    | Xuanyi, Yunzhi
+main  U' R U' R' U R' U' F U R2 U' R' F'             | Tymon
+main  R U R' U' R U' R' U F' U F R U' R'             | Zhaokun
+more  r2 D r2 U' R2 r' U r2 D' R2 r'                 | 5 on solved.no
+
+33-7
+main  y U' L' U L F' L F L2 U' L                     | Xuanyi, Yunzhi
+main  U' R U' R' U' R' F R F' R U2 R'                | Yufang
+more  U' R U' R' U2 R B U' B' R'                     | 7 on solved.no
+
+33-8
+main  y R' D R U' R' D' R                            | Xuanyi
+main  y' U' R' U' R U2 R' U' R                       | Xuanyi
+main  U' R U' R' U2 R U' R'                          | Tymon, Yufang
+main  y U2 R' D R U R' D' R                          | Yufang
+main  y2 U' L U' L' U' L U2 L'                       | Yunzhi
+
+34-1
+main  U r U2 r' U2 r U r' U2 r U2 r'                 | Xuanyi, Tymon
+main  y U F' L F L2 U2 L2 F' L' F                    | Xuanyi, Yunzhi
+main  U R U R' U2 R' D' r U r' D R2 U R'             | Yufang
+more  R U R D r' U r D' R' U' R'                     | 9 on solved.no
+
+34-2
+main  U' R U2 R' U S' R U R' S                       | Xuanyi, Yufang
+main  U' F' U' L' U' L U2 F                          | Yunzhi
+main  y U' R' F R U' R' F' R L' U L                  | Yunzhi
+
+34-3
+main  U r U' R' U R U r' U' R U R'                   | Xuanyi
+main  y U' L' U L2 F' L' F L' U' L                   | Xuanyi
+main  F R' F2 R U R U' R' F                          | Zhaokun
+
+34-4
+main  U F' U L' U L U' F                             | Xuanyi
+main  y U L' U L U' L F' L' F                        | Yufang, Yunzhi
+
+34-5
+main  U2 F' L' U2 L U2 F                             | Xuanyi, Zhaokun
+main  U2 R U' R' U r U' R' U' R U r'                 | Tymon
+main  y U L' U L U2 F R U R' F'                      | Bofan
+more  U2 F R' F' R2 U' R' U' R U R'                  | 10 on solved.no
+
+34-6
+main  U R U' R' F R' F' R2 U R'                      | Xuanyi, Yufang, Yunzhi
+main  y U F U2 R U' R' U' F'                         | Xuanyi
+main  y L' U' l L' U L U' l' U L                     | Tymon
+more  U' R U2 R' U' r U' r' U' r U r'                | 6 on solved.no
+
+34-7
+main  r U r' U' R U R' r U' r'                       | Xuanyi
+main  y U L' U L U2 L' U' L U2 L F' L' F             | Xuanyi
+more  U F D R U R' U' D' F'                          | 10 on solved.no
+
+34-8
+main  U R' D' R U' R' D R                            | Xuanyi
+main  y U L' U L U2 L' U L                           | Xuanyi, Tymon, Yufang, Yunzhi
+main  U' R U2 R' U R U R'                            | Yufang, Yunzhi
+main  U' R' D' R U R' D R                            | Yufang, Zhaokun
+main  U R U R' U2 R U R'                             | Yunzhi
+
+35-1
+main  U2 R U' R' U' F' U2 L' U L F                   | Xuanyi, Yunzhi
+main  U2 R U R' U' R U R2 D' r U r' D R              | Xuanyi
+main  y U2 F U F' L F' L2 U' L U F                   | Xuanyi, Yunzhi
+main  U2 R U' R D r' U' r D' R2                      | Yufang
+
+35-2
+main  U' R U R2 U' F' U F2 R F'                      | Xuanyi
+main  R' D' r U' r' D R U R U' R'                    | Tymon, Yufang
+main  U' R U R' U F' U2 L' U L F                     | Yunzhi
+main  y U' L' U L F U R U R' U F'                    | Yunzhi
+more  U2 R U R' U R' D' r U' r' D R                  | 7 on solved.no
+
+35-3
+main  U R' D' L F L' D R2 U2 R'                      | Xuanyi
+main  U R' D' r U r' D R2 U2 R'                      | Xuanyi
+main  U R' D' r U r' D R U' R U' R'                  | Yufang
+main  U' R U R' U F' U' L' U' L U F                  | Yunzhi
+more  U2 R U R' U' R' D' r U r' D R                  | 6 on solved.no
+
+35-4
+main  U2 r U' r' U R' F R F' r U2 r'                 | Xuanyi
+main  y U2 L F' L' F R' F R U R' F' R                | Xuanyi
+main  R2 D r' U' r D' R2 U R U' R'                   | Yufang
+main  U2 R U' R' U F' U' L' U L U F                  | Yunzhi
+
+35-5
+main  U2 R U R' U' F' U F                            | Xuanyi, Tymon, Yufang, Yunzhi, Bofan
+more  U2 R U R' U' y L' U L                          | 13 on solved.no
+
+35-6
+main  U' R U R' U F' U' F                            | Xuanyi, Tymon, Yufang, Yunzhi
+main  y U' F U F' U L' U' L                          | Yunzhi
+more  U' R U R' y U L' U' L                          | 227 on solved.no
+
+35-7
+main  U2 R U' R' U' F' U' F                          | Xuanyi, Yufang, Yunzhi
+main  y U2 F U' F' U' L' U' L                        | Xuanyi
+
+35-8
+main  U2 R U R' F R' F' R                            | Tymon, Yufang, Yunzhi, Zhaokun
+main  y2 U2 L U L' l U L' U' M'                      | Tymon
+main  y U2 F U F' L F' L' F                          | Yunzhi
+
+36-1
+main  U2 R' F R F' r U' r' U' r U r'                 | Xuanyi, Qixian
+main  y L' U' L U' F U' R U' R' U' F'                | Xuanyi
+main  F' U' F U' F R' F' R2 U R'                     | Yufang
+main  U' R' D' r U' r' D R2 U' R' U' R U R'          | Yufang
+
+36-2
+main  U2 R U2 R' F' L' U2 L U' F                     | Xuanyi
+main  y U2 L' U L U F U R U R' U' F'                 | Xuanyi
+main  U2 R2 D r' U' r D' R2 U' R U R'                | Tymon
+more  U2 F' U' F U S' R U' R' S                      | 8 on solved.no
+
+36-3
+main  U R U' R' F' U' L' U' L U' F                   | Xuanyi
+main  y U L' U' L U' F U2 R U' R' F'                 | Xuanyi
+main  R U R2 D' r U r' D R U' R U R'                 | Tymon
+main  U2 F' U' F U R U' R2 F' r U' r' F2 R           | Tymon
+main  U R' D' r U' r' D F' R U R U' R' F             | Yufang
+more  R' F2 D' F' D R U R U' R2 F' R                 | 7 on solved.no
+
+36-4
+main  U2 R U2 R' U F' U' L' U' L U' F                | Xuanyi
+main  y U2 L' U L U F U2 R U' R' F'                  | Xuanyi
+main  U2 F' U' F R' F R2 U R' U' F'                  | Yufang, Yunzhi
+main  U2 R' D' r U' r' D R U' R U R'                 | Yufang
+
+36-5
+main  U F' U' F U' R U R'                            | Xuanyi, Tymon, Yufang, Yunzhi
+main  y U L' U' L U' F U F'                          | Xuanyi, Tymon
+
+36-6
+main  U2 F' U' F U R U' R'                           | Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun
+main  y' U2 R' U' R y U2 R U2 R'                     | Tymon
+
+36-7
+main  U2 F' U' F R' F R F'                           | Xuanyi, Yufang, Yunzhi
+main  y U2 L' U' L F' L F L'                         | Xuanyi, Tymon, Yunzhi
+main  U2 R' F R F' U2 R U R'                         | Tymon
+main  y' U2 R' U' R r' U' R U R' r                   | Tymon
+
+36-8
+main  U2 F' U F U R U R'                             | Xuanyi, Tymon, Yunzhi
+main  y U2 L' U L U F U F'                           | Xuanyi
+main  y U2 L' U L d R U R'                           | Tymon
+main  y' U2 R' U R y U R U R'                        | Tymon
+
+== ZBLS-both | Both | Both in the slot
+
+37-1
+main  F U R U' R' F' U' F R U R' U' F'               | Xuanyi
+main  F U R U' R' F' U F R U R' U' F'                | Yunzhi
+
+37-2
+main  F U R U' R' F'                                 | Yunzhi
+main  U2 r' U2 R U R' U r                            | Zhaokun
+
+37-3
+main  R U R' U' R' F R F'                            | Xuanyi, Yufang
+main  F R U R' U' F'                                 | Xuanyi
+
+38-1
+main  U F' U F U' R U2 R' U R' F R F'                | Xuanyi, Yunzhi, Zhaokun
+main  y U L' U L U' F U2 R U' R' U F'                | Xuanyi
+main  r U' r' R U R' U r U' r' R U R'                | Tymon, Yufang
+main  y U R' F R L' U' L U' R' F R L' U' L           | Tymon
+main  y F U' F' U L' U2 L U' L F' L' F               | Yunzhi
+more  r U' R r' U R' U r U' R r' U R'                | 14 on solved.no
+more  R U' R' U R' F R F2 U2 F R U R'                | 5 on solved.no
+
+38-2
+main  y U2 L' U L F U R U2 R' U F'                   | Xuanyi
+main  U2 R2 U2 F R2 F' U2 R' U R'                    | Tymon
+main  y' U' R' U R d' R U2 R' U2 R U' R'             | Tymon
+main  R' F R F' R U' R' U R U' R' U2 R U' R'         | Yufang
+main  U2 R U2 R' U R U2 R' U F' U' F                 | Yunzhi
+main  y U L' U2 L U' L' U2 L U' F U F'               | Yunzhi
+more  R' F R F' R' U2 R2 U R2 U R                    | 21 on solved.no
+
+39-1
+main  y L' U2 L R' F R U L' U2 L R' F R              | Yi
+main  R U2 R' U F' L' U2 L U' F U' R U R'            | Yunzhi
+more  R U' R' U' r U' r' U2 r U R r' U2 R'           | 12 on solved.no
+
+39-2
+main  F R' F' R2 U2 R' U' R U R'                     | Xuanyi, Yufang
+main  y U2 L' U L U' L' U2 L2 F' L' F                | Xuanyi, Yunzhi
+
+39-3
+main  R U' R' U' R U R' U R' F R F'                  | Xuanyi, Qixian, Yunzhi, Zhaokun
+main  y F' L F L2 U' L U L F' L' F L' U' L           | Xuanyi
+
+39-4
+main  y' R' U R U' R' U2 R U' R' U R                 | Xuanyi
+main  R U' R' U' R U R' U2 R U' R'                   | Yufang, Yunzhi
+main  y L' U L U' L' U2 L U' L' U L                  | Yufang, Yunzhi
+more  R U R' U' R U2 R' U' R U R'                    | 11 on solved.no
+
+40-1
+main  R U R' U r U' r' U r R' U2 R U r'              | Xuanyi
+main  R U R' U r U' r' U M' U2 R U r'                | Xuanyi
+more  R U2 R' r U' r' U2 r U r' U R U R'             | 14 on solved.no
+
+40-2
+main  R U' R' U R U2 R2 F R F'                       | Xuanyi, Yufang, Yunzhi, Zhaokun, Bofan
+main  y U2 F' L F L2 U2 L U L' U' L                  | Xuanyi, Yunzhi
+
+40-3
+main  R U2 R' U R' F R2 U R' U' R' F' R              | Yufang
+main  y U L' U L U L' U' L U' L F' L' F              | Yunzhi
+
+40-4
+main  R U' R' U R U2 R' U R U' R'                    | Yufang, Yunzhi, Yiheng
+more  R U R' U2 R U' R' U R U R'                     | 223 on solved.no
+
+41-1
+main  y L' U L F R U2 R' F'                          | Xuanyi, Yunzhi
+main  r U' r' U2 r U r' R U R'                       | Tymon, Yufang, Yunzhi
+
+41-2
+main  U2 R U' R' U' R U' R' U F' U' F                | Xuanyi, Yunzhi
+main  R U' R' d R' U' R U' R' U' R                   | Tymon
+main  U R U' R' F R U R' U' F' R U' R'               | Yufang
+more  R F U R U' R' F' U' R'                         | 22 on solved.no
+
+42-1
+main  R U' R' F' L' U2 L F                           | Xuanyi, Yunzhi, Bofan
+main  y F R U2 R' F' L' U' L                         | Xuanyi, Yunzhi
+main  R U' R' r U' r' U2 r U r'                      | Yufang
+
+42-2
+main  R U' R' F' L' U L U F                          | Xuanyi, Qixian, Yunzhi
+main  U2 R U R' F R' F' R2 U' R' U2 R U' R'          | Yufang
+main  U' R U' R' U2 y' R' U' R U' R' U R             | Yufang
+main  y L' U L U L' U L U' F U F'                    | Yunzhi
+main  U' R U R' U' R U' R' U2 F' U' F                | Bofan
+main  U' R U' R' U R U' R' U R' F R F' R' F R F'     | Tymon

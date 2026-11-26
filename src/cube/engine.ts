@@ -9,6 +9,13 @@
  *   12-14 right strip, back to front
  *   15-17 front strip, left to right
  *   18-20 left strip, back to front
+ *
+ * A ZBLS case is the last layer and the front right slot under it, 26 characters:
+ *
+ *   0-20  the last layer as above, but X wherever its own pieces aren't yellow, and X for all of
+ *         its corners. Only the yellow on its edges matters.
+ *   21-22 the slot's edge, front then right   F R = the colors of the slot, D = white
+ *   23-25 the slot's corner, front, right, bottom
  */
 export type Turn = 0 | 1 | 2 | 3
 
@@ -220,6 +227,26 @@ const llSlots: number[] = [
 const isLL = new Set(llSlots)
 const rest = stickers.flatMap((_, i) => (isLL.has(i) ? [] : [i]))
 
+const slotSlots = [at([1, 0, 1], [0, 0, 1]), at([1, 0, 1], [1, 0, 0]), at([1, -1, 1], [0, 0, 1]), at([1, -1, 1], [1, 0, 0]), at([1, -1, 1], [0, -1, 0])]
+const inSlot = new Set(slotSlots)
+/** Everything a ZBLS algorithm has to leave where it was. */
+const below = rest.filter((i) => !inSlot.has(i))
+const pieces = (() => {
+  const by = new Map<string, number[]>()
+  stickers.forEach(({ p }, i) => by.set(String(p), [...(by.get(String(p)) ?? []), i]))
+  return [...by.values()].filter((list) => list.length > 1)
+})()
+
+/** True for the picture of a ZBLS case, false for a last layer. */
+export const isSlot = (ll: string) => ll.length > 21
+
+/** A cube as a ZBLS picture: the last layer's pieces only say where an edge's yellow is. */
+function slotPicture(state: string[]): string {
+  const out = [...state]
+  for (const piece of pieces) if (piece.some((i) => state[i] === 'U')) for (const i of piece) out[i] = piece.length === 2 && state[i] === 'U' ? 'U' : 'X'
+  return [...llSlots, ...slotSlots].map((i) => out[i]).join('')
+}
+
 const sides = 'FRBL'
 const recolor = (ll: string, k: number) =>
   ll.replace(/[FRBL]/g, (c) => sides[(sides.indexOf(c) + k) % 4])
@@ -240,40 +267,56 @@ const afterU: number[] = (() => {
   return to
 })()
 
-/** The picture after k clockwise U turns. */
+/** The picture after k clockwise U turns. A ZBLS slot stays where it is. */
 export function turnU(ll: string, k: number): string {
   let s = ll
   for (let i = 0; i < ((k % 4) + 4) % 4; i++) {
     const out: string[] = []
     for (let j = 0; j < 21; j++) out[afterU[j]] = s[j]
-    s = out.join('')
+    s = out.join('') + s.slice(21)
   }
   return s
 }
 
-const canonical = (ll: string) => [0, 1, 2, 3].map((k) => anyColoring(turnU(ll, k))).sort()[0]
+/** The same case seen any way. A ZBLS case only turns, as its colors are fixed by the slot. */
+const sameCase = (ll: string) => (isSlot(ll) ? (k: number) => turnU(ll, k) : (k: number) => anyColoring(turnU(ll, k)))
+const canonical = (ll: string) => [0, 1, 2, 3].map(sameCase(ll)).sort()[0]
 
 /** The quarter turns that take the picture `ll` to the one `seen` on a cube, whatever its colors. Null if it's another case. */
 export function viewOf(ll: string, seen: string): Turn | null {
-  const want = anyColoring(seen)
-  return ([0, 1, 2, 3] as Turn[]).find((k) => anyColoring(turnU(ll, k)) === want) ?? null
+  const want = isSlot(ll) ? seen : anyColoring(seen)
+  return ([0, 1, 2, 3] as Turn[]).find((k) => sameCase(ll)(k) === want) ?? null
 }
 
-/** The last layer an algorithm solves, or null if it disturbs the first two layers. */
-function solvedLayer(text: string): string | null {
+/** The whole cube, sticker by sticker, in the position an algorithm solves. */
+function solvedBy(text: string): string[] {
   const back = invert(upright(permOf(parse(text))))
   const state: string[] = []
   for (let i = 0; i < N; i++) state[back[i]] = solved[i]
-  if (!rest.every((i) => state[i] === solved[i])) return null
-  return llSlots.map((i) => state[i]).join('')
+  return state
 }
 
-/** The last layer after doing `text` on a solved cube, or null if F2L or the grip changed. */
-export function layerAfter(text: string): string | null {
+/** The whole cube after doing `text` on a solved one. */
+function doneOn(text: string): string[] {
   const p = permOf(parse(text))
   const state: string[] = []
   for (let i = 0; i < N; i++) state[p[i]] = solved[i]
-  return rest.every((i) => state[i] === solved[i]) ? llSlots.map((i) => state[i]).join('') : null
+  return state
+}
+
+const keeps = (state: string[], list: number[]) => list.every((i) => state[i] === solved[i])
+const layerOf = (state: string[]) => llSlots.map((i) => state[i]).join('')
+
+/** The last layer after doing `text` on a solved cube, or null if F2L or the grip changed. */
+export function layerAfter(text: string): string | null {
+  const state = doneOn(text)
+  return keeps(state, rest) ? layerOf(state) : null
+}
+
+/** The ZBLS case after doing `text` on a solved cube, or null if more than the last slot or the grip changed. */
+export function slotAfter(text: string): string | null {
+  const state = doneOn(text)
+  return keeps(state, below) ? slotPicture(state) : null
 }
 
 const cache = new Map<string, Turn[]>()
@@ -283,21 +326,37 @@ export function solves(text: string, ll: string): Turn[] {
   const id = `${ll}:${text}`
   const hit = cache.get(id)
   if (hit) return hit
-  const layer = solvedLayer(text)
-  const target = layer && anyColoring(layer)
-  const out = target ? ([0, 1, 2, 3] as Turn[]).filter((k) => anyColoring(turnU(ll, k)) === target) : []
+  const state = solvedBy(text)
+  let out: Turn[] = []
+  if (isSlot(ll)) {
+    const target = keeps(state, below) && slotPicture(state)
+    if (target) out = ([0, 1, 2, 3] as Turn[]).filter((k) => turnU(ll, k) === target)
+  } else if (keeps(state, rest)) {
+    const target = anyColoring(layerOf(state))
+    out = ([0, 1, 2, 3] as Turn[]).filter((k) => anyColoring(turnU(ll, k)) === target)
+  }
   cache.set(id, out)
   return out
 }
 
-export type Verdict = { kind: 'layer'; key: string } | { kind: 'breaks-f2l' } | { kind: 'does-nothing' }
+export type Verdict = { kind: 'layer' | 'slot'; key: string } | { kind: 'breaks-f2l' } | { kind: 'does-nothing' }
 
-/** What an algorithm does, with a key that can be looked up against known cases. */
+const oriented = (layer: string) => [1, 3, 5, 7].every((i) => layer[i] === 'U')
+
+/**
+ * What an algorithm does, with a key that can be looked up against known cases. Keeping the first two
+ * layers and solving a last layer whose edges are oriented makes it a last layer algorithm. Orienting
+ * the edges, with or without putting in the front right pair, makes it a ZBLS.
+ */
 export function examine(text: string): Verdict {
-  const layer = solvedLayer(text)
-  if (!layer) return { kind: 'breaks-f2l' }
-  const k = canonical(layer)
-  return k === canonical(llSlots.map((i) => solved[i]).join('')) ? { kind: 'does-nothing' } : { kind: 'layer', key: k }
+  const state = solvedBy(text)
+  if (keeps(state, rest)) {
+    const layer = layerOf(state)
+    if (!oriented(layer)) return { kind: 'slot', key: canonical(slotPicture(state)) }
+    const k = canonical(layer)
+    return k === canonical(layerOf(solved)) ? { kind: 'does-nothing' } : { kind: 'layer', key: k }
+  }
+  return keeps(state, below) ? { kind: 'slot', key: canonical(slotPicture(state)) } : { kind: 'breaks-f2l' }
 }
 
 export const caseKey = canonical

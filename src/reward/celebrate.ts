@@ -1,6 +1,6 @@
 import { caseById, deckById, setById, subById, type Case } from '../data/index.ts'
 import { SOLVED_LL } from '../cube/geometry.ts'
-import { shade } from '../lib/text.ts'
+import { shade, subName } from '../lib/text.ts'
 import { getStats, setStatus, statusOf, type Status } from '../state/store.ts'
 import { bloom, calm, fly, ring, spark, wash } from './fx.ts'
 import { finale, inFlight, ripple, say } from './signals.ts'
@@ -124,7 +124,7 @@ function milestones(c: Case, wait = 0, undo?: () => void): boolean {
     else {
       playSubset()
       glow(sub.id)
-      say({ text: `${sub.short} complete`, sub: sub.id, cells: sub.cases.length, undo }, undo ? 7000 : 4600)
+      say({ text: `${subName(sub)} complete`, sub: sub.id, cells: sub.cases.length, undo }, undo ? 7000 : 4600)
       return
     }
     playSet()

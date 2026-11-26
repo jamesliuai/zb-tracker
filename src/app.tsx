@@ -1,17 +1,19 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
+import { Drill } from './components/Drill.tsx'
 import { Finale } from './components/Finale.tsx'
 import { Header } from './components/Header.tsx'
 import { Palette } from './components/Palette.tsx'
 import { Toast } from './components/Toast.tsx'
 import { covered } from './lib/layers.ts'
 import { getRoute, go, settle, trainOf, useRoute } from './lib/router.ts'
+import { subName } from './lib/text.ts'
 import { CasePage } from './pages/CasePage.tsx'
 import { Home } from './pages/Home.tsx'
 import { SetPage } from './pages/SetPage.tsx'
 import { SubsetPage } from './pages/SubsetPage.tsx'
 import { TrainPage } from './pages/TrainPage.tsx'
-import { finale } from './reward/signals.ts'
+import { drilling, finale } from './reward/signals.ts'
 import { setPrefs, usePrefs } from './state/store.ts'
 
 function useTheme() {
@@ -34,11 +36,12 @@ export function App() {
   const route = useRoute()
   const [searching, setSearching] = useState(false)
   const celebrating = finale.use() !== null
+  const timing = drilling.use() !== null
 
   useLayoutEffect(settle, [])
   useEffect(() => {
     const page = `${route.deck.id} Tracker`
-    const name = route.page === 'home' ? '' : route.page === 'train' ? 'Train' : route.page === 'set' ? route.set.name : route.page === 'sub' ? route.sub.id : route.case.name
+    const name = route.page === 'home' ? '' : route.page === 'train' ? 'Train' : route.page === 'set' ? route.set.name : route.page === 'sub' ? subName(route.sub) : route.case.name
     document.title = name ? `${name} · ${page}` : page
   }, [route])
   useEffect(() => setPrefs({ deck: route.deck.id }), [route.deck])
@@ -46,7 +49,7 @@ export function App() {
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
       const typing = (e.target as HTMLElement).closest?.('input, textarea')
-      if (finale.get()) return
+      if (finale.get() || drilling.get()) return
       if ((e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) || (e.key === 'k' && (e.metaKey || e.ctrlKey))) {
         e.preventDefault()
         flushSync(() => setSearching(true))
@@ -63,7 +66,7 @@ export function App() {
 
   return (
     <>
-      <div inert={celebrating}>
+      <div inert={celebrating || timing}>
         <Header onSearch={() => setSearching(true)} />
         {route.page === 'home' && <Home key={route.deck.id} deck={route.deck} />}
         {route.page === 'set' && <SetPage key={route.set.id} set={route.set} />}
@@ -74,6 +77,7 @@ export function App() {
       <Palette open={searching} deck={route.deck} onClose={() => setSearching(false)} />
       <Toast />
       <Finale />
+      <Drill />
     </>
   )
 }

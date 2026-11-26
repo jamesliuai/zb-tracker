@@ -3,7 +3,7 @@ import { Icon } from '../components/Icon.tsx'
 import { Roll } from '../components/Roll.tsx'
 import { Tile, tileKeys } from '../components/Tile.tsx'
 import type { Subset, ZSet } from '../data/index.ts'
-import { airy, shade } from '../lib/text.ts'
+import { airy, shade, subLine } from '../lib/text.ts'
 import { ripple } from '../reward/signals.ts'
 import { useStats } from '../state/store.ts'
 
@@ -15,12 +15,12 @@ export function Subnav({ set, sub }: { set: ZSet; sub?: Subset }) {
       {set.subs.map((s) => {
         const k = stats.bySub.get(s.id)!
         return (
-          <a key={s.id} {...shade(s)} href={`#${s.id}`} aria-current={sub?.id === s.id ? 'page' : undefined} title={sub ? undefined : `${s.id} ${airy(s.name)}, ${k} of ${s.cases.length}`}>
+          <a key={s.id} {...shade(s)} href={`#${s.id}`} aria-current={sub?.id === s.id ? 'page' : undefined} title={sub ? undefined : `${subLine(s)}, ${k} of ${s.cases.length}`}>
             <i>
               <b style={{ scale: `${k / s.cases.length} 1` }} />
             </i>
             <span>
-              {s.id}
+              {s.short}
               <em>{airy(s.name)}</em>
             </span>
           </a>
@@ -34,9 +34,9 @@ function Row({ sub }: { sub: Subset }) {
   const n = useStats(sub.deck).bySub.get(sub.id)!
   const waving = ripple.use() === sub.id
   return (
-    <section className={waving ? 'row is-waving' : 'row'} aria-label={`${sub.id} ${airy(sub.name)}`}>
+    <section className={waving ? 'row is-waving' : 'row'} aria-label={subLine(sub)}>
       <a className="row__head" href={`#${sub.id}`}>
-        <b>{sub.id}</b>
+        <b>{sub.short}</b>
         <span>{airy(sub.name)}</span>
         <span className="num">
           <Roll value={n} />

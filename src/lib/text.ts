@@ -4,6 +4,15 @@ import { setById } from '../data/index.ts'
 /** The sheet writes "Same/Opposite". A little air makes it readable, and the slash stays with the first word. */
 export const airy = (name: string) => name.replace(/\s*\/\s*/g, '\u00a0/ ')
 
+/** What a subset is called on its own: T3, Edges, or ZBLS 5 for one that only has a number. */
+export const subName = (sub: Subset) => (sub.name ? sub.short : `${sub.deck} ${sub.short}`)
+
+/** The words that go with a subset: its name, or its set's when it only has a number. */
+export const subWords = (sub: Subset) => airy(sub.name || setById.get(sub.set)!.name)
+
+/** A subset's number or short name and its name, as far as it has one. */
+export const subLine = (sub: Subset) => [sub.short, airy(sub.name)].filter(Boolean).join(' ')
+
 export const date = (t: number) => {
   const d = new Date(t)
   const same = d.getFullYear() === new Date().getFullYear()

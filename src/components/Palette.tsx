@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { AUF, NotationError, examine, parse, solves } from '../cube/engine.ts'
 import { caseByKey, caseById, deckById, decks, setById, subById, subsets, type Case, type Deck, type Subset, type ZSet } from '../data/index.ts'
 import { go, homeOf, trainOf } from '../lib/router.ts'
+import { subName, subWords } from '../lib/text.ts'
 import { useStatus } from '../state/store.ts'
 import { Cube, Glyph } from './Cube.tsx'
 import { Icon, type IconName } from './Icon.tsx'
@@ -22,8 +23,8 @@ const hitDeck = (d: Deck): Hit => ({ id: homeOf(d.id), title: d.id, detail: `${d
 const hitTrain = (d: Deck): Hit => ({ id: trainOf(d.id), title: 'Train', detail: `${d.id}, against the clock`, ll: d.cases[0].ll, icon: 'timer' })
 const training = (q: string) => q.length >= 3 && ['train', 'practice', 'drill', 'timer'].some((w) => w.startsWith(q.toLowerCase()))
 const hitSet = (s: ZSet): Hit => ({ id: s.id, title: s.name, detail: `${s.cases.length} cases`, ll: s.cases[0].ll, set: s.id })
-const hitSub = (s: Subset): Hit => ({ id: s.id, title: s.id, detail: s.name, ll: s.cases[0].ll, set: s.set, isCase: true })
-const hitCase = (c: Case, detail = subById.get(c.sub)!.name): Hit => ({ id: c.id, title: c.name, detail, ll: c.ll, set: c.set, isCase: true })
+const hitSub = (s: Subset): Hit => ({ id: s.id, title: subName(s), detail: subWords(s), ll: s.cases[0].ll, set: s.set, isCase: true })
+const hitCase = (c: Case, detail = subWords(subById.get(c.sub)!)): Hit => ({ id: c.id, title: c.name, detail, ll: c.ll, set: c.set, isCase: true })
 
 /** T, T3, T3-5 and the names of subsets. */
 function inZbll(q: string): Hit[] {
@@ -52,13 +53,32 @@ function inPll(q: string): Hit[] {
   return found.map((c) => hitCase(c))
 }
 
+/** 12, 12-3, ZBLS 12-3, and the names of the sets. */
+function inZbls(q: string): Hit[] {
+  const zbls = deckById.get('ZBLS')!
+  const m = /^(?:zbls|f2l)?\s*(\d{1,2})(?:\s*[\s\-./]\s*(\d))?$/i.exec(q)
+  if (m) {
+    const sub = subById.get(`ZBLS-${Number(m[1])}`)
+    const c = sub && m[2] ? caseById.get(`${sub.id}-${m[2]}`) : undefined
+    if (c) return [hitCase(c)]
+    return sub && !m[2] ? [hitSub(sub), ...sub.cases.map((x) => hitCase(x))] : []
+  }
+  const words = q.toLowerCase().replace(/\bzbls\b/g, ' ').trim()
+  if (!words) return [hitDeck(zbls)]
+  return words.length < 3 ? [] : zbls.sets.filter((s) => `${s.name} ${s.short}`.toLowerCase().includes(words)).map(hitSet)
+}
+
+/** What a name could be, looked for in the deck that's open first. */
+const lookups = { ZBLL: [inZbll, inZbls, inPll], ZBLS: [inZbls, inZbll, inPll], PLL: [inPll, inZbll, inZbls] }
+const examples = { ZBLL: '“T3”, “Pi 2-5”, “Niklas”', ZBLS: '“12”, “12-3”, “edge in the slot”', PLL: '“Ua”, “J perm”, “diagonal”' }
+
 function search(text: string, deck: Deck): { hits: Hit[]; message?: string } {
   const q = text.trim()
   const here = deck.flat ? deck.cases.map((c) => hitCase(c)) : deck.sets.map(hitSet)
   if (!q) return { hits: [...here, hitTrain(deck), ...decks.filter((d) => d !== deck).map(hitDeck)] }
   if (training(q)) return { hits: [hitTrain(deck), ...decks.filter((d) => d !== deck).map(hitTrain)] }
 
-  const named = deck.id === 'PLL' ? [...inPll(q), ...inZbll(q)] : [...inZbll(q), ...inPll(q)]
+  const named = lookups[deck.id].flatMap((look) => look(q))
   if (named.length) return { hits: named }
   const other = decks.find((d) => d.id.toLowerCase() === q.toLowerCase())
   if (other) return { hits: [hitDeck(other)] }
@@ -68,20 +88,19 @@ function search(text: string, deck: Deck): { hits: Hit[]; message?: string } {
     const moves = parse(q)
     if (moves.length < 4) return { hits: [], message: 'Keep typing to look up an algorithm' }
     const v = examine(q)
-    if (v.kind === 'layer') {
+    if (v.kind === 'layer' || v.kind === 'slot') {
       const c = caseByKey.get(v.key)
       if (c) {
         const auf = AUF[solves(q, c.ll)[0] ?? 0]
-        return { hits: [hitCase(c, `This solves ${c.name}${auf ? `, after ${auf.replace("'", '′')}` : ''}`)] }
+        return { hits: [hitCase(c, `This solves ${c.deck === 'ZBLS' ? 'ZBLS ' : ''}${c.name}${auf ? `, after ${auf.replace("'", '′')}` : ''}`)] }
       }
-      return { hits: [], message: 'This solves the last layer, but with edges to flip, so it’s neither a ZBLL nor a PLL.' }
+      return { hits: [], message: 'This solves a case that isn’t here' }
     }
     if (v.kind === 'does-nothing') return { hits: [], message: 'This only turns the top layer' }
     return { hits: [], message: 'This doesn’t keep the first two layers solved' }
   } catch (e) {
     const near = e instanceof NotationError && /[UDRLFB]/.test(q) && q.length > 6 ? ` ${e.message}.` : ''
-    const names = deck.id === 'PLL' ? '“Ua”, “J perm”, “diagonal”' : '“T3”, “Pi 2-5”, “Niklas”'
-    return { hits: [], message: `Nothing matches.${near} Try ${names}, or paste an algorithm.` }
+    return { hits: [], message: `Nothing matches.${near} Try ${examples[deck.id]}, or paste an algorithm.` }
   }
 }
 

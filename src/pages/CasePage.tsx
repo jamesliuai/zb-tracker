@@ -5,16 +5,17 @@ import { Cube } from '../components/Cube.tsx'
 import { Icon } from '../components/Icon.tsx'
 import { Note } from '../components/Note.tsx'
 import { Segmented } from '../components/Segmented.tsx'
-import { NotationError, moveCount, normalize, parse, setup, type Turn } from '../cube/engine.ts'
-import { caseById, type Case, type Deck, type Subset, type ZSet } from '../data/index.ts'
+import { NotationError, isSlot, moveCount, normalize, parse, setup, type Turn } from '../cube/engine.ts'
+import { caseById, deckById, type Case, type Deck, type Subset, type ZSet } from '../data/index.ts'
 import { covered } from '../lib/layers.ts'
 import { go, homeOf } from '../lib/router.ts'
-import { airy, clock, date, shade, when } from '../lib/text.ts'
+import { clock, date, shade, subLine, when } from '../lib/text.ts'
 import { change, learn } from '../reward/celebrate.ts'
 import { say } from '../reward/signals.ts'
 import { playTurn } from '../reward/sound.ts'
 import { chosen, need, offers, suggestAngle, tipFor, type Row } from '../state/choose.ts'
-import { addAngle, anglesOf, nextUp, removeAngle, setPrefs, touch, updateAngle, updateEntry, useEntry, usePractice, usePrefs, type Angle, type Entry, type Status } from '../state/store.ts'
+import { addAngle, anglesOf, nextUp, removeAngle, setPrefs, touch, updateAngle, updateEntry, useDrills, useEntry, usePractice, usePrefs, type Angle, type Entry, type Status } from '../state/store.ts'
+import { drill } from '../train/drill.ts'
 import { median } from '../train/schedule.ts'
 
 const hands = [['two', 'Two-handed'], ['oh', 'One-handed']] as const
@@ -70,6 +71,7 @@ function AngleView({ c, angle, i, of, active, onFocus, children }: { c: Case; an
   const [showSetup, setShowSetup] = useState(false)
   const pick = chosen(c, angle, hand)
   const tip = tipFor(c, pick.text)
+  const best = useDrills(c.id)[pick.text]?.best
   const turn = () => {
     playTurn()
     updateAngle(c.id, i, { rot: ((angle.rot + 1) % 4) as Turn })
@@ -77,8 +79,9 @@ function AngleView({ c, angle, i, of, active, onFocus, children }: { c: Case; an
   return (
     <section className={active ? 'angle is-active' : 'angle'} onFocus={onFocus} onClick={onFocus} aria-label={of > 1 ? `Angle ${AB[i]}` : undefined}>
       <div className="angle__view">
-        <Cube ll={c.ll} rot={angle.rot} label={`${c.name} seen from above`} />
-        <button className="angle__turn" onClick={turn} aria-label="Turn the picture" title="See it from another side  U">
+        <Cube ll={c.ll} rot={angle.rot} label={isSlot(c.ll) ? `${c.name}, the last layer and the slot under it` : `${c.name} seen from above`} />
+        {/* a ZBLS slot stays where it is, so only the top turns */}
+        <button className="angle__turn" onClick={turn} aria-label={isSlot(c.ll) ? 'Turn the top' : 'Turn the picture'} title={isSlot(c.ll) ? 'Turn the top  U' : 'See it from another side  U'}>
           <Icon name="turn" />
         </button>
       </div>
@@ -108,6 +111,14 @@ function AngleView({ c, angle, i, of, active, onFocus, children }: { c: Case; an
         </p>
         <div className="angle__tools">
           <Copy text={pick.text} />
+          <button className="quiet" onClick={() => drill(c.id, pick.text)} title="Time this algorithm  S">
+            <Icon name="timer" size={14} /> Time it
+            {best && (
+              <span className="best num" title="Your fastest">
+                {clock(best)}
+              </span>
+            )}
+          </button>
           <button className="quiet" aria-expanded={showSetup} onClick={() => setShowSetup(!showSetup)}>
             Setup
           </button>
@@ -135,7 +146,18 @@ function AngleView({ c, angle, i, of, active, onFocus, children }: { c: Case; an
 
 /* ------------------------------------------------------------------ choosing an algorithm */
 
-function AlgRow({ row, on, choose, remove }: { row: Row; on: boolean; choose: () => void; remove?: () => void }) {
+/** Who uses an algorithm, two of them by name and then how many more. */
+function Who({ by }: { by: string }) {
+  const names = by.split(', ')
+  if (names.length < 3) return <small>{by}</small>
+  return (
+    <small title={by}>
+      {names.slice(0, 2).join(', ')} +{names.length - 2}
+    </small>
+  )
+}
+
+function AlgRow({ row, on, best, choose, time, remove }: { row: Row; on: boolean; best?: number; choose: () => void; time: () => void; remove?: () => void }) {
   return (
     <div className={on ? 'pick is-on' : 'pick'}>
       <button role="radio" aria-checked={on} onClick={choose}>
@@ -147,9 +169,17 @@ function AlgRow({ row, on, choose, remove }: { row: Row; on: boolean; choose: ()
         </span>
         <span className="pick__meta">
           {row.own && <small>Yours</small>}
-          {row.by && <small>{row.by}</small>}
+          {row.by && <Who by={row.by} />}
           <small>{moveCount(row.text)} moves</small>
+          {best && (
+            <small className="best" title="Your fastest">
+              {clock(best)}
+            </small>
+          )}
         </span>
+      </button>
+      <button className="mini" onClick={time} aria-label="Time this algorithm" title="Time it">
+        <Icon name="timer" />
       </button>
       <Copy text={row.text} />
       {remove && (
@@ -236,6 +266,7 @@ function OwnAlg({ c, rot, onAdd }: { c: Case; rot: Turn; onAdd: (text: string) =
 function Algorithms({ c, entry, angles, active, setActive }: { c: Case; entry: Entry; angles: Angle[]; active: number; setActive: (i: number) => void }) {
   const { hand } = usePrefs()
   const [all, setAll] = useState(false)
+  const drills = useDrills(c.id)
   const angle = angles[active]
   const { main, more } = offers(c, hand, angle.rot, entry)
   const now = chosen(c, angle, hand).text
@@ -249,7 +280,7 @@ function Algorithms({ c, entry, angles, active, setActive }: { c: Case; entry: E
         {angles.length > 1 && (
           <Segmented label="Choose for" value={AB[active]} options={[['A', 'Angle A'], ['B', 'Angle B']] as const} onChange={(v) => setActive(v === 'A' ? 0 : 1)} />
         )}
-        <Segmented label="Hands" value={hand} options={hands} onChange={(v) => setPrefs({ hand: v })} />
+        {deckById.get(c.deck)!.hands && <Segmented label="Hands" value={hand} options={hands} onChange={(v) => setPrefs({ hand: v })} />}
       </div>
       <div role="radiogroup" aria-label="Algorithm">
         {list.map((r) => (
@@ -257,7 +288,9 @@ function Algorithms({ c, entry, angles, active, setActive }: { c: Case; entry: E
             key={(r.own ? 'own ' : '') + r.text}
             row={r}
             on={r.text === now}
+            best={drills[r.text]?.best}
             choose={() => choose(r.text)}
+            time={() => drill(c.id, r.text)}
             remove={
               r.own
                 ? () => {
@@ -338,7 +371,8 @@ export function CasePage({ c, sub, set, deck }: { c: Case; sub: Subset; set: ZSe
       else if (k === 'u') {
         playTurn()
         updateAngle(c.id, active, { rot: ((angles[active].rot + (e.shiftKey ? 3 : 1)) % 4) as Turn })
-      } else if (k === 'escape') go(sub.id)
+      } else if (k === 's') drill(c.id, chosen(c, angles[active], hand).text)
+      else if (k === 'escape') go(sub.id)
       else return
       e.preventDefault()
     }
@@ -351,7 +385,7 @@ export function CasePage({ c, sub, set, deck }: { c: Case; sub: Subset; set: ZSe
       <div className="crumbs">
         <nav aria-label="You are here">
           <a href={`#${deck.flat ? homeOf(deck.id) : set.id}`}>{deck.flat ? deck.id : set.name}</a>
-          <a href={`#${sub.id}`}>{deck.flat ? sub.name : `${sub.id} ${airy(sub.name)}`}</a>
+          <a href={`#${sub.id}`}>{deck.flat ? sub.name : subLine(sub)}</a>
         </nav>
         <div className="crumbs__step">
           <a className="tool" href={`#${before ?? c.id}`} aria-disabled={!before} aria-label="Previous case" title="Previous  ←">

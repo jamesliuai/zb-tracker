@@ -8,7 +8,7 @@ import { Sheet } from '../components/Sheet.tsx'
 import { Tile, tileKeys } from '../components/Tile.tsx'
 import { Wall } from '../components/Wall.tsx'
 import { trainOf } from '../lib/router.ts'
-import { airy, shade, when } from '../lib/text.ts'
+import { shade, subWords, when } from '../lib/text.ts'
 import { inFlight } from '../reward/signals.ts'
 import { anglesOf, getEntry, nextUp, setPrefs, statusOf, useCases, useLast, usePractices, usePrefs, useStats, type Stats } from '../state/store.ts'
 import { chosen } from '../state/choose.ts'
@@ -16,6 +16,23 @@ import { nextDue, plan } from '../train/schedule.ts'
 
 const credits: Record<DeckId, React.ReactNode> = {
   ZBLL: 'Algorithms compiled by Juliette Sébastien, sheet layout by Thibaud Ou.',
+  ZBLS: (
+    <>
+      Xuanyi Geng’s algorithms come first, then other pros’, from{' '}
+      <a href="https://cyrickyarar.github.io/zbls_site_static/" target="_blank" rel="noreferrer">
+        CYRickyArAr’s ZBLS library
+      </a>{' '}
+      and Yota Ueda’s sheet of solves on{' '}
+      <a href="https://reco.nz/" target="_blank" rel="noreferrer">
+        reco.nz
+      </a>
+      . The ones most used on{' '}
+      <a href="https://solved.no/algs/3x3/zbls" target="_blank" rel="noreferrer">
+        solved.no
+      </a>{' '}
+      are behind “more”.
+    </>
+  ),
   PLL: (
     <>
       The main algorithms are Yiheng Wang’s, from{' '}
@@ -60,7 +77,7 @@ function UpNext({ deck }: { deck: Deck }) {
       <span className="next__text">
         <small>Up next</small>
         <b>{c.name}</b>
-        <i>{airy(sub.name)}</i>
+        <i>{subWords(sub)}</i>
         <span className="next__alg">
           <Auf turn={pick.need} />
           <Alg text={pick.text} />

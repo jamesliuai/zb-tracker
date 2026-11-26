@@ -6,6 +6,7 @@ import './styles/set.css'
 import './styles/case.css'
 import './styles/overlay.css'
 import './styles/train.css'
+import './styles/drill.css'
 import { createRoot } from 'react-dom/client'
 import { App } from './app.tsx'
 

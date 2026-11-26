@@ -1,0 +1,403 @@
+[
+  {"id":"ZBLS-basic","tab":"Basic","name":"Basic inserts","subs":[
+    {"n":1,"cases":[
+      {"name":"1-1","ll":"XXXXUFXXFXUXXRRXUDXUXXUXXX","two":["2R' F R F' U2 R' F R F'","0y' r' U' r U2 r' R U' M'"],"by":["Xuanyi, Yufang, Yunzhi","Tymon"],"two2":["0M' U R U' r2 U2 R U R' U r","0y R' F' R U2 M' U' M"],"by2":["8 on solved.no","5 on solved.no"]},
+      {"name":"1-2","ll":"XXXXUFXUFXUXXRRXXDXUXUXXXX","two":["1S' R U' R' S","2F R' F' R U' R U' R'","2F R' F' R2 U2 R'","1y F U' R U R' U' F'"],"by":["Xuanyi, Yunzhi","Xuanyi","Yufang","Yunzhi"],"two2":["2R U' B U' B' R'"],"by2":["8 on solved.no"]},
+      {"name":"1-3","ll":"XXXUUFXXFXUXXRRXUDXXXUXXXX","two":["0R' F R2 U R' U' F'","2R U' R' U' R' F R F'","0y' R' U2 R' D' r U r' D R2"],"by":["Xuanyi, Qixian, Tymon, Yufang, Bofan","Xuanyi","Tymon"]},
+      {"name":"1-4","ll":"XUXXUFXXFXXXXRRXUDXUXUXXXX","two":["1R U R' U2 R' F R F'","0R' U' F U R2 U' R' F'"],"by":["Xuanyi, Qixian, Yufang, Yunzhi","Tymon"],"two2":["1R U R' U2 M' U R U' r'"],"by2":["55 on solved.no"]},
+      {"name":"1-5","ll":"XXXUUFXUFXUXXRRXXDXXXXUXXX","two":["2R' F R F' R U2 R'","2R' F R F' U' R U' R'","1y F R U' R' F'","1F' U F R U' R'"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi, Yufang","Xuanyi, Yunzhi","Zhaokun"],"two2":["1R B U' B' R'","2y' R2 F R F' R"],"by2":["81 on solved.no","12 on solved.no"]},
+      {"name":"1-6","ll":"XUXUUFXXFXXXXRRXUDXXXXUXXX","two":["0R' F R F'","0y F' L F L'"],"by":["Xuanyi, Tymon, Yufang, Zhaokun","Tymon, Yunzhi"],"two2":["0M' U R U' r'"],"by2":["5 on solved.no"]},
+      {"name":"1-7","ll":"XUXXUFXUFXXXXRRXXDXUXXUXXX","two":["1F' L' U' L F","1y L' U' L U' F' L F L'"],"by":["Xuanyi, Yunzhi","Xuanyi"],"two2":["0R' U' F U R U' F'"],"by2":["71 on solved.no"]},
+      {"name":"1-8","ll":"XUXUUFXUFXXXXRRXXDXXXUXXXX","two":["1R U' R'","2R U2 R'","1y F U' F'","2y F U2 F'","2y2 L U2 L'"],"by":["Xuanyi, Tymon","Xuanyi","Xuanyi, Yunzhi","Yunzhi","Yunzhi"]}
+    ]},
+    {"n":2,"cases":[
+      {"name":"2-1","ll":"XXXXUXXRRXUXXUDXFFXUXUXXXX","two":["0r U r' U2 M' U M","2y L F' L' F U2 L F' L' F","3R U' R2 D' r U r' D R","0r U R' U' r' R2 U2 R2 F R F' R U2 R'"],"by":["Xuanyi, Qixian","Xuanyi","Yufang, Yunzhi","Tymon"]},
+      {"name":"2-2","ll":"XXXXUUXRRXUXXXDXFFXUXXUXXX","two":["3R' D' r U r' D R","3y S L' U L S'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun","Xuanyi"],"two2":["3S R' U' R U R S'"],"by2":["6 on solved.no"]},
+      {"name":"2-3","ll":"XUXXUXXRRXXXXUDXFFXUXXUXXX","two":["0F R' F2 U' F U R","0y L F' L2 U' L U F","3R U R2 D' r U r' D R"],"by":["Xuanyi","Xuanyi","Yunzhi"],"two2":["0R U2 R D r' U' r D' R2"],"by2":["11 on solved.no"]},
+      {"name":"2-4","ll":"XXXUUXXRRXUXXUDXFFXXXXUXXX","two":["3y L' U' L U2 L F' L' F","1R' D' r U' r' D R"],"by":["Xuanyi","Yufang, Yunzhi, Zhaokun"]},
+      {"name":"2-5","ll":"XUXXUUXRRXXXXXDXFFXUXUXXXX","two":["3r U' r' U r U r'","3y F U' F' L' U L","3F R' F' R2 U' R'","3F' L' U L F","3y' R' F' U F R"],"by":["Xuanyi","Zhaokun, Bofan","Yufang","Yunzhi","Yunzhi"]},
+      {"name":"2-6","ll":"XUXUUXXRRXXXXUDXFFXXXUXXXX","two":["0F R' F' R","0y L F' L' F"],"by":["Xuanyi, Tymon","Xuanyi, Tymon, Yufang, Yunzhi"],"two2":["0r U R' U' M"],"by2":["5 on solved.no"]},
+      {"name":"2-7","ll":"XXXUUUXRRXUXXXDXFFXXXUXXXX","two":["3R U R' U F R' F' R","3y F R U R' F'","3R B U B' R'","3R U2 R' F' U F"],"by":["Xuanyi, Yunzhi","Xuanyi, Yunzhi, Zhaokun","Tymon","Yufang"],"two2":["0F U R' U' F' U R"],"by2":["54 on solved.no"]},
+      {"name":"2-8","ll":"XUXUUUXRRXXXXXDXFFXXXXUXXX","two":["3F' U F","3y L' U L","3y' R' U R","2y L' U2 L"],"by":["Xuanyi, Yunzhi","Xuanyi, Tymon, Yunzhi","Tymon","Yunzhi"],"two2":["2F' U2 F"],"by2":["5 on solved.no"]}
+    ]},
+    {"n":3,"cases":[
+      {"name":"3-1","ll":"XXXRUXXXFXUXXURXUDXFXUXXXX","two":["0y' R D r' U' r D' R2 U' R"],"by":["Tymon, Yufang"],"two2":["0y' R D r' U r D' R2 U' R","0R' F R2 U' M' U2 r' U' F'"],"by2":["29 on solved.no","5 on solved.no"]},
+      {"name":"3-2","ll":"XXXRUXXUFXUXXURXXDXFXXUXXX","two":["2R' D' r U' r' D R2 U' R'","0y L' U2 L F R U R' F'","2F' U' L' U L U F"],"by":["Xuanyi, Yufang","Xuanyi, Yunzhi","Tymon, Yunzhi"],"two2":["0y' R' U2 F R' F' R U R"],"by2":["24 on solved.no"]},
+      {"name":"3-3","ll":"XXXRUUXXFXUXXXRXUDXFXXUXXX","two":["0y' R' U2 F' U F R","3R' D' r U' r' D R2 U2 R'","0F' U2 L' U L F"],"by":["Xuanyi","Yufang","Yufang"],"two2":["1R2 D r' U' r D' R2"],"by2":["10 on solved.no"]},
+      {"name":"3-4","ll":"XUXRUXXXFXXXXURXUDXFXXUXXX","two":["0F' U' L' U' L U F","0y S L' U' L S'","0y' S' R' U' R S"],"by":["Xuanyi, Yunzhi, Zhaokun","Xuanyi","Yufang"]},
+      {"name":"3-5","ll":"XXXRUUXUFXUXXXRXXDXFXUXXXX","two":["1R U2 R' F R' F' R","0y L' U2 L U L F' L' F","0y' R' U' R2 U R' U' M' U R U' r'","0S U R U' R' S'"],"by":["Xuanyi, Zhaokun","Xuanyi, Yunzhi","Tymon","Yufang"],"two2":["0y' R' U' R F R U R' U' F'"],"by2":["26 on solved.no"]},
+      {"name":"3-6","ll":"XUXRUUXXFXXXXXRXUDXFXUXXXX","two":["1R U2 R' U' F' U F","0y L' U' L F' U' L' U L F","0F' r U' r' F2 R U' R'","1y F U2 F' U' L' U L","0y L' U2 L U L F' L2 U' L U F"],"by":["Xuanyi","Xuanyi","Yufang, Zhaokun","Yunzhi","Yunzhi"],"two2":["2S' R U' R' S R U' R'"],"by2":["5 on solved.no"]},
+      {"name":"3-7","ll":"XUXRUXXUFXXXXURXXDXFXUXXXX","two":["2y R' F R U R' F' R"],"by":["Yunzhi, Bofan"],"two2":["3R' F R U R U' R2 F' R"],"by2":["41 on solved.no"]},
+      {"name":"3-8","ll":"XUXRUUXUFXXXXXRXXDXFXXUXXX","two":["0F' U' F","0y L' U' L","0y' R' U' R"],"by":["Xuanyi, Yunzhi","Xuanyi, Tymon, Yunzhi","Xuanyi, Tymon"]}
+    ]},
+    {"n":4,"cases":[
+      {"name":"4-1","ll":"XFXXUXXXRXRXXUDXUFXUXXUXXX","two":["0R' D' r U r' D R2 U R'","0y2 L' D' l U l' D L2 U L'","0y L' U L U' F R U R' U F'"],"by":["Xuanyi, Yufang","Tymon","Yunzhi"]},
+      {"name":"4-2","ll":"XFXXUUXXRXRXXXDXUFXUXUXXXX","two":["0R U' R2 F R F' R U2 R'","2y F U R U' R' U' F'"],"by":["Tymon, Yufang, Zhaokun","Yunzhi"]},
+      {"name":"4-3","ll":"XFXXUXXURXRXXUDXXFXUXUXXXX","two":["1F U R U' R2 F' R","0y F U2 R U' R' F'","3y L2 D' l U l' D L2"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun","Xuanyi, Yunzhi","Tymon"],"two2":["0R U2 B U' B' R'"],"by2":["28 on solved.no"]},
+      {"name":"4-4","ll":"XFXUUXXXRXRXXUDXUFXXXUXXXX","two":["0S' R U R' S","0y F U R U R' U' F'"],"by":["Xuanyi, Qixian, Tymon, Yufang, Yunzhi","Xuanyi"]},
+      {"name":"4-5","ll":"XFXXUUXURXRXXXDXXFXUXXUXXX","two":["3y L' U2 L F' L F L'","0R U2 R' U' R' F R F'","1r' R U' R U M' R'","1M U' R U R2 r"],"by":["Xuanyi","Yufang, Zhaokun","Tymon","Tymon"],"two2":["0R U R' F R U R' U' F'","0S R U R' U' S'"],"by2":["28 on solved.no","12 on solved.no"]},
+      {"name":"4-6","ll":"XFXUUXXURXRXXUDXXFXXXXUXXX","two":["3y L' U2 L U F U' F'","3F' U2 F U R U' R'"],"by":["Xuanyi","Yunzhi"],"two2":["0R U R' F U R U' R' F'","0R U R2 U' F' U F R"],"by2":["29 on solved.no","7 on solved.no"]},
+      {"name":"4-7","ll":"XFXUUUXXRXRXXXDXUFXXXXUXXX","two":["2r U' r' U' r U r'","0R U' R' U2 R' F R F'","1y L F' L' U' L' U L2 F L'"],"by":["Xuanyi, Tymon, Yunzhi","Yufang","Yunzhi"]},
+      {"name":"4-8","ll":"XFXUUUXURXRXXXDXXFXXXUXXXX","two":["0R U R'","0y F U F'"],"by":["Xuanyi, Tymon, Yunzhi","Xuanyi, Yunzhi"]}
+    ]}
+  ]},
+  {"id":"ZBLS-side","tab":"Side","name":"White to the side","subs":[
+    {"n":5,"cases":[
+      {"name":"5-1","ll":"XFXXUXXXFXRXXURXUDXUXXUXXX","two":["3y L' U L F R U2 R' U F'","2y2 L2 D l' U' l D' L' U' L'","3F' U F U R U' R2 F R F'","3r U' r' U2 r U r' R U2 R'"],"by":["Xuanyi","Tymon","Yufang","Yunzhi"],"two2":["2R2 D r' U' r D' R' U' R'"],"by2":["15 on solved.no"]},
+      {"name":"5-2","ll":"XFXXUUXXFXRXXXRXUDXUXUXXXX","two":["3r U R' U' r' R2 U2 R'","3R U R' U R' F R2 U R' U' F'","1y L F' L' F L' U2 L2 F' L' F","3r U R' U' R M U2 R'"],"by":["Xuanyi, Yunzhi","Yufang","Yunzhi","Qixian"],"two2":["3r U R' U' R2 r' U2 R'"],"by2":["7 on solved.no"]},
+      {"name":"5-3","ll":"XFXXUXXUFXRXXURXXDXUXUXXXX","two":["2y F R U R' U2 F'","3R U R' U' R' F R F' R U2 R'","1R U' R' U' R' F R F' R U R'"],"by":["Xuanyi","Yufang","Yufang"]},
+      {"name":"5-4","ll":"XFXUUXXXFXRXXURXUDXXXUXXXX","two":["3R U R' U R' F R F'","3y F U R U' R' U F'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Bofan","Yunzhi, Zhaokun"]},
+      {"name":"5-5","ll":"XFXXUUXUFXRXXXRXXDXUXXUXXX","two":["1y R' F r U' r' F' R","3R U R' U2 S' R U' R' S","3R U R' U' F R' F' R2 U2 R'"],"by":["Xuanyi, Yunzhi","Tymon","Yufang"]},
+      {"name":"5-6","ll":"XFXUUXXUFXRXXURXXDXXXXUXXX","two":["3R U R' U2 F' L' U' L F","0y F R U2 R' U' R U2 R' F'"],"by":["Yunzhi","Yunzhi"],"two2":["0R' D' R U R' D F R F'"],"by2":["21 on solved.no"]},
+      {"name":"5-7","ll":"XFXUUUXXFXRXXXRXUDXXXXUXXX","two":["3R U R' U2 R U R' U2 R' F R F'","1y L F' L2 U' L U F L' U' L","3F' U F U R U' R' U R U' R'","3y r' U r U r' F' U' r","2R U' R' U2 R U' R' U R' F R F'"],"by":["Xuanyi, Yunzhi","Xuanyi","Yufang","Yunzhi","Zhaokun"],"two2":["0R' D' R U R' U' D F U R U' F'","0F R' F' R U R U' R2 F R F'"],"by2":["13 on solved.no","7 on solved.no"]},
+      {"name":"5-8","ll":"XFXUUUXUFXRXXXRXXDXXXUXXXX","two":["3R U R' U2 R U' R'","3R U R' U' R U2 R'","3y F U R U' R' U2 R U' R' F'"],"by":["Xuanyi, Qixian, Tymon, Yufang, Yunzhi, Zhaokun","Xuanyi","Yunzhi"]}
+    ]},
+    {"n":6,"cases":[
+      {"name":"6-1","ll":"XXXRUXXXRXUXXUDXUFXFXUXXXX","two":["1R U' R' F' L' U2 L U' F","1y R' F R U2 R' F' R U L' U L","1y R' F R U2 R' F' R L' U2 L"],"by":["Xuanyi, Yunzhi","Tymon","Yunzhi"]},
+      {"name":"6-2","ll":"XXXRUXXURXUXXUDXXFXFXXUXXX","two":["3R' F R F' R U2 R2 F R F'","2R' D' r U M U R' D R"],"by":["Xuanyi, Yunzhi","Yufang"],"two2":["0R2 D r' U' r D' R' U R'"],"by2":["14 on solved.no"]},
+      {"name":"6-3","ll":"XXXRUUXXRXUXXXDXUFXFXXUXXX","two":["2F' L' U' L U2 F","1y L' U' L U2 L' B' U B L"],"by":["Xuanyi, Yufang, Yunzhi","Yunzhi"],"two2":["1R U R2 F R F' r U' r' U' r U r'"],"by2":["10 on solved.no"]},
+      {"name":"6-4","ll":"XUXRUXXXRXXXXUDXUFXFXXUXXX","two":["1F' U' L' U L U' F","1y L' U' L U' L F' L' F"],"by":["Xuanyi, Yunzhi","Xuanyi, Tymon, Yufang, Yunzhi"]},
+      {"name":"6-5","ll":"XXXRUUXURXUXXXDXXFXFXUXXXX","two":["3r U' R' U R U r'","2y L F' L' F U2 F U F'","1y L' U' L U2 S L' U L S'","2F R' F' R U2 R U R'"],"by":["Xuanyi, Tymon, Yunzhi","Xuanyi, Yunzhi","Tymon","Yufang"]},
+      {"name":"6-6","ll":"XUXRUUXXRXXXXXDXUFXFXUXXXX","two":["1y r' U' R' F R U r U L' U L","3F R' F' R U2 R U' R' U2 R U' R'","1y L' U' L U2 F R U R' F'"],"by":["Tymon","Yufang","Yunzhi"],"two2":["0R' D' R U' R' D R F R' F' R"],"by2":["12 on solved.no"]},
+      {"name":"6-7","ll":"XUXRUXXURXXXXUDXXFXFXUXXXX","two":["0R' U' R x U R' U' x' U R","1y L' U' L U2 L' U' L U2 L F' L' F"],"by":["Xuanyi","Xuanyi"],"two2":["0R U R' U' R U R' U' F' U' F"],"by2":["13 on solved.no"]},
+      {"name":"6-8","ll":"XUXRUUXURXXXXXDXXFXFXXUXXX","two":["1y' R' U' R U R' U2 R","1y L' U' L U L' U2 L","1y L' U' L U2 L' U L","1F' U' L' U L U2 L' U L F","1y' R' U' R U2 R' U R"],"by":["Xuanyi, Tymon","Tymon","Tymon","Yunzhi","Zhaokun"]}
+    ]},
+    {"n":7,"cases":[
+      {"name":"7-1","ll":"XXXFUXXXFXUXXURXUDXRXXUXXX","two":["0M' U' M U2 r U' r'","0y R' F' R U L' U L R' F' R","3y L' U L U F U R U R' U F'"],"by":["Xuanyi, Tymon, Yunzhi","Xuanyi","Yunzhi"]},
+      {"name":"7-2","ll":"XXXFUXXUFXUXXURXXDXRXUXXXX","two":["3R U2 R' U2 F' L' U' L F","0y F U R U2 R' U2 R U' R' F'","1R U' R' U R' F R F' R U R'"],"by":["Xuanyi, Yunzhi","Xuanyi, Yunzhi","Tymon, Yufang, Zhaokun"],"two2":["3R U2 R' U R' U' F U R U' F'"],"by2":["8 on solved.no"]},
+      {"name":"7-3","ll":"XXXFUUXXFXUXXXRXUDXRXUXXXX","two":["3R U2 R' U R' F R F'","3y F U2 R U' R' U F'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Xuanyi, Yunzhi"]},
+      {"name":"7-4","ll":"XUXFUXXXFXXXXURXUDXRXUXXXX","two":["3y F' L F L2 U2 L U' L F' L' F","0F R' F' R U2 R U' R' U R U' R'"],"by":["Tymon, Yunzhi","Yufang"]},
+      {"name":"7-5","ll":"XXXFUUXUFXUXXXRXXDXRXXUXXX","two":["0R' D' R U2 R' D F R F'","0y l U2 L2 U' L2 U' l'"],"by":["Xuanyi, Yufang, Yunzhi","Yunzhi"],"two2":["0y' r U2 R2 U' R2 U' r'"],"by2":["7 on solved.no"]},
+      {"name":"7-6","ll":"XUXFUUXXFXXXXXRXUDXRXXUXXX","two":["3R U2 R' U R' F R2 U R' U' F'","0y l U2 L2 U' L U L U2 l'","0R' D' r U2 r' D F R F'"],"by":["Xuanyi, Qixian","Xuanyi","Tymon, Yufang, Yunzhi"]},
+      {"name":"7-7","ll":"XUXFUXXUFXXXXURXXDXRXXUXXX","two":["0R U R' U R U' R2 F R F'","0y F U R U2 R' U F'"],"by":["Xuanyi, Yufang, Yunzhi","Yunzhi"],"two2":["0y' F R U R2 U' R F'"],"by2":["14 on solved.no"]},
+      {"name":"7-8","ll":"XUXFUUXUFXXXXXRXXDXRXUXXXX","two":["3R U2 R' U2 R U' R'","0R U R' U R U' R' U R U' R'"],"by":["Tymon, Yufang, Yunzhi","Zhaokun"]}
+    ]},
+    {"n":8,"cases":[
+      {"name":"8-1","ll":"XRXXUXXXRXFXXUDXUFXUXUXXXX","two":["0r U r' U' R U' R' r U r'","0y M' U M U2 R' F R"],"by":["Xuanyi, Zhaokun","Xuanyi, Tymon, Yunzhi"]},
+      {"name":"8-2","ll":"XRXXUUXXRXFXXXDXUFXUXXUXXX","two":["0F' U' L' U2 L U2 L' U L F","3R' D' r U' r' R U2 R' D R","1R U R' F' L' U' L U2 F"],"by":["Xuanyi, Tymon","Yufang","Zhaokun"],"two2":["1y L' U2 L U2 F R U R' F'"],"by2":["9 on solved.no"]},
+      {"name":"8-3","ll":"XRXXUXXURXFXXUDXXFXUXXUXXX","two":["1F' U2 L' U L U' F","1y L' U2 L U' L F' L' F"],"by":["Xuanyi, Tymon, Yunzhi, Zhaokun","Tymon, Yufang"],"two2":["1y' R' U2 F' U F U' R"],"by2":["11 on solved.no"]},
+      {"name":"8-4","ll":"XRXUUXXXRXFXXUDXUFXXXXUXXX","two":["1R' D' r U M U2 R' D R","1F R' F' R2 U2 R' U R' F R F'","1y L' U2 L U2 L' U' L U2 L F' L' F","0F R' F' R U' R U R' U' F' U' F"],"by":["Yufang","Yunzhi","Yunzhi","Zhaokun"],"two2":["1R' D' r U R r' U2 R' D R"],"by2":["10 on solved.no"]},
+      {"name":"8-5","ll":"XRXXUUXURXFXXXDXXFXUXUXXXX","two":["2F R' F' D' R U2 R' D R","0r' U2 R2 U R2 U r"],"by":["Yufang","Yunzhi"]},
+      {"name":"8-6","ll":"XRXUUXXURXFXXUDXXFXXXUXXXX","two":["1y L' U2 L U' L F' L2 U' L U F"],"by":["Xuanyi"],"two2":["1F R' F' R2 U2 R' U2 R U' R'"],"by2":["13 on solved.no"]},
+      {"name":"8-7","ll":"XRXUUUXXRXFXXXDXUFXXXUXXXX","two":["0y L' U' L U' L' U L2 F' L' F","0F' U' L' U2 L U' F","1R U' R' U R U2 R' F' U2 F"],"by":["Xuanyi","Tymon, Yunzhi, Zhaokun","Yufang"],"two2":["0y R' F' U' F2 U F' R"],"by2":["8 on solved.no"]},
+      {"name":"8-8","ll":"XRXUUUXURXFXXXDXXFXXXXUXXX","two":["1y L' U2 L U2 L' U L","1y' R' U2 R U R' U2 R"],"by":["Tymon, Yufang, Yunzhi","Tymon, Yufang"],"two2":["1y' R' U2 R U2 R' U R"],"by2":["27 on solved.no"]}
+    ]},
+    {"n":9,"cases":[
+      {"name":"9-1","ll":"XRXXUXXXFXFXXURXUDXUXUXXXX","two":["3R' F R2 U R' U' F2 U' F","2y R' F R U2 r R' U' r' F' R","1r U r' U2 r R' U r' R2 U' R'","2R U R' U' R' F R F' R U2 R2 F R F'","3R U' R' U F' U2 L' U L F","1r U r' U2 M' U R M U' R'"],"by":["Xuanyi","Xuanyi, Yunzhi","Tymon","Yufang","Yunzhi","Tymon"],"two2":["0R' F2 R2 U' R' U' R' F' R2 U R' F2"],"by2":["9 on solved.no"]},
+      {"name":"9-2","ll":"XRXXUUXXFXFXXXRXUDXUXXUXXX","two":["0F' U L' U' L U2 F"],"by":["Xuanyi, Yufang"],"two2":["3R U' R' d S' R' U' R S"],"by2":["8 on solved.no"]},
+      {"name":"9-3","ll":"XRXXUXXUFXFXXURXXDXUXXUXXX","two":["1r U' r' U2 r U r' R U' R'","2y L' U L U' R' F R U R' F' R","1r U' r' U2 r U M U' R'","3R' F R F' U2 F R' F' R2 U' R'","3R U' R' U' R' D' r U' r' D R2 U' R'"],"by":["Xuanyi, Yunzhi","Xuanyi, Yunzhi","Xuanyi, Qixian","Yufang","Zhaokun"]},
+      {"name":"9-4","ll":"XRXUUXXXFXFXXURXUDXXXXUXXX","two":["0F' U L' U' L U L' U L F","1y L' U' L U R' F R U R' F' R"],"by":["Xuanyi, Yunzhi, Zhaokun","Yunzhi"]},
+      {"name":"9-5","ll":"XRXXUUXUFXFXXXRXXDXUXUXXXX","two":["3R U' R' U F' U' F","2y R' F r U r' F' R"],"by":["Yufang","Yunzhi"],"two2":["3R U' R' d R' U' R"],"by2":["25 on solved.no"]},
+      {"name":"9-6","ll":"XRXUUXXUFXFXXURXXDXXXUXXXX","two":["1r U R' U' r' R2 U' R'","0y L F' L' F U2 L' U' L U L' U' L","1F R' F' R U' R U R' U R U' R'","1r U R' U' R M U' R'"],"by":["Xuanyi, Tymon, Yunzhi","Xuanyi","Yufang","Tymon"],"two2":["0R' F R U2 r U2 r' U2 F'"],"by2":["7 on solved.no"]},
+      {"name":"9-7","ll":"XRXUUUXXFXFXXXRXUDXXXUXXXX","two":["0F R U R' U' F' R U' R'","0y F' L F L' U' L F' L' F L' U' L"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun, Bofan","Yunzhi"]},
+      {"name":"9-8","ll":"XRXUUUXUFXFXXXRXXDXXXXUXXX","two":["2y L' U L U L' U' L","2y' R' U R U R' U' R"],"by":["Xuanyi, Tymon, Yunzhi","Xuanyi, Tymon"],"two2":["1y L' U' L U' L' U' L"],"by2":["41 on solved.no"]}
+    ]},
+    {"n":10,"cases":[
+      {"name":"10-1","ll":"XXXFUXXXRXUXXUDXUFXRXXUXXX","two":["2r U' r' U2 M' U R U r'","1y L' U L U' F U2 R U' R' F'","0R U' R D r' U' r D' R' U' R'"],"by":["Xuanyi, Yunzhi","Xuanyi","Tymon"],"two2":["0R' D' R U R' r U r' D R2 U R'"],"by2":["11 on solved.no"]},
+      {"name":"10-2","ll":"XXXFUXXURXUXXUDXXFXRXUXXXX","two":["1F R' F' R U2 R U' R'","0y F U' R U R' U2 F'","1F R' F' R U' R U2 R'"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi, Yunzhi","Yufang"]},
+      {"name":"10-3","ll":"XXXFUUXXRXUXXXDXUFXRXUXXXX","two":["2R U' R' U r U' r' U' r U r'","1F R' F' R U' R' F R F' R U2 R'","3y R' F R U2 R' F' R L' U L"],"by":["Xuanyi, Tymon, Yunzhi, Zhaokun","Yufang","Yunzhi"]},
+      {"name":"10-4","ll":"XUXFUXXXRXXXXUDXUFXRXUXXXX","two":["3R U R' U' r U' r' U' r U r'","0y F U' R U R' U' R U' R' F'","3R U R' U R U' R' U2 R' F R F'","0F R' F' R U2 R' F' R U R U' R' F","2R U' R' U' S' R U R' S"],"by":["Xuanyi","Xuanyi, Yunzhi","Yufang","Yufang","Yufang"]},
+      {"name":"10-5","ll":"XXXFUUXURXUXXXDXXFXRXXUXXX","two":["2r U' R' U' R U r'","1F R' F' R U R' F R F'","1F' U F U' R U R'","1y L' U L U' F U F'"],"by":["Xuanyi, Qixian, Tymon, Yunzhi","Yufang","Zhaokun","Yunzhi"]},
+      {"name":"10-6","ll":"XUXFUUXXRXXXXXDXUFXRXXUXXX","two":["0R' F R F' U2 R U R' U' R U R'","3y R' F' r U R r2 F r","2R U' R' U' R U' R2 F R F' U' R U' R'","2R U' R' U' R U' R2 F R F' R U2 R'"],"by":["Xuanyi, Yufang","Tymon, Yunzhi","Zhaokun","Zhaokun"]},
+      {"name":"10-7","ll":"XUXFUXXURXXXXUDXXFXRXXUXXX","two":["0F R' F' R U R' F R F' R U R'","2R U' R' F U R U' R2 F' R","0r' D' r U r' D r R U R'","0r' D' r U r' D R r U R'"],"by":["Xuanyi, Yunzhi","Yufang, Zhaokun","Tymon","Tymon"]},
+      {"name":"10-8","ll":"XUXFUUXURXXXXXDXXFXRXUXXXX","two":["3R U R' U R U R'","2R U' R' U' R U R'"],"by":["Tymon, Yufang, Yunzhi","Tymon, Yunzhi"]}
+    ]},
+    {"n":11,"cases":[
+      {"name":"11-1","ll":"XXXXURXXFXUXXFRXUDXUXUXXXX","two":["0F R' F' R U' R U' R2 F R F'"],"by":["Xuanyi, Yufang, Zhaokun"]},
+      {"name":"11-2","ll":"XXXXURXUFXUXXFRXXDXUXXUXXX","two":["0y' R U2 R2 U' R U' R' F R F'","3R U2 R' U' F' U' L' U L U F","2y r U2 R' U' R U' r2 F' r"],"by":["Xuanyi, Tymon","Yunzhi","Yunzhi"],"two2":["0R U' R' U' R U' R2 F R F2 U' F"],"by2":["6 on solved.no"]},
+      {"name":"11-3","ll":"XXXUURXXFXUXXFRXUDXXXXUXXX","two":["0F' U L' U2 L U2 F","3y L' U L U F' L F L' F' L F L'"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi, Yunzhi"],"two2":["0F' U r' F2 r U2 F"],"by2":["9 on solved.no"]},
+      {"name":"11-4","ll":"XUXXURXXFXXXXFRXUDXUXXUXXX","two":["0F' L' U' L U' L' U L U' F","0y L' U' L U' L F' L' F L' U' L"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi"],"two2":["0R' D' r U r U R U' r2 D"],"by2":["7 on solved.no"]},
+      {"name":"11-5","ll":"XXXUURXUFXUXXFRXXDXXXUXXXX","two":["3R U2 R' U F' U' F","3y F U2 F' U L' U' L"],"by":["Xuanyi, Qixian, Yufang","Xuanyi, Yunzhi"],"two2":["3R U2 R' U y' R' U' R"],"by2":["278 on solved.no"]},
+      {"name":"11-6","ll":"XUXUURXXFXXXXFRXUDXXXUXXXX","two":["0y L' U L U' L' U L U' L F' L' F","0F R' F' R U' R U' R' U R U' R'","3R U R' U' R U R' d' L' U L","0F R' F' R U' R U' R' U2 R U2 R'"],"by":["Xuanyi, Tymon, Yunzhi","Tymon, Yufang, Yunzhi, Zhaokun","Tymon","Bofan"]},
+      {"name":"11-7","ll":"XUXXURXUFXXXXFRXXDXUXUXXXX","two":["0R U' R' U R U' R2 F R F' R U' R'","3R U' R' y' U' R' U R U R' U' R"],"by":["Xuanyi, Yufang, Yunzhi","Tymon"]},
+      {"name":"11-8","ll":"XUXUURXUFXXXXFRXXDXXXXUXXX","two":["0y' R U2 R2 U' R2 U' R'","0y L U2 L2 U' L2 U' L'","0y L' U L U' L' U L U2 L' U L"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Yufang, Yunzhi","Tymon"]}
+    ]},
+    {"n":12,"cases":[
+      {"name":"12-1","ll":"XXXXUXXFRXUXXUDXRFXUXXUXXX","two":["1F' U L' U L F U R U' R'","1F R' F' R2 U R' U R' F R F'","0R' D' R U2 M' U r' D R2 U R'","0y F' L F L' U L' U L2 F' L' F"],"by":["Xuanyi, Yunzhi","Tymon, Yufang","Tymon","Yunzhi"],"two2":["0R U2 R' U' M' U' M U2 r U' r'"],"by2":["10 on solved.no"]},
+      {"name":"12-2","ll":"XXXXUUXFRXUXXXDXRFXUXUXXXX","two":["2R' F2 r U r' F R2 U R'","0R U' R' U R U' R' U2 S' R U' R' S"],"by":["Xuanyi","Yufang"]},
+      {"name":"12-3","ll":"XUXXUXXFRXXXXUDXRFXUXUXXXX","two":["1R U' R' U' F R' F' R F R' F' R","0y F U' R U2 R' U2 F'"],"by":["Xuanyi, Yunzhi","Yufang, Yunzhi"],"two2":["0R' U2 R2 U R2 F' U F R"],"by2":["9 on solved.no"]},
+      {"name":"12-4","ll":"XXXUUXXFRXUXXUDXRFXXXUXXXX","two":["0R U R' U R' F R F' R U R'","0y F R U R' U R U' R' U F'"],"by":["Xuanyi","Xuanyi, Yunzhi, Zhaokun"],"two2":["0R U' R' U R U' R' U2 R B U' B' R'","1F R' F' R2 U R' U2 R U' R'"],"by2":["8 on solved.no","5 on solved.no"]},
+      {"name":"12-5","ll":"XUXXUUXFRXXXXXDXRFXUXXUXXX","two":["1F' U2 F U' R U R'","1y L' U2 L U' F U F'"],"by":["Xuanyi, Yufang","Yunzhi"]},
+      {"name":"12-6","ll":"XUXUUXXFRXXXXUDXRFXXXXUXXX","two":["0R U' R' U R U' R' U R' F R F'","0y F' L F L' U L' U L U' L' U L"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun","Xuanyi, Tymon"]},
+      {"name":"12-7","ll":"XXXUUUXFRXUXXXDXRFXXXXUXXX","two":["0R U' r' U R U' R' U' r U2 R'","0y L' U L U' L' U L2 F' L' F L' U L","0F' U' L' U L U' L' U L U' F","2R U R' U' F R' F' R U' R U R'"],"by":["Xuanyi","Xuanyi, Tymon","Yufang","Zhaokun"],"two2":["0R U' R' U R U' R' U R' F R2 U R' U' F'"],"by2":["10 on solved.no"]},
+      {"name":"12-8","ll":"XUXUUUXFRXXXXXDXRFXXXUXXXX","two":["0R' U2 R2 U R2 U R","0R U' R' U R U' R' U2 R U' R'"],"by":["Xuanyi, Yufang, Yunzhi","Tymon, Yufang"]}
+    ]},
+    {"n":13,"cases":[
+      {"name":"13-1","ll":"XXXXUXXRFXUXXURXFDXUXUXXXX","two":["2y R' F R U' M' U2 r' F' R","1y' R' U R U' R D r' U' r D' R2 U' R","0R U' R' U' F R' F' R U F R' F' R","1R' F R F' U2 F' U2 L' U L U' F","2y R' F R U L' U2 L R' F R"],"by":["Xuanyi","Tymon","Yufang","Yunzhi","Yunzhi"],"two2":["2y R' F R U2 R' F' R U' L' U' L","2R U R D r' U r D' R' U R'"],"by2":["9 on solved.no","5 on solved.no"]},
+      {"name":"13-2","ll":"XXXXUUXRFXUXXXRXFDXUXXUXXX","two":["2F' L' U L U' L' U2 L F","2y l' U' L U' L' U2 l U' L' U L"],"by":["Xuanyi, Yufang, Yunzhi","Tymon"],"two2":["0M' U' R U' r' U2 r U' r'"],"by2":["10 on solved.no"]},
+      {"name":"13-3","ll":"XUXXUXXRFXXXXURXFDXUXXUXXX","two":["0R' D' r U r' D R U R U' R'","0y L' U' L U L F' L' F L' U' L","0F' U' F U R U' R' F R' F' R"],"by":["Yufang","Yunzhi","Zhaokun"],"two2":["3S' U' R B U B' U2 R' U' S"],"by2":["5 on solved.no"]},
+      {"name":"13-4","ll":"XXXUUXXRFXUXXURXFDXXXXUXXX","two":["0R' F R U2 r U' r' U2 F'","1y L' U L U' L' U L U2 L F' L' F","1y L' U L U R' F R U R' F' R"],"by":["Xuanyi, Tymon","Tymon","Bofan"]},
+      {"name":"13-5","ll":"XUXXUUXRFXXXXXRXFDXUXUXXXX","two":["2y L' U' L U' L' U2 L2 F' L' F","0R' F' r U R U2 r' F2"],"by":["Xuanyi, Yunzhi","Yufang"],"two2":["0M' U' R U R' U' R U2 r'"],"by2":["9 on solved.no"]},
+      {"name":"13-6","ll":"XUXUUXXRFXXXXURXFDXXXUXXXX","two":["0R U' R' U R' F R F' R U' R'"],"by":["Yufang, Yunzhi"],"two2":["0M' U' R U R' U2 R U' r'"],"by2":["13 on solved.no"]},
+      {"name":"13-7","ll":"XXXUUUXRFXUXXXRXFDXXXUXXXX","two":["0R U' R' U F' U2 F R U R'","0R U R' U' R' F R F' U R U' R'","1y L F' L2 U' L U L F L'"],"by":["Xuanyi","Tymon, Zhaokun","Yunzhi"]},
+      {"name":"13-8","ll":"XUXUUUXRFXXXXXRXFDXXXXUXXX","two":["1y' R' U R U' R' U' R","1y L' U L U' L' U' L"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Yufang, Yunzhi"]}
+    ]},
+    {"n":14,"cases":[
+      {"name":"14-1","ll":"XXXXUFXXRXUXXRDXUFXUXXUXXX","two":["2r U' r' U r R' U2 R U r'","0R' F R F' R U' R' U R U2 R2 F R F'","3y L F' L' F U2 F U2 R U' R' U F'","2r U' r' U M' U2 R U r'"],"by":["Xuanyi, Tymon","Yufang","Yunzhi","Qixian"],"two2":["2r U' r' U2 r U r' U R U R'"],"by2":["12 on solved.no"]},
+      {"name":"14-2","ll":"XXXXUFXURXUXXRDXXFXUXUXXXX","two":["2F R' F' R U R U' R' U R U R'","2y F R U' R' U R U2 R' F'"],"by":["Yufang, Bofan","Yunzhi"],"two2":["3R U' R' U R U R' F R U R' U' F'"],"by2":["6 on solved.no"]},
+      {"name":"14-3","ll":"XXXUUFXXRXUXXRDXUFXXXUXXXX","two":["0R U R' U' R' F R F' R U R'"],"by":["Xuanyi, Yufang"]},
+      {"name":"14-4","ll":"XUXXUFXXRXXXXRDXUFXUXUXXXX","two":["3R U' R' U R U' R' U2 R' F R F'","3R' U' F' U F R2 U R'","0y L F' L' U2 R' F R U2 F"],"by":["Yufang","Yunzhi","Yunzhi"],"two2":["3R U' R' U' r U' r' U' r U r'"],"by2":["9 on solved.no"]},
+      {"name":"14-5","ll":"XXXUUFXURXUXXRDXXFXXXXUXXX","two":["2R U R' U R U2 R2 F R F'","3R U' R' U2 F U R U' R2 F' R"],"by":["Tymon, Yunzhi","Yufang"]},
+      {"name":"14-6","ll":"XUXUUFXXRXXXXRDXUFXXXXUXXX","two":["3R U' R' U S' R U R' S","0y L' U L U' L F' L' F L' U L"],"by":["Xuanyi, Yufang, Zhaokun","Xuanyi"]},
+      {"name":"14-7","ll":"XUXXUFXURXXXXRDXXFXUXXUXXX","two":["3R' F R2 U R' U' R' F' R","0y L' U L U' F U2 F' L' U' L","3R' F R F' U R U R' U R U' R'"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi","Zhaokun"]},
+      {"name":"14-8","ll":"XUXUUFXURXXXXRDXXFXXXUXXXX","two":["3R U' R' U R U R'","3y2 L U' L' U L U L'"],"by":["Xuanyi, Yufang, Yunzhi, Bofan","Tymon"]}
+    ]},
+    {"n":15,"cases":[
+      {"name":"15-1","ll":"XXXXUXXFFXUXXURXRDXUXXUXXX","two":["1y l' U L U L' l U2 l' U' l","3F' U L' U2 L F R U R'","0y' R' U R2 D r' U r D' R2 U R"],"by":["Tymon","Yunzhi","Zhaokun"],"two2":["1R U' R D r' U r D' R' U' R'"],"by2":["9 on solved.no"]},
+      {"name":"15-2","ll":"XXXXUUXFFXUXXXRXRDXUXUXXXX","two":["0R U2 R2 F R F' U' R U2 R'","0y F U R' F R F' U2 F'","0R U2 R2 F R F' U2 R U' R'","3y R' F R U2 R' F' R U L' U' L"],"by":["Xuanyi","Xuanyi","Yufang, Yunzhi","Tymon"]},
+      {"name":"15-3","ll":"XUXXUXXFFXXXXURXRDXUXUXXXX","two":["0R U R' U2 R U' R2 F R F'","3y R' F R U2 R' F' R U' R' F R U R' F' R","0R' D' R U' R' D R U2 R U' R' U' R' F R F'"],"by":["Tymon, Yunzhi, Bofan","Tymon","Zhaokun"]},
+      {"name":"15-4","ll":"XXXUUXXFFXUXXURXRDXXXUXXXX","two":["1R' F R F' U R U2 R' U' R' F R F'","1F R' F' R U2 R U2 R' U R U' R'","2y L' U' L F R U2 R' F'"],"by":["Yufang, Zhaokun","Yunzhi","Yunzhi"],"two2":["0R' D' R U' R' D R U S' R U' R' S"],"by2":["8 on solved.no"]},
+      {"name":"15-5","ll":"XUXXUUXFFXXXXXRXRDXUXXUXXX","two":["0R' D' R U' R' D F R F'","3y F' U' L' U L F L' U' L"],"by":["Yufang","Yunzhi"]},
+      {"name":"15-6","ll":"XUXUUXXFFXXXXURXRDXXXXUXXX","two":["1R' F R F' U R U R'","0y F U2 R U R' U F'","0y L' U L U2 F U F'","2F' U' F U2 R U R' U R U' R'"],"by":["Yufang, Yunzhi, Zhaokun, Bofan","Tymon","Yunzhi","Zhaokun"],"two2":["0F' U F U2 R U R'"],"by2":["15 on solved.no"]},
+      {"name":"15-7","ll":"XXXUUUXFFXUXXXRXRDXXXXUXXX","two":["0l U r U' r' U' l'","0r' R U r U' r' U' M'","0F D R U R U' R2 D' F'","0y L' U L F U R U2 R' F'","0M U r U' r' U' M'"],"by":["Xuanyi, Zhaokun","Tymon","Yufang","Yunzhi","Tymon"],"two2":["0R' D' R U' R' U' D F U R U' F'"],"by2":["8 on solved.no"]},
+      {"name":"15-8","ll":"XUXUUUXFFXXXXXRXRDXXXUXXXX","two":["0R' D' R U' R' D R U R U' R'","0R U R' U2 R U' R' U R U' R'","0y F R U' R' U2 R U' R' U' F'"],"by":["Xuanyi, Tymon, Yufang","Tymon, Yufang","Yunzhi"]}
+    ]},
+    {"n":16,"cases":[
+      {"name":"16-1","ll":"XXXXURXXRXUXXFDXUFXUXUXXXX","two":["1R U2 R' F' L' U2 L F","1y F U' R U2 R' F' L' U' L","0R U' R2 D' r U' r' D R2 U' R'","3r U' R' U' M U2 r U r'","0R U' R' F' U' L' U L U F"],"by":["Xuanyi","Xuanyi, Yunzhi","Yufang, Zhaokun","Tymon","Yunzhi"],"two2":["1R U2 R' r U' r' U2 r U r'"],"by2":["9 on solved.no"]},
+      {"name":"16-2","ll":"XXXXURXURXUXXFDXXFXUXXUXXX","two":["0F' U' L F' L' F U2 F","2R' D' r U' M U' R' D R","0y L' U2 L2 F' L' F U2 L' U L","0R U R' U R' D' r U r' D R U' R U R'"],"by":["Xuanyi, Yunzhi","Yufang","Yunzhi","Zhaokun"],"two2":["1r U' r' U2 r U r' U' R U R'"],"by2":["9 on solved.no"]},
+      {"name":"16-3","ll":"XXXUURXXRXUXXFDXUFXXXXUXXX","two":["0r U' r' U l' U2 R U' R' U2 l","0y L' U' L U2 L' U L2 F' L' F","0r U' r' U R' F2 R F' R' F2 R","1R U' R' U R U' R' r U' r' U2 r U r'"],"by":["Xuanyi","Xuanyi, Tymon, Yunzhi","Xuanyi","Yufang"],"two2":["0R U' R' U2 y' S' R' U' R S"],"by2":["6 on solved.no"]},
+      {"name":"16-4","ll":"XUXXURXXRXXXXFDXUFXUXXUXXX","two":["2R U R' F' L' U2 L F","2R U R' r U' r' U2 r U r'","0F' U R U R' U' R' F2 R F'","2R U M' U' r' U2 r U r'"],"by":["Xuanyi, Yi","Tymon","Yufang","Tymon"]},
+      {"name":"16-5","ll":"XXXUURXURXUXXFDXXFXXXUXXXX","two":["0y F U' R U' R' U' R U' R' F'","0y' R' U2 R U' R' U' r' R2 U' R' U r","1F R' F' R2 U' R' U2 R U' R'","1F U R U' R' F' R U R'","0R' D' R U R' D R F R' F' R"],"by":["Xuanyi, Bofan","Tymon","Yufang","Yunzhi","Zhaokun"]},
+      {"name":"16-6","ll":"XUXUURXXRXXXXFDXUFXXXUXXXX","two":["0R U' R' U2 F' U' F","0R U' R' U2 y' R' U' R","0R U' R' U d R' U' R"],"by":["Tymon, Yunzhi, Bofan","Yufang","Tymon"]},
+      {"name":"16-7","ll":"XUXXURXURXXXXFDXXFXUXUXXXX","two":["0R U' R' U' R U2 R' F R' F' R","0y r' U' R' F R U r","1F R U R' U' F' U R U' R'"],"by":["Xuanyi","Tymon, Yunzhi, Zhaokun","Yufang"]},
+      {"name":"16-8","ll":"XUXUURXURXXXXFDXXFXXXXUXXX","two":["0r U r' U r U2 r' U' r U' r'","0y L' U' L U2 L' U L U' L' U L","1F R' F' R2 U' R' U R' F R F'","0F' L' U L U2 L' U L U F"],"by":["Xuanyi","Xuanyi, Tymon, Yunzhi","Yufang","Yunzhi"],"two2":["2y' R' U' R' D' R U R' D R U' R"],"by2":["10 on solved.no"]}
+    ]}
+  ]},
+  {"id":"ZBLS-up","tab":"Up","name":"White facing up","subs":[
+    {"n":17,"cases":[
+      {"name":"17-1","ll":"XXXXUFXXDXUXXRFXURXUXXUXXX","two":["3F' L' U2 L U' F U' R U R'","0y F' L F L2 U L U' L' U2 L2 F' L' F","0F' r U' r' F2 R U2 R2 F R F'"],"by":["Xuanyi","Tymon","Yufang"],"two2":["0R U2 R' U' R' D' r U r' D R2 U R'"],"by2":["11 on solved.no"]},
+      {"name":"17-2","ll":"XXXXUFXUDXUXXRFXXRXUXUXXXX","two":["0R U' R' U' F R' F' R U2 R U' R'","2y R U2 R' U2 R' F R U2 F'","2F R' F' R U2 R U2 R' U' R U R'"],"by":["Xuanyi","Yunzhi","Zhaokun"]},
+      {"name":"17-3","ll":"XXXUUFXXDXUXXRFXURXXXUXXXX","two":["0y L' U L2 F' L' F l' U l U l' U' l","0R U2 R' F U R U' R2 F' R","3R U' R' U2 R U2 R2 F R F'"],"by":["Xuanyi, Tymon","Yufang, Zhaokun","Yunzhi"]},
+      {"name":"17-4","ll":"XUXXUFXXDXXXXRFXURXUXUXXXX","two":["0R U2 r' U' R U R2 r","0R U' R' r U' R' U' R U r'","0F' U' F U R U' R2 F R F'","0R U' M' U' R' U' R U r'"],"by":["Xuanyi, Yunzhi, Yi","Tymon","Yufang","Tymon"],"two2":["3F R' F' R U R U' R' U' R U R'"],"by2":["6 on solved.no"]},
+      {"name":"17-5","ll":"XXXUUFXUDXUXXRFXXRXXXXUXXX","two":["0y L F' L' F L' U L2 F' L' F"],"by":["Yunzhi"],"two2":["0R U2 R' U' S' R U R' S"],"by2":["9 on solved.no"]},
+      {"name":"17-6","ll":"XUXUUFXXDXXXXRFXURXXXXUXXX","two":["0R U R' U' F R' F' R2 U R'","3y L' U L2 F' L' F U' L' U L","3y F R U R' U' R U' R' U' F'"],"by":["Xuanyi, Yufang, Bofan","Xuanyi","Yunzhi"]},
+      {"name":"17-7","ll":"XUXXUFXUDXXXXRFXXRXUXXUXXX","two":["0R U2 R' U r U' r' U' r U r'","0y L' U L F U F' U' L' U L","0F' U' F U R U' R' U R U' R'","3y L' U L2 F' L' F L F' L' F"],"by":["Xuanyi, Tymon","Xuanyi","Yufang, Zhaokun","Yunzhi"]},
+      {"name":"17-8","ll":"XUXUUFXUDXXXXRFXXRXXXUXXXX","two":["0R U2 R' U' R U R'","0y L F' L' F L' U L U' L' U L"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Tymon"]}
+    ]},
+    {"n":18,"cases":[
+      {"name":"18-1","ll":"XXXXUXXRDXUXXUFXFRXUXUXXXX","two":["0F R U R' U' F' R U2 R2 F R F'","1y F R U2 R' U F' U L' U' L","0F R' F' R2 U' R' U R U2 R2 F R F'","1R U' R' U F' U L' U2 L F"],"by":["Xuanyi","Xuanyi, Yunzhi","Yufang","Yunzhi"]},
+      {"name":"18-2","ll":"XXXXUUXRDXUXXXFXFRXUXXUXXX","two":["3F' L' U' L U L' U' L U2 F","2R U R2 D' r U' r' D R U R U' R'","2L' U2 L U2 L F' L' U2 F","1y L' U2 L U F U F' L' U' L"],"by":["Xuanyi","Yufang","Yunzhi","Yunzhi"],"two2":["0R U2 R' r U r' U2 r U R' U R r'"],"by2":["5 on solved.no"]},
+      {"name":"18-3","ll":"XUXXUXXRDXXXXUFXFRXUXXUXXX","two":["1y L' U L U2 L' U2 L2 F' L' F","0R U' R2 F R F' r U' r' U' r U r'","0R' F R F' R U' R2 F R2 U R' U' F'"],"by":["Xuanyi, Yunzhi","Yufang","Zhaokun"],"two2":["0R' D R2 U2 r' U2 R U r D' R2"],"by2":["5 on solved.no"]},
+      {"name":"18-4","ll":"XXXUUXXRDXUXXUFXFRXXXXUXXX","two":["0R U R' F' L' U2 L U' F","0y L' U2 l U L' U' L2 l'","1y F' L F L' U' L' U L U L' U' L"],"by":["Xuanyi, Tymon, Yufang","Yunzhi","Zhaokun"],"two2":["0R' F R F' R U' R' U S' R U' R' S"],"by2":["7 on solved.no"]},
+      {"name":"18-5","ll":"XUXXUUXRDXXXXXFXFRXUXUXXXX","two":["0R' F R F' R U' R2 F R F'","0y L' U2 L U S L' U' L S'","0y F' L F L' U' F R U2 R' U F'"],"by":["Xuanyi, Tymon, Yunzhi, Bofan","Xuanyi","Yunzhi"]},
+      {"name":"18-6","ll":"XUXUUXXRDXXXXUFXFRXXXUXXXX","two":["1R U' R2 F R F' U R U' R'","0y L' U' L U F' L F L2 U' L","1F' L' U' L U L' U L U F"],"by":["Xuanyi","Xuanyi, Yunzhi","Yunzhi"],"two2":["1R' F R F' R U' R' U F' U' F"],"by2":["6 on solved.no"]},
+      {"name":"18-7","ll":"XXXUUUXRDXUXXXFXFRXXXUXXXX","two":["0y L' U2 L U' R' F R U R' F' R","1R U' R2 F R F' R' F R F'"],"by":["Xuanyi, Tymon, Yunzhi","Yunzhi"]},
+      {"name":"18-8","ll":"XUXUUUXRDXXXXXFXFRXXXXUXXX","two":["0y L' U2 L U L' U' L","0y' R' U2 R U R' U' R","0R' F R F' R U' R' U R U' R'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Tymon, Yufang, Yunzhi","Tymon, Yunzhi"]}
+    ]},
+    {"n":19,"cases":[
+      {"name":"19-1","ll":"XFXXUXXXDXRXXUFXURXUXXUXXX","two":["1F' U L' U2 L F U2 R U' R'","2R U R' M' U' R r' U2 r U' r'","0R' U' F' U F2 R2 U R' U' R' F' R","1y L' U L2 F' L' F U L F' L' F","2R U R2 r U' M U2 r U' r'"],"by":["Xuanyi","Tymon","Yufang","Yunzhi","Tymon"]},
+      {"name":"19-2","ll":"XFXXUUXXDXRXXXFXURXUXUXXXX","two":["1R U2 R2 F R F'"],"by":["Xuanyi, Tymon, Yunzhi, Bofan"]},
+      {"name":"19-3","ll":"XFXXUXXUDXRXXUFXXRXUXUXXXX","two":["1F R U R' U' F' R U R'","0y F U' R U' R' U R U2 R' F'","1R U2 R2 F R2 U R' U' F'"],"by":["Xuanyi","Yunzhi, Zhaokun","Zhaokun"]},
+      {"name":"19-4","ll":"XFXUUXXXDXRXXUFXURXXXUXXXX","two":["0F R' F' R U R U R' U' R U R'","1R U2 R' U F' U F R U' R'"],"by":["Tymon, Yufang","Yunzhi"],"two2":["1R U2 R' U R B U' B' R'"],"by2":["6 on solved.no"]},
+      {"name":"19-5","ll":"XFXXUUXUDXRXXXFXXRXUXXUXXX","two":["1R U2 R' U R U R' U2 R' F R F'","1y L' U L2 F' L' F L' U L"],"by":["Xuanyi, Yunzhi","Yunzhi, Zhaokun"]},
+      {"name":"19-6","ll":"XFXUUXXUDXRXXUFXXRXXXXUXXX","two":["1R' F R F' R U' R' U2 R U' R'"],"by":["Yunzhi"],"two2":["1R U2 R' U S' R U' R' S"],"by2":["8 on solved.no"]},
+      {"name":"19-7","ll":"XFXUUUXXDXRXXXFXURXXXXUXXX","two":["3y F U R U R' U' R U2 R' F'","1R U2 R' U F' L' U' L F"],"by":["Xuanyi, Yunzhi","Yunzhi, Zhaokun"],"two2":["1R U2 R2 U' F U R U' F'"],"by2":["9 on solved.no"]},
+      {"name":"19-8","ll":"XFXUUUXUDXRXXXFXXRXXXUXXXX","two":["1R U2 R' U R U' R'"],"by":["Tymon, Yufang, Yunzhi"]}
+    ]},
+    {"n":20,"cases":[
+      {"name":"20-1","ll":"XXXRUXXXDXUXXUFXURXFXUXXXX","two":["3R U' R2 F R F' U' R' F R F'","3R U R' U r U' r' U2 r U r'"],"by":["Yufang, Yunzhi","Tymon"]},
+      {"name":"20-2","ll":"XXXRUXXUDXUXXUFXXRXFXXUXXX","two":["3y L' U2 L2 F' L' F"],"by":["Xuanyi, Yufang, Yunzhi, Bofan"]},
+      {"name":"20-3","ll":"XXXRUUXXDXUXXXFXURXFXXUXXX","two":["0F' U L' U L U' L' U2 L F","3y L' U2 L2 F' L2 U' L U F"],"by":["Yufang, Zhaokun","Yunzhi"],"two2":["0F D R2 U' R' U2 R U R2 D' F'"],"by2":["6 on solved.no"]},
+      {"name":"20-4","ll":"XUXRUXXXDXXXXUFXURXFXXUXXX","two":["0F' L' U L U' L' U2 L U2 F","3y L' U2 L U' F U' F' L' U L","0y F' L F L' U' L' U' L U L' U' L"],"by":["Xuanyi, Yunzhi","Xuanyi","Zhaokun"],"two2":["3r U' r' U2 r U r' R U R' U R U' R'"],"by2":["6 on solved.no"]},
+      {"name":"20-5","ll":"XXXRUUXUDXUXXXFXXRXFXUXXXX","two":["3R U' R2 F R F' R U' R'"],"by":["Xuanyi, Yufang, Yunzhi, Bofan"]},
+      {"name":"20-6","ll":"XUXRUUXXDXXXXXFXURXFXUXXXX","two":["3y L F' L' F L' U L U2 L' U L","3F R' F' D' R U' R' D R"],"by":["Xuanyi, Yunzhi","Yufang"],"two2":["0S R U2 R' U' R U R' U S'"],"by2":["5 on solved.no"]},
+      {"name":"20-7","ll":"XUXRUXXUDXXXXUFXXRXFXUXXXX","two":["2r U' R' U R U r' F' U' F","3y L' U2 L U' F R U R' F'","1y L' U L U' l' U L U2 L' U' l"],"by":["Xuanyi","Xuanyi, Yunzhi","Tymon"]},
+      {"name":"20-8","ll":"XUXRUUXUDXXXXXFXXRXFXXUXXX","two":["3y L' U2 L U' L' U L","3y' R' U2 R U' R' U R"],"by":["Xuanyi, Tymon, Yunzhi","Tymon, Yufang"]}
+    ]},
+    {"n":21,"cases":[
+      {"name":"21-1","ll":"XXXFUXXXDXUXXUFXURXRXXUXXX","two":["2F' L' U2 L2 F' L' F2","1y F' L F L' U2 R' F R U' R' F' R","0F R' F' R U F R' F' R2 U R'","1y F' L F L' U2 F R U' R' F'"],"by":["Xuanyi, Tymon, Yunzhi","Tymon","Yufang","Yunzhi"],"two2":["1M' U R U' r' U R U R2 F R F'"],"by2":["9 on solved.no"]},
+      {"name":"21-2","ll":"XXXFUXXUDXUXXUFXXRXRXUXXXX","two":["1F R' F' R2 U' R' U R U R'","2y L F' L' F L' U' L2 F' L' F","2R U R' U S' R U' R' S","1R U' R' U2 R U' R2 F R2 U R' U' F'"],"by":["Xuanyi, Yunzhi, Zhaokun","Xuanyi, Yunzhi","Yi","Tymon"]},
+      {"name":"21-3","ll":"XXXFUUXXDXUXXXFXURXRXUXXXX","two":["2R U R' U F' L' U' L F","1y F R U R' U F'","2F R U R' U' F' U2 R U' R'","2R U R2 U' F U R U' F'"],"by":["Xuanyi, Tymon","Xuanyi, Zhaokun","Tymon","Yufang"]},
+      {"name":"21-4","ll":"XUXFUXXXDXXXXUFXURXRXUXXXX","two":["0r U' R' U2 R U r'","0y F R U2 R' F'","0F R' F' R U2 R U R' U' R U R'","2R U R' U2 R' F R F' U' R U' R'"],"by":["Xuanyi","Xuanyi, Yunzhi","Yufang","Yufang"],"two2":["2R U R' U R B U' B' R'"],"by2":["5 on solved.no"]},
+      {"name":"21-5","ll":"XXXFUUXUDXUXXXFXXRXRXXUXXX","two":["1R' F R F' U R' F R F'","1R U' R' U2 R U' R2 F R F'","2R U R' U R U R' U2 R' F R F'"],"by":["Yufang, Yunzhi","Tymon","Zhaokun"],"two2":["2F' r U R' U' r' F2 R F'"],"by2":["6 on solved.no"]},
+      {"name":"21-6","ll":"XUXFUUXXDXXXXXFXURXRXXUXXX","two":["2R U R2 F R F'","2y F R' F R F2","0R U' R' r U' r' U' r U r'"],"by":["Xuanyi, Qixian, Tymon, Yunzhi","Xuanyi","Bofan"]},
+      {"name":"21-7","ll":"XUXFUXXUDXXXXUFXXRXRXXUXXX","two":["2F' U' F R U R'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi"]},
+      {"name":"21-8","ll":"XUXFUUXUDXXXXXFXXRXRXUXXXX","two":["2R U R' U R U' R'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi"]}
+    ]},
+    {"n":22,"cases":[
+      {"name":"22-1","ll":"XRXXUXXXDXFXXUFXURXUXUXXXX","two":["3F R' F' R U2 r U' r' U r U r'","3F R' F' R U2 F R' F' R2 U' R'"],"by":["Xuanyi","Yufang"],"two2":["0M' U R U' r' F2 r U r' U2 F"],"by2":["8 on solved.no"]},
+      {"name":"22-2","ll":"XRXXUUXXDXFXXXFXURXUXXUXXX","two":["3y F' L F L2 U L U' L' U' L","2R' F R F' R U R2 F R F'","0F' L' U' L U' F R U' R'"],"by":["Xuanyi, Tymon","Tymon, Yunzhi","Zhaokun"],"two2":["0r U' r' U2 y' R U R U' R' y"],"by2":["5 on solved.no"]},
+      {"name":"22-3","ll":"XRXXUXXUDXFXXUFXXRXUXXUXXX","two":["3F' L' U' L U' F","2y L' U' L U' F R U R' F'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun, Bofan","Yunzhi"],"two2":["2y' R' U' R U' R' F R' F' R U R"],"by2":["5 on solved.no"]},
+      {"name":"22-4","ll":"XRXUUXXXDXFXXUFXURXXXXUXXX","two":["0F' L' U2 L F","0y R' F r U2 r' F' R","2y' R' U' R U' R' F' U F R"],"by":["Xuanyi, Yunzhi, Zhaokun","Xuanyi, Tymon","Tymon"],"two2":["0r U' r' U2 r U r'"],"by2":["218 on solved.no"]},
+      {"name":"22-5","ll":"XRXXUUXUDXFXXXFXXRXUXUXXXX","two":["3F R' F' R U' F R' F' R","3y L F' L' F U' L F' L' F"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi, Yunzhi"],"two2":["0R2 U2 R2 F R F' R U2 R2"],"by2":["7 on solved.no"]},
+      {"name":"22-6","ll":"XRXUUXXUDXFXXUFXXRXXXUXXXX","two":["2F' r U' r' F2","1F R' F' R2 U R' U R U R'","2y L' U' L2 F' L' F"],"by":["Xuanyi, Tymon, Zhaokun","Yufang","Yunzhi"],"two2":["2y' R' F R' F' R2"],"by2":["9 on solved.no"]},
+      {"name":"22-7","ll":"XRXUUUXXDXFXXXFXURXXXUXXXX","two":["0F' L' U L U F","2y F U F' L' U' L","2R U R' F' U' F"],"by":["Xuanyi","Xuanyi","Tymon, Yufang, Yunzhi"],"two2":["0y' R' F' U F U R y"],"by2":["6 on solved.no"]},
+      {"name":"22-8","ll":"XRXUUUXUDXFXXXFXXRXXXXUXXX","two":["2y L' U' L U' L' U L","2y' R' U' R U' R' U R"],"by":["Xuanyi, Tymon, Yunzhi, Zhaokun","Xuanyi, Tymon, Yufang"],"two2":["0y' R' U R U2 R' U' R"],"by2":["8 on solved.no"]}
+    ]},
+    {"n":23,"cases":[
+      {"name":"23-1","ll":"XXXXUXXFDXUXXUFXRRXUXXUXXX","two":["3F' U' L' U L U' F R U R'","0F' U' F U' R U' R2 F R F'"],"by":["Qixian, Yunzhi","Yufang"],"two2":["1F R' F' R U S' R U R' S"],"by2":["12 on solved.no"]},
+      {"name":"23-2","ll":"XXXXUUXFDXUXXXFXRRXUXUXXXX","two":["2r U' r' U r U r' U R U' R'","3y F U' R U' R' F' L' U' L"],"by":["Xuanyi, Tymon","Xuanyi, Yunzhi"]},
+      {"name":"23-3","ll":"XUXXUXXFDXXXXUFXRRXUXUXXXX","two":["0R U2 R' U r U' R' U' R U r'","0y F R U' R' U R U R' U2 F'","0y R' F R U R' F' R2 F R' U2 R F' R'","0R U R' U F R' F' R2 U R'","0R U2 R' F' U F U' R U R'"],"by":["Xuanyi, Tymon","Xuanyi, Yunzhi","Tymon","Yufang","Zhaokun"]},
+      {"name":"23-4","ll":"XXXUUXXFDXUXXUFXRRXXXUXXXX","two":["1F R' F' R U R U R'","1y L' U L U' R' F R U2 R' F' R","0y L' U L F R U R' U2 F'"],"by":["Xuanyi, Tymon, Yunzhi","Tymon","Yunzhi"]},
+      {"name":"23-5","ll":"XUXXUUXFDXXXXXFXRRXUXXUXXX","two":["3y F R U' R' F' L' U' L","1R U' R' U' R U' R2 F R F'"],"by":["Xuanyi, Yunzhi","Tymon, Yufang, Yunzhi"]},
+      {"name":"23-6","ll":"XUXUUXXFDXXXXUFXRRXXXXUXXX","two":["1R' F R F' R U R' U2 R U' R'"],"by":["Xuanyi, Qixian, Tymon, Yufang, Yunzhi"],"two2":["0F U R U' R' F' U' F' U' F"],"by2":["7 on solved.no"]},
+      {"name":"23-7","ll":"XXXUUUXFDXUXXXFXRRXXXXUXXX","two":["2R U2 R' U' R U' R2 F R F'","2R U R' U' R U' R' U R' F R F'","0y L' U L U' R' F r U' r' F' R"],"by":["Xuanyi, Yunzhi","Yufang","Yunzhi"]},
+      {"name":"23-8","ll":"XUXUUUXFDXXXXXFXRRXXXUXXXX","two":["0R U' R2 D' R U2 R' D R","0y2 L U' L' U L U2 L' U L U L'","1R U' R' U' R U' R' U R U' R'","1y L' U' L2 F' L' F L' U L"],"by":["Xuanyi, Tymon","Tymon","Tymon","Yunzhi"]}
+    ]},
+    {"n":24,"cases":[
+      {"name":"24-1","ll":"XXXXURXXDXUXXFFXURXUXUXXXX","two":["0R U R' U2 F' r' F2 r U' F","0F R' F' R U2 F R' F' R2 U R'","3y F' L F L' U' S L' U' L S'"],"by":["Xuanyi","Yufang, Zhaokun","Tymon"],"two2":["0R U' R2 D' r U R r' U R' D R"],"by2":["8 on solved.no"]},
+      {"name":"24-2","ll":"XXXXURXUDXUXXFFXXRXUXXUXXX","two":["1F' U L' U L F R U R'","0F' U F U R U' R' U R' F R F'"],"by":["Xuanyi, Yunzhi","Zhaokun"],"two2":["3F' U r' F r U r' F r U' F"],"by2":["6 on solved.no"]},
+      {"name":"24-3","ll":"XXXUURXXDXUXXFFXURXXXXUXXX","two":["0r U R' U R U r' U' r U r'","0F' U2 F R U' R' U F' U' F"],"by":["Xuanyi","Zhaokun"],"two2":["0r U' r' U' r U r' F' U2 F"],"by2":["6 on solved.no"]},
+      {"name":"24-4","ll":"XUXXURXXDXXXXFFXURXUXXUXXX","two":["3R U' R' U r U' r' U2 r U r'","3R U R2 F R F' U' R' F R F'","3R' F R F' U' F' U' F","3y F' L F L' U' L' U' L"],"by":["Tymon","Yufang","Yunzhi","Yunzhi"],"two2":["0F U R U' R' F' U' R' F R F'"],"by2":["11 on solved.no"]},
+      {"name":"24-5","ll":"XXXUURXUDXUXXFFXXRXXXUXXXX","two":["1F' L' U L F R U R'","1F R' F' D' R U R' D R","3y L' U L U L' U L2 F' L' F"],"by":["Xuanyi, Yunzhi","Yufang, Zhaokun","Tymon"],"two2":["1F R' F' R2 U2 R' U R U R'"],"by2":["9 on solved.no"]},
+      {"name":"24-6","ll":"XUXUURXXDXXXXFFXURXXXUXXXX","two":["0F U R U' R' F' R U' R'"],"by":["Xuanyi, Yufang, Yunzhi, Zhaokun"]},
+      {"name":"24-7","ll":"XUXXURXUDXXXXFFXXRXUXUXXXX","two":["0R U' R' F R' F' R U2 R U R'","3R U R' U2 F R' F' R y' R' U R","1F R U R' U' F' U' R U' R' U R U R'","0R U' R' U r U' R' U R U r'"],"by":["Xuanyi, Yufang","Tymon","Yufang","Yunzhi"]},
+      {"name":"24-8","ll":"XUXUURXUDXXXXFFXXRXXXXUXXX","two":["3R U R2 F R F' R U' R'","0y' R U R' U R U2 R2 U2 R"],"by":["Xuanyi, Yunzhi","Tymon"],"two2":["3y L' U L U L' U L U' L' U L"],"by2":["37 on solved.no"]}
+    ]}
+  ]},
+  {"id":"ZBLS-corner","tab":"Corner","name":"Corner in the slot","subs":[
+    {"n":25,"cases":[
+      {"name":"25-1","ll":"XXXXUFXXXXUXXRXXUXXUXXUFRD","two":["1R2 D r' U r D' R' U' R'"],"by":["Tymon, Yi"]},
+      {"name":"25-2","ll":"XXXXUFXUXXUXXRXXXXXUXUXFRD","two":["1f' U2 L' U L U2 f","2r U2 R' U R U' R' U2 R U' r'","1y R' F2 U' F U F2 R"],"by":["Xuanyi","Yufang","Yunzhi"],"two2":["0r' U' R' U' R' U R U r"],"by2":["7 on solved.no"]},
+      {"name":"25-3","ll":"XXXUUFXXXXUXXRXXUXXXXUXFRD","two":["0y R' F2 U' F' U F2 R"],"by":["Xuanyi, Yunzhi"],"two2":["0R U' R' U' R' F R2 U R' U' R' F' R"],"by2":["8 on solved.no"]},
+      {"name":"25-4","ll":"XUXXUFXXXXXXXRXXUXXUXUXFRD","two":["3F R' F' R U' R U R' U2 R U' R'","3F R' F' R U' R U R' U' R U2 R'","2y F U2 R U2 R' U2 F'"],"by":["Xuanyi, Qixian, Yunzhi","Xuanyi","Xuanyi, Yunzhi"],"two2":["3R' F R F' U2 r U' r' U' r U r'"],"by2":["14 on solved.no"]},
+      {"name":"25-5","ll":"XXXUUFXUXXUXXRXXXXXXXXUFRD","two":["3F' U' F U R U R'","3y L' U L U R' F R U' R' F' R"],"by":["Xuanyi, Yunzhi, Bofan","Tymon"]},
+      {"name":"25-6","ll":"XUXUUFXXXXXXXRXXUXXXXXUFRD","two":["3F' U F U R U' R'","3y L' U L U F U' F'"],"by":["Tymon, Zhaokun","Yunzhi"]},
+      {"name":"25-7","ll":"XUXXUFXUXXXXXRXXXXXUXXUFRD","two":["3R' F R F' R U R'","3F' U F R' F R F'","3y L' U L F' L F L'"],"by":["Xuanyi, Yufang, Yunzhi","Tymon","Tymon"]},
+      {"name":"25-8","ll":"XUXUUFXUXXXXXRXXXXXXXUXFRD","two":["0R' F' R U R U' R' F","3F' R U R' U' R' F R"],"by":["Xuanyi, Yufang, Yunzhi","Tymon, Yufang"],"two2":["0R' U' R' U' R' U R U R"],"by2":["8 on solved.no"]}
+    ]},
+    {"n":26,"cases":[
+      {"name":"26-1","ll":"XXXXUXXRXXUXXUXXFXXUXUXFRD","two":["1R U R D r' U' r D' R2"],"by":["Yufang, Yunzhi, Max"],"two2":["3y' R2 D' r U' r' D R U R"],"by2":["10 on solved.no"]},
+      {"name":"26-2","ll":"XXXXUUXRXXUXXXXXFXXUXXUFRD","two":["0r U r' U2 r U' R' U2 R U' r'","1R U R' U F' U' L' U L U F"],"by":["Xuanyi","Yunzhi"],"two2":["1R U' R' r U r' U2 M' U M"],"by2":["11 on solved.no"]},
+      {"name":"26-3","ll":"XUXXUXXRXXXXXUXXFXXUXXUFRD","two":["0y f U2 R U R' U2 f'","0R' D' r U r' D R U' R U R'","1R U' R' U' R' D' r U r' D R","1y F U' F' U' S L' U L S'"],"by":["Xuanyi","Yufang, Zhaokun","Yunzhi","Yunzhi"]},
+      {"name":"26-4","ll":"XXXUUXXRXXUXXUXXFXXXXXUFRD","two":["2F' U2 L' U2 L U2 F","1y F' L F L' U L' U' L U2 L' U L","1R U' R' U R' D' r U' r' D R"],"by":["Xuanyi","Xuanyi, Yunzhi","Yunzhi"]},
+      {"name":"26-5","ll":"XUXXUUXRXXXXXXXXFXXUXUXFRD","two":["1R U R' U' F' U' F","1R U' R' U' r U' r' U r U r'","1R U' R' U' F R' F' R2 U' R'","1y F U F' U' L' U' L"],"by":["Xuanyi, Yufang, Yunzhi","Tymon","Yufang","Yunzhi"]},
+      {"name":"26-6","ll":"XUXUUXXRXXXXXUXXFXXXXUXFRD","two":["1R U' R' U' F' U F","1y F U' F' U' L' U L"],"by":["Xuanyi, Yufang","Yunzhi, Yiheng"]},
+      {"name":"26-7","ll":"XXXUUUXRXXUXXXXXFXXXXUXFRD","two":["1R U' R' F R' F' R","1y L F' L' F L' U' L"],"by":["Xuanyi, Qixian, Tymon, Yufang, Yunzhi, Bofan","Tymon, Yunzhi"]},
+      {"name":"26-8","ll":"XUXUUUXRXXXXXXXXFXXXXXUFRD","two":["2R U' R' U' r U' R' U R U r'","0y r U r' U' r' F r F'","1y F L' U' L U L F' L'"],"by":["Xuanyi","Xuanyi, Tymon","Tymon"],"two2":["1R U' R' F U R' U' F' U R"],"by2":["10 on solved.no"]}
+    ]},
+    {"n":27,"cases":[
+      {"name":"27-1","ll":"XXXXUFXXXXUXXRXXUXXUXXUDFR","two":["3R U' R' M' U' M U2 r U' r'","0y L' U2 L F U' R U' R' F'","3R' D' r U' r' D R U' R U2 R'","3R' D' r U' r' D R U2 R U' R'"],"by":["Xuanyi","Xuanyi, Yunzhi","Yufang","Yufang"]},
+      {"name":"27-2","ll":"XXXXUFXUXXUXXRXXXXXUXUXDFR","two":["0R U' R' U R U R' U2 R' F R F'","2y F U R U R' U F'","1R M U' R' U r U' R'","1r' R2 U' R' U r U' R'"],"by":["Xuanyi, Yufang, Zhaokun","Xuanyi, Yunzhi","Qixian, Tymon","Tymon"]},
+      {"name":"27-3","ll":"XXXUUFXXXXUXXRXXUXXXXUXDFR","two":["0R U' R' U F' L' U' L F","0R U' R2 U' F U R U' F'"],"by":["Xuanyi, Bofan","Yufang"]},
+      {"name":"27-4","ll":"XUXXUFXXXXXXXRXXUXXUXUXDFR","two":["0y F U' R U' R' F' U2 L' U L","0R U' R2 F R F'"],"by":["Xuanyi","Tymon, Yufang, Yunzhi"]},
+      {"name":"27-5","ll":"XXXUUFXUXXUXXRXXXXXXXXUDFR","two":["0F' U2 F R U2 R'","0y L' U2 L F U2 F'","0R U' R' U S' R U' R' S","0R U' r' U R U' R' U' M'"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi","Yufang, Bofan","Tymon"]},
+      {"name":"27-6","ll":"XUXUUFXXXXXXXRXXUXXXXXUDFR","two":["0R U' R' U F' U F R U' R'","0y L' U2 L U' F R U' R' F'","0R U' R' U R B U' B' R'","0R' D' R U R' D R U' R' F R F'"],"by":["Xuanyi, Zhaokun","Xuanyi, Yunzhi","Tymon","Yufang"]},
+      {"name":"27-7","ll":"XUXXUFXUXXXXXRXXXXXUXXUDFR","two":["0F' U' F U' R U2 R'","0F' U' F U2 R U' R'","0R U' R2 F R2 U R' U' F'","3R' F R F' U' R U R' U2 R U' R'","0y L' U' L U' F U2 F'"],"by":["Xuanyi","Tymon, Yufang, Yunzhi","Tymon, Zhaokun","Yufang","Yunzhi"]},
+      {"name":"27-8","ll":"XUXUUFXUXXXXXRXXXXXXXUXDFR","two":["0R U' R' U R U' R'"],"by":["Tymon, Yufang, Yunzhi"]}
+    ]},
+    {"n":28,"cases":[
+      {"name":"28-1","ll":"XXXXUXXRXXUXXUXXFXXUXUXRDF","two":["1y L' U L2 R' F L' R U2 R' F R","0R U2 R' U R' D' r U r' D R","0R U2 R' F' U L' U L F","0y L' U L U2 L F' L' F U2 L F' L' F"],"by":["Xuanyi, Tymon","Yufang","Yunzhi","Yunzhi"],"two2":["0R U R' U2 R' D' r U r' D R"],"by2":["9 on solved.no"]},
+      {"name":"28-2","ll":"XXXXUUXRXXUXXXXXFXXUXXURDF","two":["0R U2 R' U' R' D' r U' r' D R","0y L' U L U' L' U' L U2 L F' L' F","2F' U' L' U' L U' F"],"by":["Yufang, Zhaokun","Yunzhi, Zhaokun","Yunzhi"],"two2":["0R U R' F R U R' U' F2 U' F"],"by2":["7 on solved.no"]},
+      {"name":"28-3","ll":"XUXXUXXRXXXXXUXXFXXUXXURDF","two":["0y L' U L U' F R U R' F'","0R U2 R' U R U R2 D' r U r' D R"],"by":["Tymon, Yufang, Yunzhi, Yi","Zhaokun"]},
+      {"name":"28-4","ll":"XXXUUXXRXXUXXUXXFXXXXXURDF","two":["1F' L' U2 L U' F","0y L' U L2 F' L' F"],"by":["Xuanyi, Yunzhi","Xuanyi, Tymon, Yunzhi"]},
+      {"name":"28-5","ll":"XUXXUUXRXXXXXXXXFXXUXUXRDF","two":["0R U2 R' F' U2 F","0y F U2 F' L' U2 L","0R U2 R' d R' U R","0R U2 R' U F' U F"],"by":["Xuanyi, Yunzhi","Xuanyi, Yunzhi","Tymon","Zhaokun"]},
+      {"name":"28-6","ll":"XUXUUXXRXXXXXUXXFXXXXUXRDF","two":["0R U2 R B' R' B R'","0R U2 R' U F R' F' R2 U' R'","0R U2 R' U F' L' U L F"],"by":["Tymon","Yufang","Yunzhi"],"two2":["0R U R' U' F U R' U' F' U R"],"by2":["7 on solved.no"]},
+      {"name":"28-7","ll":"XXXUUUXRXXUXXXXXFXXXXUXRDF","two":["0R U R' U F' U2 F","0F U R U' R2 F' R2 U R'","0R U R' U2 y' R' U R"],"by":["Xuanyi, Yunzhi","Xuanyi","Tymon"]},
+      {"name":"28-8","ll":"XUXUUUXRXXXXXXXXFXXXXXURDF","two":["0y L' U L U' L' U L","0y' R' U R U' R' U R"],"by":["Xuanyi, Tymon, Yunzhi","Yufang, Yunzhi"],"two2":["0R U R' U' F R' F' R"],"by2":["29 on solved.no"]}
+    ]},
+    {"n":29,"cases":[
+      {"name":"29-1","ll":"XXXXUXXRXXUXXUXXFXXUXUXDFR","two":["2R U' R' F' U' L' U' L U F","0r R' U' R r' U2 r U' R' U R U' r'","0y' R' U' R U R D r' U' r D' R2 U' R","0M' U' M U2 r U' R' U R U' r'"],"by":["Xuanyi, Yunzhi","Tymon","Zhaokun","Tymon"]},
+      {"name":"29-2","ll":"XXXXUUXRXXUXXXXXFXXUXXUDFR","two":["2R U' R' U2 R' D' r U' r' D R2 U' R'","0R' F R F' U S' R U' R' S","0y' R' U' r U R' U' R2 r'"],"by":["Xuanyi","Yufang, Yi","Yunzhi"]},
+      {"name":"29-3","ll":"XUXXUXXRXXXXXUXXFXXUXXUDFR","two":["1F' U L' U2 L F","0y L' U' L U' R' F R U R' F' R","0R' D' r U' r' D R2 U R' U2 R U' R'"],"by":["Xuanyi, Yunzhi, Zhaokun","Xuanyi, Tymon","Yufang"]},
+      {"name":"29-4","ll":"XXXUUXXRXXUXXUXXFXXXXXUDFR","two":["2R U' R' F' U2 L' U L F","1y F' L F L2 U' L","1R' D' r U r' D R2 U' R'"],"by":["Xuanyi","Xuanyi, Tymon, Yunzhi","Yufang"],"two2":["1R' F R F2 U' F"],"by2":["9 on solved.no"]},
+      {"name":"29-5","ll":"XUXXUUXRXXXXXXXXFXXUXUXDFR","two":["3R U R' U R U R' F' U' F","2y L F' L' F U2 L' U' L U' L' U L","2y L F' L' F L' U L U2 L' U' L","0R' F R F' U R U R' U2 R' F R F'"],"by":["Xuanyi, Qixian, Yunzhi","Xuanyi, Tymon","Xuanyi","Zhaokun"]},
+      {"name":"29-6","ll":"XUXUUXXRXXXXXUXXFXXXXUXDFR","two":["0R' F R F' R' F R F'","0y2 l L' U L U' L' U L U' l'","0y F' L F L' F' L F L'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Tymon","Yunzhi"],"two2":["0x R' U R U' R' U R U' x'"],"by2":["9 on solved.no"]},
+      {"name":"29-7","ll":"XXXUUUXRXXUXXXXXFXXXXUXDFR","two":["2R U' R' F' U' F","2y F U' F' L' U' L"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Xuanyi, Yunzhi"]},
+      {"name":"29-8","ll":"XUXUUUXRXXXXXXXXFXXXXXUDFR","two":["0R' F R F' U R U' R'","0y' R' U' R U R' U' R","0y L' U' L U L' U' L"],"by":["Xuanyi, Tymon, Bofan","Xuanyi, Yunzhi","Yunzhi"]}
+    ]},
+    {"n":30,"cases":[
+      {"name":"30-1","ll":"XXXXUFXXXXUXXRXXUXXUXXURDF","two":["0R U R' U' R' D' r U r' D R2 U R'","2y L' U L F U R U R' U' F'"],"by":["Xuanyi, Zhaokun","Xuanyi, Yunzhi"]},
+      {"name":"30-2","ll":"XXXXUFXUXXUXXRXXXXXUXUXRDF","two":["0R U R' U' S R U R' U' S'","2y L' U L U2 F U R U' R' U' F'","0R U r' U' R U R' M'","2F R' F' R U' R U R' U R U R'","0R U r' U' R U R2 r"],"by":["Xuanyi","Xuanyi","Tymon, Zhaokun","Yufang","Tymon"]},
+      {"name":"30-3","ll":"XXXUUFXXXXUXXRXXUXXXXUXRDF","two":["0R U R' U r U' r' U' r U r'","3y F U' R U2 R' F'","0R U R' U' R U' R' U2 R' F R F'"],"by":["Xuanyi, Yunzhi","Xuanyi, Yunzhi","Yufang"]},
+      {"name":"30-4","ll":"XUXXUFXXXXXXXRXXUXXUXUXRDF","two":["3F R' F' R2 U R'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun"]},
+      {"name":"30-5","ll":"XXXUUFXUXXUXXRXXXXXXXXURDF","two":["1y L' U' L U' L' U' L F U F'","2R' F R F' U2 R U R' U R U' R'","0R U R' U' R U R2 U' F' U F R","0R U R' U' R U R' F U R U' R' F'","2R' F R F' R U' R' U2 R U R'","0F R' F' R U R' D' r U' r' D R"],"by":["Xuanyi","Tymon","Yufang","Yufang","Yunzhi","Zhaokun"]},
+      {"name":"30-6","ll":"XUXUUFXXXXXXXRXXUXXXXXURDF","two":["0F R' F' R F R' F' R","0y L F' L' F L F' L' F"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Yunzhi"]},
+      {"name":"30-7","ll":"XUXXUFXUXXXXXRXXXXXUXXURDF","two":["2F' U F R U R'","2y L' U L y' R U R'","0R U R' F U R U' R2 F' R","2y L' U L F U F'"],"by":["Xuanyi, Zhaokun","Tymon","Yufang","Yunzhi"]},
+      {"name":"30-8","ll":"XUXUUFXUXXXXXRXXXXXXXUXRDF","two":["0R U R' U' R U R'","0y L F' L' F U' L' U L","0y2 L U L' U' L U L'"],"by":["Xuanyi, Qixian, Tymon, Yufang, Bofan","Xuanyi","Tymon"]}
+    ]}
+  ]},
+  {"id":"ZBLS-edge","tab":"Edge","name":"Edge in the slot","subs":[
+    {"n":31,"cases":[
+      {"name":"31-1","ll":"XXXXUUXXDXUXXXFXURXUXRFXXX","two":["3R' F R F' U' R' F R F'"],"by":["Yufang, Yunzhi"]},
+      {"name":"31-2","ll":"XUXXUXXXDXXXXUFXURXUXRFXXX","two":["0R U' R' U R' D' r U r' D R","0y F U' R U' R' F' L' U2 L","0r U' r' U r R' U R U r'","3R' F R F2 L' U' L F","0r U' r' U M' U R U r'"],"by":["Xuanyi","Xuanyi, Yunzhi","Tymon","Yunzhi","Tymon"]},
+      {"name":"31-3","ll":"XXXUUXXXDXUXXUFXURXXXRFXXX","two":["0F' U L' U L F R U2 R'","0y L' U L F U' R U' R' F'","1F R' F' R2 U2 R' F' U F","1y L F' L' F2 R U R' F'"],"by":["Xuanyi, Yunzhi","Xuanyi, Yunzhi","Yufang","Yunzhi"],"two2":["0r U' R' U' M U' r U r'"],"by2":["11 on solved.no"]},
+      {"name":"31-4","ll":"XXXXUXXUDXUXXUFXXRXUXRFXXX","two":["1F R' F' R U F R' F' R","1y L F' L' F U L F' L' F"],"by":["Xuanyi, Yufang, Yunzhi","Tymon, Yufang, Yunzhi"]},
+      {"name":"31-5","ll":"XUXUUUXXDXXXXXFXURXXXRFXXX","two":["0R U' R' F' U2 F","0y F U' F' L' U2 L","0R U' R' d R' U R","0R U' R' U F' U F"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi, Yunzhi","Tymon","Zhaokun"],"two2":["0R U' R' U y' R' U R y"],"by2":["16 on solved.no"]},
+      {"name":"31-6","ll":"XUXUUXXUDXXXXUFXXRXXXRFXXX","two":["0F' U F R U2 R'","0F' U F U' R U' R'","0y L' U L U' F U' F'","0y L' U L F U2 F'","0y L' U L U' y' R U' R'"],"by":["Xuanyi, Yunzhi","Xuanyi, Bofan","Xuanyi","Yunzhi, Zhaokun","Tymon"]},
+      {"name":"31-7","ll":"XXXUUUXUDXUXXXFXXRXXXRFXXX","two":["1y L F' L' F L' U L","1y L F' L' F U' L' U2 L"],"by":["Xuanyi, Tymon, Yunzhi","Tymon"],"two2":["0R U2 R' U' F R' F' R"],"by2":["5 on solved.no"]},
+      {"name":"31-8","ll":"XUXXUUXUDXXXXXFXXRXUXRFXXX","two":["3R' F R F' R U' R'","3y F' L F L' F U' F'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Xuanyi"]}
+    ]},
+    {"n":32,"cases":[
+      {"name":"32-1","ll":"XXXXUXXXDXUXXUFXURXUXFRXXX","two":["2r U2 r' U2 r U' r' U2 r U2 r'","2y R' F2 R U2 R' F R U2 R' F2 R","0R U R' U R U' R' U F R' F' R U S' R U R' S"],"by":["Yunzhi","Yunzhi","Tymon"],"two2":["0r U M U2 r R2 U2 R U r'"],"by2":["10 on solved.no"]},
+      {"name":"32-2","ll":"XUXXUUXXDXXXXXFXURXUXFRXXX","two":["3F R' F' R U' R U R'"],"by":["Xuanyi, Yufang, Yunzhi"]},
+      {"name":"32-3","ll":"XUXUUXXXDXXXXUFXURXXXFRXXX","two":["0F R' F' R2 U R' U' R U R'"],"by":["Xuanyi, Yufang, Yunzhi"],"two2":["0R' F R F' R' F R F' U R U' R'"],"by2":["10 on solved.no"]},
+      {"name":"32-4","ll":"XXXUUXXUDXUXXUFXXRXXXFRXXX","two":["2F' U L' U' L U' F","1R' F R F' U F' U' F"],"by":["Xuanyi, Tymon","Zhaokun"],"two2":["1R' F R F' U y' R' U' R"],"by2":["15 on solved.no"]},
+      {"name":"32-5","ll":"XXXXUUXUDXUXXXFXXRXUXFRXXX","two":["2F R' F' R2 U R' U R U' R'","2y F' L F L2 U' L U' L' U L"],"by":["Xuanyi, Tymon, Yufang","Yunzhi"]},
+      {"name":"32-6","ll":"XXXUUUXXDXUXXXFXURXXXFRXXX","two":["1R U' R' U R U' R2 F R F'","1y F U' R U2 R' U F'"],"by":["Xuanyi, Yufang, Yunzhi, Zhaokun","Yunzhi"]},
+      {"name":"32-7","ll":"XUXXUXXUDXXXXUFXXRXUXFRXXX","two":["3y L' U L U' L' U L2 F' L' F","3F' U L' U2 L U' F"],"by":["Xuanyi, Tymon, Yunzhi","Yunzhi"],"two2":["1R U' R' U R U' R' U S' R U' R' S"],"by2":["9 on solved.no"]},
+      {"name":"32-8","ll":"XUXUUUXUDXXXXXFXXRXXXFRXXX","two":["1R U' R' U R U' R' U R U' R'","0y' R' U' R U R' U' R U R' U' R","3y' R' U' R U R' U2 R U' R' U R"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Xuanyi","Xuanyi"]}
+    ]},
+    {"n":33,"cases":[
+      {"name":"33-1","ll":"XXXXUXXXFXUXXURXUDXUXFRXXX","two":["3F R' F' R2 U2 R2 F R F'","3y R' F2 R U2 R' F' R U2 R' F2 R"],"by":["Xuanyi, Tymon, Yunzhi","Tymon"],"two2":["0D' r U' r' F2 U R' F R F2 D"],"by2":["7 on solved.no"]},
+      {"name":"33-2","ll":"XUXXUUXXFXXXXXRXUDXUXFRXXX","two":["3R U' R' U R' F R F'","3y F U' R U' R' U F'"],"by":["Xuanyi, Tymon, Yufang","Xuanyi"],"two2":["3R U' R' U M' U R U' r'"],"by2":["7 on solved.no"]},
+      {"name":"33-3","ll":"XUXUUXXXFXXXXURXUDXXXFRXXX","two":["1R U' R2 F R F' R U R'","3y l' U L U' L' U' l U L' U' L","0F R' F' R2 U' R' U R U' R'"],"by":["Xuanyi","Xuanyi","Yufang, Yunzhi"]},
+      {"name":"33-4","ll":"XXXUUXXUFXUXXURXXDXXXFRXXX","two":["1r U' r' U r U r' R U' R'","1r U' r' U r U M U' R'","1R U' R' F' U F U R U' R'","3R U' R' U' F R' F' R2 U2 R'"],"by":["Xuanyi","Xuanyi","Yufang","Yufang"],"two2":["3R U' R' U2 S' R U' R' S"],"by2":["10 on solved.no"]},
+      {"name":"33-5","ll":"XXXXUUXUFXUXXXRXXDXUXFRXXX","two":["3F' U2 L' U2 L F","2y F R U2 R' U2 F'"],"by":["Xuanyi","Xuanyi, Yunzhi"]},
+      {"name":"33-6","ll":"XXXUUUXXFXUXXXRXUDXXXFRXXX","two":["3R U' R' U2 R U R' U2 R' F R F'","0y' r' U' r U R' U' R r' U r","3R U' R' U R' U' F U R2 U' R' F'","0R U R' U' R U' R' U F' U F R U' R'"],"by":["Xuanyi, Qixian","Xuanyi, Yunzhi","Tymon","Zhaokun"],"two2":["0r2 D r2 U' R2 r' U r2 D' R2 r'"],"by2":["5 on solved.no"]},
+      {"name":"33-7","ll":"XUXXUXXUFXXXXURXXDXUXFRXXX","two":["3y L' U L F' L F L2 U' L","3R U' R' U' R' F R F' R U2 R'"],"by":["Xuanyi, Yunzhi","Yufang"],"two2":["3R U' R' U2 R B U' B' R'"],"by2":["7 on solved.no"]},
+      {"name":"33-8","ll":"XUXUUUXUFXXXXXRXXDXXXFRXXX","two":["0y R' D R U' R' D' R","3y' R' U' R U2 R' U' R","3R U' R' U2 R U' R'","2y R' D R U R' D' R","3y2 L U' L' U' L U2 L'"],"by":["Xuanyi","Xuanyi","Tymon, Yufang","Yufang","Yunzhi"]}
+    ]},
+    {"n":34,"cases":[
+      {"name":"34-1","ll":"XXXXUXXXRXUXXUDXUFXUXFRXXX","two":["1r U2 r' U2 r U r' U2 r U2 r'","1y F' L F L2 U2 L2 F' L' F","1R U R' U2 R' D' r U r' D R2 U R'"],"by":["Xuanyi, Tymon","Xuanyi, Yunzhi","Yufang"],"two2":["0R U R D r' U r D' R' U' R'"],"by2":["9 on solved.no"]},
+      {"name":"34-2","ll":"XUXXUUXXRXXXXXDXUFXUXFRXXX","two":["3R U2 R' U S' R U R' S","3F' U' L' U' L U2 F","3y R' F R U' R' F' R L' U L"],"by":["Xuanyi, Yufang","Yunzhi","Yunzhi"]},
+      {"name":"34-3","ll":"XUXUUXXXRXXXXUDXUFXXXFRXXX","two":["1r U' R' U R U r' U' R U R'","3y L' U L2 F' L' F L' U' L","0F R' F2 R U R U' R' F"],"by":["Xuanyi","Xuanyi","Zhaokun"]},
+      {"name":"34-4","ll":"XXXUUXXURXUXXUDXXFXXXFRXXX","two":["1F' U L' U L U' F","1y L' U L U' L F' L' F"],"by":["Xuanyi","Yufang, Yunzhi"]},
+      {"name":"34-5","ll":"XXXXUUXURXUXXXDXXFXUXFRXXX","two":["2F' L' U2 L U2 F","2R U' R' U r U' R' U' R U r'","1y L' U L U2 F R U R' F'"],"by":["Xuanyi, Zhaokun","Tymon","Bofan"],"two2":["2F R' F' R2 U' R' U' R U R'"],"by2":["10 on solved.no"]},
+      {"name":"34-6","ll":"XXXUUUXXRXUXXXDXUFXXXFRXXX","two":["1R U' R' F R' F' R2 U R'","1y F U2 R U' R' U' F'","0y L' U' l L' U L U' l' U L"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi","Tymon"],"two2":["3R U2 R' U' r U' r' U' r U r'"],"by2":["6 on solved.no"]},
+      {"name":"34-7","ll":"XUXXUXXURXXXXUDXXFXUXFRXXX","two":["0r U r' U' R U R' r U' r'","1y L' U L U2 L' U' L U2 L F' L' F"],"by":["Xuanyi","Xuanyi"],"two2":["1F D R U R' U' D' F'"],"by2":["10 on solved.no"]},
+      {"name":"34-8","ll":"XUXUUUXURXXXXXDXXFXXXFRXXX","two":["1R' D' R U' R' D R","1y L' U L U2 L' U L","3R U2 R' U R U R'","3R' D' R U R' D R","1R U R' U2 R U R'"],"by":["Xuanyi","Xuanyi, Tymon, Yufang, Yunzhi","Yufang, Yunzhi","Yufang, Zhaokun","Yunzhi"]}
+    ]},
+    {"n":35,"cases":[
+      {"name":"35-1","ll":"XXXXUUXXFXUXXXRXUDXUXRFXXX","two":["2R U' R' U' F' U2 L' U L F","2R U R' U' R U R2 D' r U r' D R","2y F U F' L F' L2 U' L U F","2R U' R D r' U' r D' R2"],"by":["Xuanyi, Yunzhi","Xuanyi","Xuanyi, Yunzhi","Yufang"]},
+      {"name":"35-2","ll":"XUXXUXXXFXXXXURXUDXUXRFXXX","two":["3R U R2 U' F' U F2 R F'","0R' D' r U' r' D R U R U' R'","3R U R' U F' U2 L' U L F","3y L' U L F U R U R' U F'"],"by":["Xuanyi","Tymon, Yufang","Yunzhi","Yunzhi"],"two2":["2R U R' U R' D' r U' r' D R"],"by2":["7 on solved.no"]},
+      {"name":"35-3","ll":"XXXUUXXXFXUXXURXUDXXXRFXXX","two":["1R' D' L F L' D R2 U2 R'","1R' D' r U r' D R2 U2 R'","1R' D' r U r' D R U' R U' R'","3R U R' U F' U' L' U' L U F"],"by":["Xuanyi","Xuanyi","Yufang","Yunzhi"],"two2":["2R U R' U' R' D' r U r' D R"],"by2":["6 on solved.no"]},
+      {"name":"35-4","ll":"XXXXUXXUFXUXXURXXDXUXRFXXX","two":["2r U' r' U R' F R F' r U2 r'","2y L F' L' F R' F R U R' F' R","0R2 D r' U' r D' R2 U R U' R'","2R U' R' U F' U' L' U L U F"],"by":["Xuanyi","Xuanyi","Yufang","Yunzhi"]},
+      {"name":"35-5","ll":"XUXUUUXXFXXXXXRXUDXXXRFXXX","two":["2R U R' U' F' U F"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Bofan"],"two2":["2R U R' U' y L' U L"],"by2":["13 on solved.no"]},
+      {"name":"35-6","ll":"XUXUUXXUFXXXXURXXDXXXRFXXX","two":["3R U R' U F' U' F","3y F U F' U L' U' L"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Yunzhi"],"two2":["3R U R' y U L' U' L"],"by2":["227 on solved.no"]},
+      {"name":"35-7","ll":"XXXUUUXUFXUXXXRXXDXXXRFXXX","two":["2R U' R' U' F' U' F","2y F U' F' U' L' U' L"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi"]},
+      {"name":"35-8","ll":"XUXXUUXUFXXXXXRXXDXUXRFXXX","two":["2R U R' F R' F' R","2y2 L U L' l U L' U' M'","2y F U F' L F' L' F"],"by":["Tymon, Yufang, Yunzhi, Zhaokun","Tymon","Yunzhi"]}
+    ]},
+    {"n":36,"cases":[
+      {"name":"36-1","ll":"XXXXUUXXRXUXXXDXUFXUXRFXXX","two":["2R' F R F' r U' r' U' r U r'","0y L' U' L U' F U' R U' R' U' F'","0F' U' F U' F R' F' R2 U R'","3R' D' r U' r' D R2 U' R' U' R U R'"],"by":["Xuanyi, Qixian","Xuanyi","Yufang","Yufang"]},
+      {"name":"36-2","ll":"XUXXUXXXRXXXXUDXUFXUXRFXXX","two":["2R U2 R' F' L' U2 L U' F","2y L' U L U F U R U R' U' F'","2R2 D r' U' r D' R2 U' R U R'"],"by":["Xuanyi","Xuanyi","Tymon"],"two2":["2F' U' F U S' R U' R' S"],"by2":["8 on solved.no"]},
+      {"name":"36-3","ll":"XXXUUXXXRXUXXUDXUFXXXRFXXX","two":["1R U' R' F' U' L' U' L U' F","1y L' U' L U' F U2 R U' R' F'","0R U R2 D' r U r' D R U' R U R'","2F' U' F U R U' R2 F' r U' r' F2 R","1R' D' r U' r' D F' R U R U' R' F"],"by":["Xuanyi","Xuanyi","Tymon","Tymon","Yufang"],"two2":["0R' F2 D' F' D R U R U' R2 F' R"],"by2":["7 on solved.no"]},
+      {"name":"36-4","ll":"XXXXUXXURXUXXUDXXFXUXRFXXX","two":["2R U2 R' U F' U' L' U' L U' F","2y L' U L U F U2 R U' R' F'","2F' U' F R' F R2 U R' U' F'","2R' D' r U' r' D R U' R U R'"],"by":["Xuanyi","Xuanyi","Yufang, Yunzhi","Yufang"]},
+      {"name":"36-5","ll":"XUXUUUXXRXXXXXDXUFXXXRFXXX","two":["1F' U' F U' R U R'","1y L' U' L U' F U F'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi","Xuanyi, Tymon"]},
+      {"name":"36-6","ll":"XUXUUXXURXXXXUDXXFXXXRFXXX","two":["2F' U' F U R U' R'","2y' R' U' R y U2 R U2 R'"],"by":["Xuanyi, Tymon, Yufang, Yunzhi, Zhaokun","Tymon"]},
+      {"name":"36-7","ll":"XXXUUUXURXUXXXDXXFXXXRFXXX","two":["2F' U' F R' F R F'","2y L' U' L F' L F L'","2R' F R F' U2 R U R'","2y' R' U' R r' U' R U R' r"],"by":["Xuanyi, Yufang, Yunzhi","Xuanyi, Tymon, Yunzhi","Tymon","Tymon"]},
+      {"name":"36-8","ll":"XUXXUUXURXXXXXDXXFXUXRFXXX","two":["2F' U F U R U R'","2y L' U L U F U F'","2y L' U L d R U R'","2y' R' U R y U R U R'"],"by":["Xuanyi, Tymon, Yunzhi","Xuanyi","Tymon","Tymon"]}
+    ]}
+  ]},
+  {"id":"ZBLS-both","tab":"Both","name":"Both in the slot","subs":[
+    {"n":37,"cases":[
+      {"name":"37-1","ll":"XXXXUXXXXXUXXUXXUXXUXFRFRD","two":["0F U R U' R' F' U' F R U R' U' F'","0F U R U' R' F' U F R U R' U' F'"],"by":["Xuanyi","Yunzhi"]},
+      {"name":"37-2","ll":"XUXUUXXXXXXXXUXXUXXXXFRFRD","two":["0F U R U' R' F'","2r' U2 R U R' U r"],"by":["Yunzhi","Zhaokun"]},
+      {"name":"37-3","ll":"XXXUUUXXXXUXXXXXUXXXXFRFRD","two":["0R U R' U' R' F R F'","0F R U R' U' F'"],"by":["Xuanyi, Yufang","Xuanyi"]}
+    ]},
+    {"n":38,"cases":[
+      {"name":"38-1","ll":"XXXUUXXXXXUXXUXXUXXXXRFFRD","two":["1F' U F U' R U2 R' U R' F R F'","1y L' U L U' F U2 R U' R' U F'","0r U' r' R U R' U r U' r' R U R'","1y R' F R L' U' L U' R' F R L' U' L","0y F U' F' U L' U2 L U' L F' L' F"],"by":["Xuanyi, Yunzhi, Zhaokun","Xuanyi","Tymon, Yufang","Tymon","Yunzhi"],"two2":["0r U' R r' U R' U r U' R r' U R'","0R U' R' U R' F R F2 U2 F R U R'"],"by2":["14 on solved.no","5 on solved.no"]},
+      {"name":"38-2","ll":"XUXUUUXXXXXXXXXXUXXXXRFFRD","two":["2y L' U L F U R U2 R' U F'","2R2 U2 F R2 F' U2 R' U R'","3y' R' U R d' R U2 R' U2 R U' R'","0R' F R F' R U' R' U R U' R' U2 R U' R'","2R U2 R' U R U2 R' U F' U' F","1y L' U2 L U' L' U2 L U' F U F'"],"by":["Xuanyi","Tymon","Tymon","Yufang","Yunzhi","Yunzhi"],"two2":["0R' F R F' R' U2 R2 U R2 U R"],"by2":["21 on solved.no"]}
+    ]},
+    {"n":39,"cases":[
+      {"name":"39-1","ll":"XXXXUXXXXXUXXUXXUXXUXFRDFR","two":["0y L' U2 L R' F R U L' U2 L R' F R","0R U2 R' U F' L' U2 L U' F U' R U R'"],"by":["Yi","Yunzhi"],"two2":["0R U' R' U' r U' r' U2 r U R r' U2 R'"],"by2":["12 on solved.no"]},
+      {"name":"39-2","ll":"XUXUUXXXXXXXXUXXUXXXXFRDFR","two":["0F R' F' R2 U2 R' U' R U R'","2y L' U L U' L' U2 L2 F' L' F"],"by":["Xuanyi, Yufang","Xuanyi, Yunzhi"]},
+      {"name":"39-3","ll":"XUXXUXXUXXXXXUXXXXXUXFRDFR","two":["0R U' R' U' R U R' U R' F R F'","0y F' L F L2 U' L U L F' L' F L' U' L"],"by":["Xuanyi, Qixian, Yunzhi, Zhaokun","Xuanyi"]},
+      {"name":"39-4","ll":"XUXUUUXUXXXXXXXXXXXXXFRDFR","two":["0y' R' U R U' R' U2 R U' R' U R","0R U' R' U' R U R' U2 R U' R'","0y L' U L U' L' U2 L U' L' U L"],"by":["Xuanyi","Yufang, Yunzhi","Yufang, Yunzhi"],"two2":["0R U R' U' R U2 R' U' R U R'"],"by2":["11 on solved.no"]}
+    ]},
+    {"n":40,"cases":[
+      {"name":"40-1","ll":"XXXXUXXXXXUXXUXXUXXUXFRRDF","two":["0R U R' U r U' r' U r R' U2 R U r'","0R U R' U r U' r' U M' U2 R U r'"],"by":["Xuanyi","Xuanyi"],"two2":["0R U2 R' r U' r' U2 r U r' U R U R'"],"by2":["14 on solved.no"]},
+      {"name":"40-2","ll":"XXXXUUXUXXUXXXXXXXXUXFRRDF","two":["0R U' R' U R U2 R2 F R F'","2y F' L F L2 U2 L U L' U' L"],"by":["Xuanyi, Yufang, Yunzhi, Zhaokun, Bofan","Xuanyi, Yunzhi"]},
+      {"name":"40-3","ll":"XUXXUXXUXXXXXUXXXXXUXFRRDF","two":["0R U2 R' U R' F R2 U R' U' R' F' R","1y L' U L U L' U' L U' L F' L' F"],"by":["Yufang","Yunzhi"]},
+      {"name":"40-4","ll":"XUXUUUXUXXXXXXXXXXXXXFRRDF","two":["0R U' R' U R U2 R' U R U' R'"],"by":["Yufang, Yunzhi, Yiheng"],"two2":["0R U R' U2 R U' R' U R U R'"],"by2":["223 on solved.no"]}
+    ]},
+    {"n":41,"cases":[
+      {"name":"41-1","ll":"XXXUUXXXXXUXXUXXUXXXXRFDFR","two":["0y L' U L F R U2 R' F'","0r U' r' U2 r U r' R U R'"],"by":["Xuanyi, Yunzhi","Tymon, Yufang, Yunzhi"]},
+      {"name":"41-2","ll":"XUXUUUXXXXXXXXXXUXXXXRFDFR","two":["2R U' R' U' R U' R' U F' U' F","0R U' R' d R' U' R U' R' U' R","1R U' R' F R U R' U' F' R U' R'"],"by":["Xuanyi, Yunzhi","Tymon","Yufang"],"two2":["0R F U R U' R' F' U' R'"],"by2":["22 on solved.no"]}
+    ]},
+    {"n":42,"cases":[
+      {"name":"42-1","ll":"XUXXUXXXXXXXXUXXUXXUXRFRDF","two":["0R U' R' F' L' U2 L F","0y F R U2 R' F' L' U' L","0R U' R' r U' r' U2 r U r'"],"by":["Xuanyi, Yunzhi, Bofan","Xuanyi, Yunzhi","Yufang"]},
+      {"name":"42-2","ll":"XUXXUUXUXXXXXXXXXXXUXRFRDF","two":["0R U' R' F' L' U L U F","2R U R' F R' F' R2 U' R' U2 R U' R'","3R U' R' U2 y' R' U' R U' R' U R","0y L' U L U L' U L U' F U F'","3R U R' U' R U' R' U2 F' U' F","3R U' R' U R U' R' U R' F R F' R' F R F'"],"by":["Xuanyi, Qixian, Yunzhi","Yufang","Yufang","Yunzhi","Bofan","Tymon"]}
+    ]}
+  ]}
+]

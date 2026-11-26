@@ -1,5 +1,5 @@
 /** Makes a drawn case solve itself: every sticker sweeps round to the place it belongs. */
-import { homes, slots, type Box } from '../cube/geometry.ts'
+import { homes, slots, SOLVED_SLOT, type Box } from '../cube/geometry.ts'
 
 const running = new WeakMap<SVGElement, () => void>()
 const ease = (p: number) => (p < 0.5 ? 4 * p ** 3 : 1 - (-2 * p + 2) ** 3 / 2)
@@ -45,9 +45,46 @@ function place({ el, a, b, r0, r1, t0, dt, delay }: Path, p: number) {
   el.setAttribute('rx', String(a.r + (b.r - a.r) * q))
 }
 
+interface Pace {
+  there: number
+  hold: number
+  back: number
+  solved?: () => void
+}
+
+/**
+ * A ZBLS case solves where it is, as the cube is seen from the slot's side: one sticker after another,
+ * from the top down, takes the color it has once the edges are flipped and the pair is in.
+ */
+function solveSlot(svg: SVGElement, o: Pace) {
+  const list = [...svg.querySelectorAll<SVGRectElement>('rect[data-s]')]
+    .map((el) => ({ el, was: el.getAttribute('class')!, to: `st-${SOLVED_SLOT[Number(el.dataset.s)]}` }))
+    .filter((x) => x.was !== x.to)
+  const timers: number[] = []
+  const later = (ms: number, f: () => void) => timers.push(window.setTimeout(f, ms))
+  // only a sticker still showing what it was given, in case the picture was drawn again meanwhile
+  const flip = (el: SVGRectElement, from: string, to: string) => {
+    if (el.getAttribute('class') !== from) return
+    el.setAttribute('class', to)
+    el.animate([{ scale: 1 }, { scale: 0.78 }, { scale: 1 }], { duration: 320, easing: 'cubic-bezier(.3, 1.4, .5, 1)' })
+  }
+  const stop = () => {
+    timers.forEach(clearTimeout)
+    running.delete(svg)
+    list.forEach((x) => x.el.getAttribute('class') === x.to && x.el.setAttribute('class', x.was))
+  }
+  running.set(svg, stop)
+  const at = (i: number) => (i / list.length) * 0.75
+  list.forEach((x, i) => later(at(i) * o.there, () => flip(x.el, x.was, x.to)))
+  later(o.there, () => o.solved?.())
+  list.forEach((x, i) => later(o.there + o.hold + at(i) * o.back, () => flip(x.el, x.to, x.was)))
+  later(o.there + o.hold + o.back, stop)
+}
+
 /** Solve over `there` ms, rest for `hold`, return over `back`. Calls `solved` at the snap. */
-export function solveDiagram(svg: SVGElement, ll: string, o: { there: number; hold: number; back: number; solved?: () => void }) {
+export function solveDiagram(svg: SVGElement, ll: string, o: Pace) {
   running.get(svg)?.()
+  if (svg.classList.contains('cube--slot')) return solveSlot(svg, o)
   const list = paths(svg, ll)
   let frame = 0
   let told = false

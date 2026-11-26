@@ -61,6 +61,17 @@ export interface Practice {
   days: number
 }
 
+/** One algorithm timed on its own, again and again, to get it faster. */
+export interface Drill {
+  /** How many times it's been timed. */
+  n: number
+  /** The latest times, oldest first, and the fastest ever, in hundredths of a second. */
+  times: number[]
+  best: number
+  /** When it was last timed. */
+  at: number
+}
+
 export interface Data {
   v: 1
   cases: Record<string, Entry>
@@ -68,13 +79,15 @@ export interface Data {
   /** The last case that was opened or changed in each deck. */
   last: Partial<Record<DeckId, string>>
   practice: Record<string, Practice>
+  /** For each case, its algorithms that were timed on their own, by the algorithm. */
+  drills: Record<string, Record<string, Drill>>
 }
 
 const KEY = 'zbll-tracker'
 /** Solve times kept for each case. */
 export const KEEP = 12
 const POOLS: Pool[] = ['due', 'learning', 'learned', 'all', 'pick']
-const blank = (): Data => ({ v: 1, cases: {}, prefs: { theme: 'system', sound: true, hand: 'two', deck: 'ZBLL', way: 'cube', pool: {}, pick: [] }, last: {}, practice: {} })
+const blank = (): Data => ({ v: 1, cases: {}, prefs: { theme: 'system', sound: true, hand: 'two', deck: 'ZBLL', way: 'cube', pool: {}, pick: [] }, last: {}, practice: {}, drills: {} })
 const NONE: Entry = Object.freeze({})
 
 /* ------------------------------------------------------------------ reading what was saved */
@@ -103,6 +116,15 @@ function readPractice(x: unknown): Practice | null {
   if (times.length) p.times = times
   if (whole(x.best)) p.best = whole(x.best)
   return p
+}
+
+function readDrill(x: unknown): Drill | null {
+  if (!isObject(x)) return null
+  const times = Array.isArray(x.times) ? x.times.map(whole).filter(Boolean).slice(-KEEP) : []
+  if (!times.length) return null
+  // the fastest ever is never slower than one that's still here
+  const best = Math.min(whole(x.best) || Infinity, ...times)
+  return { n: Math.max(whole(x.n), times.length), times, best, at: Math.min(whole(x.at), Date.now() + 86_400_000) }
 }
 
 /** Accepts anything, keeps only what makes sense. */
@@ -140,6 +162,16 @@ export function readData(x: unknown): Data | null {
     for (const [id, raw] of Object.entries(x.practice)) {
       const p = readPractice(raw)
       if (p && caseById.has(id)) out.practice[id] = p
+    }
+  if (isObject(x.drills))
+    for (const [id, raw] of Object.entries(x.drills)) {
+      if (!caseById.has(id) || !isObject(raw)) continue
+      const algs: Record<string, Drill> = {}
+      for (const [text, d] of Object.entries(raw).slice(0, 40)) {
+        const drill = text.length <= 400 && readDrill(d)
+        if (drill) algs[text] = drill
+      }
+      if (Object.keys(algs).length) out.drills[id] = algs
     }
   // it was a single case while there was only one deck
   for (const id of isObject(x.last) ? Object.values(x.last) : [x.last]) {
@@ -210,6 +242,10 @@ export const useCases = () => useSyncExternalStore(subscribe, () => data.cases)
 export const useLast = (deck: DeckId) => useSyncExternalStore(subscribe, () => data.last[deck])
 
 export const practiceOf = (id: string): Practice | undefined => data.practice[id]
+const NO_DRILLS: Record<string, Drill> = Object.freeze({})
+/** A case's algorithms that were timed on their own, by the algorithm. */
+export const drillsOf = (id: string): Record<string, Drill> => data.drills[id] ?? NO_DRILLS
+export const useDrills = (id: string) => useSyncExternalStore(subscribe, () => drillsOf(id))
 export const usePractice = (id: string) => useSyncExternalStore(subscribe, () => data.practice[id])
 export const usePractices = () => useSyncExternalStore(subscribe, () => data.practice)
 
@@ -347,6 +383,17 @@ export function setPractice(id: string, p: Practice | undefined) {
   if (p) next[id] = p
   else delete next[id]
   commit({ ...data, practice: next })
+}
+
+/** Save how an algorithm has gone on its own. Undefined forgets it. */
+export function setDrill(id: string, text: string, d: Drill | undefined) {
+  const algs = { ...drillsOf(id) }
+  if (d) algs[text] = d
+  else delete algs[text]
+  const next = { ...data.drills }
+  if (Object.keys(algs).length) next[id] = algs
+  else delete next[id]
+  commit({ ...data, drills: next })
 }
 
 export function replaceData(next: Data): () => void {

@@ -63,7 +63,8 @@
   width: 22px;
   transition: rotate 0.6s var(--spring);
 }
-.choose__name:hover .glyph {
+.choose__name:hover .glyph:not(.glyph--slot),
+.choose__name:hover .glyph__top {
   rotate: 90deg;
 }
 .choose__name .num {
@@ -272,9 +273,6 @@
   border-radius: 34px;
   background: var(--raised);
   box-shadow: var(--shadow);
-}
-.st-X {
-  fill: var(--cell);
 }
 .stage__done {
   display: grid;

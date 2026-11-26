@@ -194,3 +194,57 @@ def solves(moves, target):
     got = canon(ll(st))
     # picture + U^k must equal the position the bare moves solve
     return [k for k in range(4) if canon(turn(target, k)) == got]
+
+
+# ---------------------------------------------------------------- ZBLS
+# A ZBLS picture is the last layer picture followed by the front right slot: its edge's front and
+# right stickers, then its corner's front, right and bottom. Only what matters is kept. A last layer
+# piece shows U where its yellow sticker is on an edge and X everywhere else, while the slot's own
+# corner and edge keep their colors, with D for white.
+SLOT = [IDX[((1, 0, 1), (0, 0, 1))], IDX[((1, 0, 1), (1, 0, 0))],
+        IDX[((1, -1, 1), (0, 0, 1))], IDX[((1, -1, 1), (1, 0, 0))], IDX[((1, -1, 1), (0, -1, 0))]]
+BELOW = [i for i in range(54) if i not in set(LL.values()) | set(SLOT)]
+PIECES = {}
+for _i, (_p, _) in enumerate(POS):
+    PIECES.setdefault(_p, []).append(_i)
+SOLVED_SLOT = "XUXUUUXUX" + "X" * 12 + "FRFRD"
+
+
+def mask(st):
+    """Last layer pieces lose everything but the yellow on their edges."""
+    out = list(st)
+    for piece in PIECES.values():
+        if len(piece) > 1 and any(st[i] == "U" for i in piece):
+            for i in piece:
+                out[i] = "U" if len(piece) == 2 and st[i] == "U" else "X"
+    return out
+
+
+def slot_picture(st):
+    m = mask(st)
+    return ll(m) + "".join(m[i] for i in SLOT)
+
+
+def slot_case(moves):
+    """The ZBLS picture `moves` solve, or None if they disturb another slot."""
+    st = case_state(moves)
+    if any(st[i] != SOLVED[i] for i in BELOW):
+        return None
+    return slot_picture(st)
+
+
+def slot_turn(p, k):
+    """The picture after U^k. The slot stays where it is."""
+    return turn(p[:21], k) + p[21:]
+
+
+def slot_key(p):
+    return min(slot_turn(p, k) for k in range(4))
+
+
+def slot_solves(moves, target):
+    """Which pre-AUFs make `moves` solve the ZBLS picture `target`? None if they break F2L."""
+    got = slot_case(moves)
+    if got is None:
+        return None
+    return [k for k in range(4) if slot_turn(target, k) == got]

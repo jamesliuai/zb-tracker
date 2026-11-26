@@ -26,6 +26,9 @@ export const ripple = signal<string | null>(null)
 /** A finished set or deck, being celebrated over the whole page. */
 export const finale = signal<string | null>(null)
 
+/** The algorithm being timed on its own, over the whole page, and the case it's for. */
+export const drilling = signal<{ id: string; text: string } | null>(null)
+
 export interface Toast {
   key: number
   text: string

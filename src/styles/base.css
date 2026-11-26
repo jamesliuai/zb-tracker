@@ -19,7 +19,10 @@
   --cube-o: #ff9420;
   --cube-g: #1fae5b;
   --cube-b: #2b6ef2;
+  --cube-w: #ffffff;
+  --cube-x: #d3d8e0;
   --cube-edge: rgb(20 23 29 / 0.1);
+  --cube-w-edge: rgb(20 23 29 / 0.34);
 
   --hue: #14171d;
   --tint: 14%;
@@ -51,7 +54,10 @@
   --cube-o: #ff9626;
   --cube-g: #25b863;
   --cube-b: #3d7df8;
+  --cube-w: #eef0f4;
+  --cube-x: #2a2f3a;
   --cube-edge: transparent;
+  --cube-w-edge: transparent;
   --hue: #f1f3f6;
   --tint: 20%;
 }
@@ -59,23 +65,36 @@
 /*
  * A set runs from --a to --b across its subsets, and --m says how far along we are.
  * The --a colors were checked with a color vision simulator in this order, the order on the wall.
+ * ZBLS has the first six of them, in the same order.
  */
+[data-set='ZBLS-basic'],
 [data-set='T'] { --a: #ee3842; --b: #fb6a35; --hue-ink: #c81f2b; }
+[data-set='ZBLS-side'],
 [data-set='U'] { --a: #f29d34; --b: #f3c42c; --hue-ink: #8f5600; }
+[data-set='ZBLS-up'],
 [data-set='L'] { --a: #159543; --b: #16a883; --hue-ink: #0b7734; }
+[data-set='ZBLS-corner'],
 [data-set='H'] { --a: #40bbd0; --b: #3c9fec; --hue-ink: #0a6f82; }
+[data-set='ZBLS-edge'],
 [data-set='Pi'] { --a: #007efd; --b: #4b5cf3; --hue-ink: #0064cc; }
+[data-set='ZBLS-both'],
 [data-set='S'] { --a: #8734c5; --b: #b534bd; --hue-ink: #7a2bb5; }
 [data-set='AS'] { --a: #f846a6; --b: #fb5c86; --hue-ink: #bd1873; }
 [data-set='PLL-edges'] { --a: #12a58c; --b: #1db4c6; --hue-ink: #07705f; }
 [data-set='PLL-adjacent'] { --a: #1479f7; --b: #5560f2; --hue-ink: #0a5fc9; }
 [data-set='PLL-diagonal'] { --a: #b23cc6; --b: #f0489f; --hue-ink: #8f279f; }
 :root[data-theme='dark'] {
+  [data-set='ZBLS-basic'],
   [data-set='T'] { --hue-ink: #ff7a80; }
+  [data-set='ZBLS-side'],
   [data-set='U'] { --hue-ink: #f7b25d; }
+  [data-set='ZBLS-up'],
   [data-set='L'] { --a: #1aa64c; --b: #1db894; --hue-ink: #4ccf7c; }
+  [data-set='ZBLS-corner'],
   [data-set='H'] { --hue-ink: #6dd3e4; }
+  [data-set='ZBLS-edge'],
   [data-set='Pi'] { --a: #1b88ff; --b: #5f6dff; --hue-ink: #62aeff; }
+  [data-set='ZBLS-both'],
   [data-set='S'] { --a: #9a48da; --b: #c645cd; --hue-ink: #c48bf2; }
   [data-set='AS'] { --hue-ink: #ff83c3; }
   [data-set='PLL-edges'] { --a: #17b398; --b: #22bfd2; --hue-ink: #4fd6bf; }

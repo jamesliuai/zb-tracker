@@ -1,18 +1,19 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { Alg, Auf } from '../components/Alg.tsx'
 import { Cube, Glyph } from '../components/Cube.tsx'
 import { Icon } from '../components/Icon.tsx'
 import { Roll } from '../components/Roll.tsx'
 import { Segmented } from '../components/Segmented.tsx'
+import { useStopwatch } from '../components/Stopwatch.tsx'
 import { Check } from '../components/Tile.tsx'
 import { turnU } from '../cube/engine.ts'
-import { caseById, subById, type Deck, type Subset } from '../data/index.ts'
+import { caseById, subById, type Deck } from '../data/index.ts'
 import { covered } from '../lib/layers.ts'
-import { airy, clock, shade, when } from '../lib/text.ts'
+import { airy, clock, shade, subLine, subWords, when } from '../lib/text.ts'
 import { hueOf } from '../reward/celebrate.ts'
 import { calm, spark } from '../reward/fx.ts'
-import { playStart, playStop, playSubset, playUndo } from '../reward/sound.ts'
+import { playStop, playSubset, playUndo } from '../reward/sound.ts'
 import { chosen, need, tipFor } from '../state/choose.ts'
 import { anglesOf, setPrefs, useCases, useEntry, usePractice, usePractices, usePrefs, type Pool, type Way } from '../state/store.ts'
 import { median, nextDue, plan, type Plan } from '../train/schedule.ts'
@@ -22,7 +23,7 @@ const ways = [['cube', 'With a cube'], ['screen', 'On screen']] as const
 const pools = [['due', 'Due'], ['learning', 'Learning'], ['learned', 'Learned'], ['all', 'All']] as const
 const touch = typeof matchMedia !== 'undefined' ? matchMedia('(pointer: coarse)') : null
 /** A picture with nothing lit, for a case you haven't seen yet. */
-const BLANK = 'X'.repeat(21)
+const blank = (ll: string) => 'X'.repeat(ll.length)
 const effort = [0, 1, 2, 1]
 
 /** Going between setting up, training and the results is a change of page, so it looks like one. */
@@ -43,7 +44,6 @@ function swap(change: () => void) {
 }
 
 const sub = (id: string) => subById.get(caseById.get(id)!.sub)!
-const subName = (s: Subset, deck: Deck) => (deck.flat ? s.name : airy(s.name))
 
 /* ------------------------------------------------------------------ choosing what to train */
 
@@ -106,9 +106,9 @@ function Chooser({ deck, on }: { deck: Deck; on: Set<string> }) {
                 : set.subs.map((s) => {
                     const mine = s.cases.map((c) => c.id)
                     return (
-                      <button key={s.id} className="chip" {...shade(s)} aria-pressed={pressed(mine, on)} onClick={() => flip(mine)} title={`${s.id} ${airy(s.name)}`}>
+                      <button key={s.id} className="chip" {...shade(s)} aria-pressed={pressed(mine, on)} onClick={() => flip(mine)} title={subLine(s)}>
                         <span className="chip__name">
-                          <b>{s.id}</b> {airy(s.name)}
+                          <b>{s.short}</b> {airy(s.name)}
                         </span>
                         <span className="chip__cells" aria-hidden="true">
                           {mine.map((id) => (
@@ -237,7 +237,7 @@ function Lights({ r, wave = false }: { r: Round; wave?: boolean }) {
 }
 
 /** The case just done: what it was, seen the way it came up, and the algorithm for that side. */
-function Reveal({ a, deck, way, onMiss }: { a: Attempt; deck: Deck; way: Way; onMiss: () => void }) {
+function Reveal({ a, way, onMiss }: { a: Attempt; way: Way; onMiss: () => void }) {
   const c = caseById.get(a.id)!
   const s = sub(a.id)
   const { hand } = usePrefs()
@@ -260,7 +260,7 @@ function Reveal({ a, deck, way, onMiss }: { a: Attempt; deck: Deck; way: Way; on
       <div className="reveal__body">
         <p className="reveal__name">
           <a href={`#${c.id}`}>{c.name}</a>
-          <span>{subName(s, deck)}</span>
+          <span>{subWords(s)}</span>
           {angles.length > 1 && <small>Angle {'AB'[best.i]}</small>}
         </p>
         <p className="reveal__alg">
@@ -286,123 +286,33 @@ function Reveal({ a, deck, way, onMiss }: { a: Attempt; deck: Deck; way: Way; on
   )
 }
 
-type Phase = 'idle' | 'armed' | 'running'
-
-function Stage({ r, deck }: { r: Round; deck: Deck }) {
-  const [phase, setPhase] = useState<Phase>('idle')
-  const [catching, setCatching] = useState(false)
-  const from = useRef(0)
-  const face = useRef<HTMLSpanElement>(null)
+function Stage({ r }: { r: Round }) {
   const time = useRef<HTMLDivElement>(null)
   const last = r.done.at(-1)
   const next = r.next
-  const running = phase === 'running'
   const screen = r.way === 'screen'
   const got = new Set(r.done.filter((a) => !a.missed).map((a) => a.id)).size
-
-  // while the clock runs, it counts on its own and everything else steps back
-  useLayoutEffect(() => {
-    if (!running) return
-    const root = document.documentElement
-    root.dataset.timing = ''
-    const show = () => {
-      if (face.current) face.current.textContent = clock(Math.floor((performance.now() - from.current) / 10))
-    }
-    show()
-    let f = requestAnimationFrame(function tick() {
-      show()
-      f = requestAnimationFrame(tick)
-    })
-    return () => {
-      cancelAnimationFrame(f)
-      delete root.dataset.timing
-    }
-  }, [running])
-
-  // the cover goes once the stopping tap's click lands on it, or soon anyway if none comes
-  useEffect(() => {
-    if (!catching) return
-    const t = setTimeout(() => setCatching(false), 500)
-    return () => clearTimeout(t)
-  }, [catching])
-
-  // Events read the phase from here, so a tap quicker than a frame still starts and stops the clock.
-  const at = useRef<Phase>('idle')
-  const set = (p: Phase) => {
-    at.current = p
-    setPhase(p)
-  }
-  const arm = () => {
-    if (at.current === 'idle' && round.get()?.next) set('armed')
-  }
-  const start = (t: number) => {
-    if (at.current !== 'armed') return
-    from.current = t
-    set('running')
-    playStart()
-  }
-  const stop = (t: number) => {
-    if (at.current !== 'running') return
-    set('idle')
-    const cs = Math.floor((t - from.current) / 10)
-    if (cs < 30) return // a slip of the finger, not a solve
-    const a = finish(cs)
-    if (!a) return
-    playStop(a.best)
-    navigator.vibrate?.(8)
-    if (a.best && !calm())
-      requestAnimationFrame(() => {
-        const b = time.current?.getBoundingClientRect()
-        if (b) spark(b.x + b.width / 2, b.y + b.height / 2, hueOf(caseById.get(a.id)!.sub), 12, Math.min(150, b.width * 0.42))
-      })
-  }
   const miss = () => {
     if (toggleMiss()) playUndo()
   }
-
-  useEffect(() => {
-    const own = (e: KeyboardEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-    const typing = (e: KeyboardEvent) => (e.target as HTMLElement).closest?.('input, textarea')
-    const down = (e: KeyboardEvent) => {
-      if (covered() || e.metaKey || e.ctrlKey || e.altKey || typing(e)) return
-      if (at.current === 'running') {
-        if (e.key === 'Shift' || e.key === 'CapsLock') return
-        own(e)
-        // a key held down since before the clock started isn't the one stopping it
-        if (e.repeat) return
-        if (e.key === 'Escape') set('idle') // called off, and it doesn't count
-        else stop(e.timeStamp)
-        return
-      }
-      const k = e.key.toLowerCase()
-      if (k !== ' ' && k !== 'm' && k !== 'escape') return
-      own(e)
-      // holding a key down does it once
-      if (e.repeat) return
-      if (k === 'm') miss()
-      else if (k === 'escape') swap(end)
-      else if (!round.get()?.next) swap(end)
-      else arm()
-    }
-    const up = (e: KeyboardEvent) => {
-      if (e.key !== ' ' || covered() || typing(e)) return
-      own(e)
-      start(e.timeStamp)
-    }
-    const lost = () => at.current === 'armed' && set('idle')
-    addEventListener('keydown', down, true)
-    addEventListener('keyup', up, true)
-    addEventListener('blur', lost)
-    return () => {
-      removeEventListener('keydown', down, true)
-      removeEventListener('keyup', up, true)
-      removeEventListener('blur', lost)
-    }
-    // they only read refs and the round, so one set of them lasts the whole round
-  }, [])
+  const { phase, face, pad, cover } = useStopwatch({
+    ready: () => !!round.get()?.next,
+    stopped: (cs) => {
+      const a = finish(cs)
+      if (!a) return
+      playStop(a.best)
+      navigator.vibrate?.(8)
+      if (a.best && !calm())
+        requestAnimationFrame(() => {
+          const b = time.current?.getBoundingClientRect()
+          if (b) spark(b.x + b.width / 2, b.y + b.height / 2, hueOf(caseById.get(a.id)!.sub), 12, Math.min(150, b.width * 0.42))
+        })
+    },
+    // Escape ends the round, and so does space once every case is done
+    keys: ['m', 'escape'],
+    press: (k) => (k === 'm' ? miss() : swap(end)),
+  })
+  const running = phase === 'running'
 
   const c = next && caseById.get(next.id)!
   const tap = touch?.matches
@@ -455,7 +365,7 @@ function Stage({ r, deck }: { r: Round; deck: Deck }) {
             </div>
           ) : screen ? (
             <div className="stage__card" data-lit={running || undefined}>
-              <Cube ll={running ? turnU(c.ll, next.view) : BLANK} label={running ? 'The case to recall' : undefined} />
+              <Cube ll={running ? turnU(c.ll, next.view) : blank(c.ll)} label={running ? 'The case to recall' : undefined} />
             </div>
           ) : (
             <p className="stage__scramble" aria-label={`Scramble: ${next.moves}`}>
@@ -464,16 +374,7 @@ function Stage({ r, deck }: { r: Round; deck: Deck }) {
           )}
         </div>
 
-        <div
-          className="stage__pad"
-          onPointerDown={(e) => {
-            if (e.button || at.current !== 'idle' || !next) return
-            e.currentTarget.setPointerCapture(e.pointerId)
-            arm()
-          }}
-          onPointerUp={(e) => start(e.timeStamp)}
-          onPointerCancel={() => at.current === 'armed' && set('idle')}
-        >
+        <div className="stage__pad" {...pad}>
           <div
             ref={time}
             className="stage__time num"
@@ -486,23 +387,10 @@ function Stage({ r, deck }: { r: Round; deck: Deck }) {
           <p className="stage__hint">{hint}</p>
         </div>
 
-        <div className="stage__last stage__fade">{last && <Reveal key={last.at} a={last} deck={deck} way={r.way} onMiss={miss} />}</div>
+        <div className="stage__last stage__fade">{last && <Reveal key={last.at} a={last} way={r.way} onMiss={miss} />}</div>
       </div>
 
-      {/* while timing, a touch anywhere stops the clock, and the click it makes lands here too, not on what appears underneath */}
-      {(running || catching) && (
-        <div
-          className="stage__catch"
-          onPointerDown={(e) => {
-            if (at.current !== 'running') return
-            e.currentTarget.setPointerCapture(e.pointerId)
-            setCatching(true)
-            stop(e.timeStamp)
-          }}
-          onClick={() => setCatching(false)}
-          onPointerCancel={() => setCatching(false)}
-        />
-      )}
+      {cover}
       <p className="sr" aria-live="polite">
         {last && phase === 'idle' ? `${caseById.get(last.id)!.name}, ${clock(last.cs)}${last.missed ? ', missed' : ''}` : ''}
       </p>
@@ -520,7 +408,7 @@ interface Row {
   best: boolean
 }
 
-function Summary({ r, deck }: { r: Round; deck: Deck }) {
+function Summary({ r }: { r: Round }) {
   const again = useRef<HTMLButtonElement>(null)
   const [wave, setWave] = useState(false)
   const rows: Row[] = r.ids
@@ -620,7 +508,7 @@ function Summary({ r, deck }: { r: Round; deck: Deck }) {
               <a className="tally__case" href={`#${x.id}`}>
                 <Cube ll={c.ll} />
                 <b>{c.name}</b>
-                <span>{subName(s, deck)}</span>
+                <span>{subWords(s)}</span>
               </a>
               <span className="tally__bar" aria-hidden="true">
                 <b style={{ scale: `${x.cs === null ? 1 : x.cs / most} 1` }} />
@@ -643,5 +531,5 @@ function Summary({ r, deck }: { r: Round; deck: Deck }) {
 export function TrainPage({ deck }: { deck: Deck }) {
   const r = round.use()
   if (!r || r.deck !== deck.id) return <Setup deck={deck} />
-  return r.over ? <Summary key={r.n} r={r} deck={deck} /> : <Stage key={r.n} r={r} deck={deck} />
+  return r.over ? <Summary key={r.n} r={r} /> : <Stage key={r.n} r={r} />
 }

@@ -1,7 +1,8 @@
 import { memo } from 'react'
 import type { Case, Hand } from '../data/index.ts'
+import { clock } from '../lib/text.ts'
 import { chosen } from '../state/choose.ts'
-import { anglesOf, useEntry } from '../state/store.ts'
+import { anglesOf, useDrills, useEntry } from '../state/store.ts'
 import { Alg, Auf } from './Alg.tsx'
 import { Cube } from './Cube.tsx'
 import { Check } from './Tile.tsx'
@@ -11,6 +12,7 @@ const words = ['not started', 'learning', 'learned']
 /** A case with the algorithms and notes for it. */
 export const Line = memo(function Line({ c, i, hand, named = false }: { c: Case; i: number; hand: Hand; named?: boolean }) {
   const e = useEntry(c.id)
+  const drills = useDrills(c.id)
   const angles = anglesOf(e)
   const s = e.s ?? 0
   return (
@@ -23,6 +25,7 @@ export const Line = memo(function Line({ c, i, hand, named = false }: { c: Case;
         {named && <b className="line__name">{c.short}</b>}
         {angles.map((a, k) => {
           const pick = chosen(c, a, hand)
+          const best = drills[pick.text]?.best
           return (
             <div className="line__angle" key={k}>
               {angles.length > 1 && k > 0 && <Cube ll={c.ll} rot={a.rot} />}
@@ -30,6 +33,11 @@ export const Line = memo(function Line({ c, i, hand, named = false }: { c: Case;
                 <p className="line__alg">
                   <Auf turn={pick.need} />
                   <Alg text={pick.text} />
+                  {best && (
+                    <span className="best num" title="Your fastest">
+                      {clock(best)}
+                    </span>
+                  )}
                 </p>
                 {a.rec && <p className="line__note">{a.rec}</p>}
                 {a.auf && (

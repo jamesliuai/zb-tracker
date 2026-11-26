@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { caseById, subById, type Deck, type ZSet } from '../data/index.ts'
 import { go } from '../lib/router.ts'
-import { airy, shade } from '../lib/text.ts'
+import { shade, subWords } from '../lib/text.ts'
 import { useStats, useStatus } from '../state/store.ts'
 import { Cell } from './Cells.tsx'
 import { Cube, Glyph } from './Cube.tsx'
@@ -25,20 +25,20 @@ function Tip({ spot }: { spot: Spot }) {
     <div className={spot.below ? 'tip tip--below' : 'tip'} data-set={c.set} style={{ left: spot.x, top: spot.y }} aria-hidden="true">
       <Cube ll={c.ll} />
       <b>{c.name}</b>
-      <span>{airy(subById.get(c.sub)!.name)}</span>
+      <span>{subWords(subById.get(c.sub)!)}</span>
       <em data-s={s}>{words[s]}</em>
     </div>
   )
 }
 
-function Block({ set, onSpot }: { set: ZSet; onSpot: (s: Spot | null) => void }) {
+function Block({ set, short, onSpot }: { set: ZSet; short: boolean; onSpot: (s: Spot | null) => void }) {
   const n = useStats(set.deck).bySet.get(set.id)!
   const id = (e: React.PointerEvent | React.MouseEvent) => (e.target as HTMLElement).closest<HTMLElement>('.cell')?.dataset.id
   return (
     <section className={n === set.cases.length ? 'block is-full' : 'block'} data-set={set.id} style={{ '--cols': set.subs.length } as React.CSSProperties}>
-      <a className="block__head" href={`#${set.id}`}>
+      <a className="block__head" href={`#${set.id}`} title={short ? set.name : undefined}>
         <Glyph ll={set.cases[0].ll} />
-        <b>{set.name}</b>
+        <b>{short ? set.short : set.name}</b>
         <span className="num">
           <Roll value={n} />
           <i>/{set.cases.length}</i>
@@ -70,6 +70,22 @@ function Block({ set, onSpot }: { set: ZSet; onSpot: (s: Spot | null) => void })
   )
 }
 
+/**
+ * How many columns the squares have to fit across, with how many sets: all of them in one row, or,
+ * on a narrow screen, in two rows split where the wider row is as narrow as it can be.
+ */
+function fit({ sets }: Deck) {
+  const cols = sets.map((s) => s.subs.length)
+  const sum = (list: number[]) => list.reduce((a, b) => a + b, 0)
+  let row = { cols: sum(cols), sets: sets.length }
+  for (let at = 1; at < cols.length; at++) {
+    const [a, b] = [sum(cols.slice(0, at)), sum(cols.slice(at))]
+    const wider = a >= b ? { cols: a, sets: at } : { cols: b, sets: cols.length - at }
+    if (at === 1 || wider.cols < row.cols) row = wider
+  }
+  return { '--all': sum(cols), '--sets': sets.length, '--row': row.cols, '--row-sets': row.sets } as React.CSSProperties
+}
+
 /** Every case of a deck as one square. Columns are subsets, and a square lights up when it's learned. */
 export function Wall({ deck }: { deck: Deck }) {
   const [spot, setSpot] = useState<Spot | null>(null)
@@ -80,10 +96,12 @@ export function Wall({ deck }: { deck: Deck }) {
     last.current = k
     setSpot(s)
   }
+  // a set's name has the width of a few squares above it, so long names give way to the tab's
+  const short = deck.sets.some((s) => s.name.length > 8)
   return (
-    <div className="wall">
+    <div className="wall" style={fit(deck)}>
       {deck.sets.map((s) => (
-        <Block key={s.id} set={s} onSpot={onSpot} />
+        <Block key={s.id} set={s} short={short} onSpot={onSpot} />
       ))}
       {/* in body, because a size container can trap fixed elements in some browsers */}
       {spot && createPortal(<Tip spot={spot} />, document.body)}

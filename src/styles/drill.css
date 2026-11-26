@@ -1,0 +1,217 @@
+/* ------------------------------------------------------------ one algorithm against the clock */
+
+/* an algorithm's fastest time, wherever it's listed */
+.best {
+  color: var(--hue-ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.angle__tools .best {
+  margin-left: 2px;
+}
+.line__alg .best {
+  flex: none;
+  font-size: 14px;
+}
+
+/* The whole page, washed with the color of the case's subset. While the clock runs, only the clock and the algorithm stay. */
+.drill {
+  --wash-drill: 5%;
+  position: fixed;
+  inset: 0;
+  z-index: 52;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--gutter) env(safe-area-inset-bottom, 0px);
+  background: color-mix(in oklab, var(--hue) var(--wash-drill), var(--bg));
+  overflow: auto;
+  overscroll-behavior: contain;
+  outline: none;
+  animation: fade-in 0.3s var(--ease) both;
+}
+:root[data-theme='dark'] .drill {
+  --wash-drill: 8%;
+}
+.drill__top {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 64px;
+  margin-right: -10px;
+}
+.drill__name {
+  margin-right: auto;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.drill__name b {
+  margin-right: 4px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.drill__main {
+  flex: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(8px, 2vh, 20px);
+  padding-block: 4px 16px;
+  text-align: center;
+}
+.drill__case {
+  width: clamp(84px, 15vh, 140px);
+}
+.drill__alg {
+  max-width: 28ch;
+  font-size: clamp(22px, 3vw, 34px);
+  line-height: 1.4;
+}
+.drill__alg .alg {
+  word-spacing: 0.06em;
+}
+.drill__setup {
+  max-width: 48ch;
+  font-size: 14.5px;
+  color: var(--ink-3);
+  text-wrap: balance;
+}
+.drill__setup > span {
+  margin-right: 6px;
+  color: var(--ink-2);
+}
+
+/* the clock is the button, for fingers */
+.drill__pad {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding-block: 2px 6px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.drill__time {
+  font-size: clamp(100px, 18vw, 232px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.drill[data-phase='armed'] .drill__time {
+  color: var(--cube-g);
+  transition: none;
+}
+.drill__time[data-best] {
+  color: var(--hue-ink);
+}
+.drill__said {
+  min-height: 1.75em;
+  font-size: 16px;
+  color: var(--ink-2);
+}
+.drill__said em {
+  display: inline-block;
+  padding: 2px 13px 3px;
+  border-radius: 99px;
+  font-style: normal;
+  font-weight: 500;
+  color: #fff;
+  background: var(--hue);
+  animation: drill-best 0.7s var(--pop) both;
+}
+@keyframes drill-best {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+}
+.drill__hint {
+  min-height: 1.5em;
+  font-size: 14.5px;
+  color: var(--ink-3);
+  text-wrap: balance;
+}
+
+.drill__stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px clamp(24px, 4.4vw, 52px);
+  margin-top: clamp(4px, 1.4vh, 16px);
+}
+.drill__stats p {
+  display: grid;
+  gap: 1px;
+}
+.drill__stats small {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.drill__stats b {
+  font-size: 22px;
+  font-weight: 500;
+}
+.drill__stats p:first-child b {
+  color: var(--hue-ink);
+}
+.drill__stats p b[data-none] {
+  color: var(--ink-3);
+}
+.drill__times {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  max-width: 560px;
+  padding: 0;
+  list-style: none;
+  font-size: 14.5px;
+  color: var(--ink-3);
+}
+.drill__times li:first-child {
+  color: var(--ink-2);
+  animation: drill-time 0.45s var(--spring) both;
+}
+@keyframes drill-time {
+  from {
+    opacity: 0;
+    translate: -8px 0;
+  }
+}
+.drill__times li.is-best {
+  color: var(--hue-ink);
+  font-weight: 500;
+}
+
+.drill__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  padding-bottom: 8px;
+  font-size: 14.5px;
+}
+.drill__foot button:disabled {
+  visibility: hidden;
+}
+
+.drill__fade {
+  transition: opacity 0.3s var(--ease), visibility 0.3s;
+}
+.drill[data-phase='running'] .drill__fade {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s, visibility 0.12s;
+}
+
+@media (max-width: 560px) {
+  .drill__stats {
+    gap: 8px 20px;
+  }
+  .drill__stats p:nth-child(3) {
+    display: none;
+  }
+}

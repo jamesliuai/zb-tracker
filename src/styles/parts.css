@@ -56,6 +56,28 @@
 .st-R { fill: var(--cube-r); }
 .st-B { fill: var(--cube-g); }
 .st-L { fill: var(--cube-o); }
+.st-D { fill: var(--cube-w); }
+.st-X { fill: var(--cell); }
+
+/* ZBLS. Strokes are in a face's own units, a sticker wide, and the top turns about its middle. */
+.cube--slot rect {
+  stroke-width: 0.045;
+  transition: fill 0.3s var(--ease);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+/* a shade deeper than an unlit cell, so a white sticker stands out from what doesn't matter */
+.cube--slot .st-X {
+  fill: var(--cube-x);
+}
+.cube--slot .st-D {
+  stroke: var(--cube-w-edge);
+  stroke-width: 0.06;
+}
+.cube__top {
+  transform-origin: 0 0;
+  transition: transform 0.5s var(--spring);
+}
 
 .glyph {
   width: 24px;
@@ -64,6 +86,12 @@
 }
 .glyph .off { fill: var(--cell); }
 .glyph .on { fill: var(--hue); }
+.glyph .white { fill: color-mix(in oklab, var(--hue) 30%, var(--raised)); }
+/* where a last layer glyph turns as a whole, a ZBLS one turns its top */
+.glyph__top {
+  transform-origin: 0 0;
+  transition: rotate 0.6s var(--spring);
+}
 
 /* ------------------------------------------------------------ one case, as a square */
 

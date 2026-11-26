@@ -7,8 +7,11 @@
  * dozen tries one of the shortest wins, about twenty turns, never one of the case's own algorithms
  * backwards, and never one of the last six scrambles for the case. Each one is checked on the
  * simulator before it's used.
+ *
+ * A ZBLS case is set up the same way round, in about a dozen turns: an algorithm for another ZBLS
+ * case undone at the end, and in front of it, whichever ZBLS case that algorithm turns this one into.
  */
-import { caseKey, layerAfter, plain, tidy, undo, viewOf, type Turn } from '../cube/engine.ts'
+import { caseKey, isSlot, layerAfter, plain, slotAfter, tidy, turnU, undo, viewOf, type Turn } from '../cube/engine.ts'
 import { caseByKey, cases, deckById, type Case } from '../data/index.ts'
 
 let table: Map<string, string[][]> | null = null
@@ -47,14 +50,15 @@ export interface Scramble {
   view: Turn
 }
 
-export function scramble(c: Case, random = Math.random): Scramble {
+/** What a scramble leaves on the cube, drawn the way the case is. */
+const after = (c: Case, moves: string[]) => (isSlot(c.ll) ? slotAfter : layerAfter)(moves.join(' '))
+
+/** Ways there for a last layer case: two algorithms undone, with a turn of the top between. */
+function lastLayer(c: Case, target: string[], random: () => number): string[][] {
   const all = setups()
+  // a PLL from two more PLLs stays short, while a ZBLL can start from any last layer
+  const from = c.deck === 'PLL' ? deckById.get('PLL')!.cases : cases.filter((x) => !isSlot(x.ll))
   const key = caseKey(c.ll)
-  const target = all.get(c.id)![0]
-  // a 2GLL is often one short algorithm after another, so the shortest way there can be one of its own, backwards
-  const avoid = new Set([...all.get(c.id)!.map(core), ...(recent.get(c.id) ?? [])])
-  // a PLL from two more PLLs stays short, while a ZBLL can start from anything
-  const from = c.deck === 'PLL' ? deckById.get('PLL')!.cases : cases
   const found: string[][] = []
   for (let i = 0; i < 80; i++) {
     const other = from[Math.floor(random() * from.length)]
@@ -71,15 +75,52 @@ export function scramble(c: Case, random = Math.random): Scramble {
       const s = tidy([...first, ...U(m + j), ...second])
       const ll = layerAfter(s.join(' '))
       if (ll && caseKey(ll) === key) {
-        if (!avoid.has(core(s))) found.push(s)
+        found.push(s)
         break
       }
     }
   }
+  return found
+}
+
+/**
+ * Ways there for a ZBLS case. Undoing another case's algorithm last means starting from what that
+ * algorithm makes of this case, which is a ZBLS case too, set up first.
+ */
+function lastSlot(c: Case, target: string[], random: () => number): string[][] {
+  const all = setups()
+  const from = deckById.get('ZBLS')!.cases
+  const key = caseKey(c.ll)
+  const found: string[][] = []
+  for (let i = 0; i < 80; i++) {
+    const other = from[Math.floor(random() * from.length)]
+    if (other === c) continue
+    const ways = all.get(other.id)!
+    const second = ways[Math.floor(random() * ways.length)]
+    const before = slotAfter([...target, ...U(Math.floor(random() * 4)), ...undo(second)].join(' '))
+    const then = before && caseByKey.get(caseKey(before))
+    if (!then || then === c) continue
+    const first = all.get(then.id)![0]
+    const there = slotAfter(first.join(' '))!
+    const k = [0, 1, 2, 3].find((n) => turnU(there, n) === before)
+    if (k === undefined) continue
+    const s = tidy([...first, ...U(k), ...second])
+    const ll = slotAfter(s.join(' '))
+    if (ll && caseKey(ll) === key) found.push(s)
+  }
+  return found
+}
+
+export function scramble(c: Case, random = Math.random): Scramble {
+  const all = setups()
+  const target = all.get(c.id)![0]
+  // a 2GLL is often one short algorithm after another, so the shortest way there can be one of its own, backwards
+  const avoid = new Set([...all.get(c.id)!.map(core), ...(recent.get(c.id) ?? [])])
+  const found = (isSlot(c.ll) ? lastSlot : lastLayer)(c, target, random).filter((s) => !avoid.has(core(s)))
   const shortest = Math.min(...found.map((s) => s.length))
   const near = found.filter((s) => s.length <= shortest + 2)
   const pick = near.length ? near[Math.floor(random() * near.length)] : target
   recent.set(c.id, [...(recent.get(c.id) ?? []), core(pick)].slice(-MEMORY))
-  const moves = tidy([...pick, ...U(Math.floor(random() * 4))]).join(' ')
-  return { moves, view: viewOf(c.ll, layerAfter(moves)!)! }
+  const moves = tidy([...pick, ...U(Math.floor(random() * 4))])
+  return { moves: moves.join(' '), view: viewOf(c.ll, after(c, moves)!)! }
 }
