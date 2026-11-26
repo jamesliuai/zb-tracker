@@ -227,6 +227,25 @@ export function playUndo() {
   tone(r, note(-5), t, 0.16, 0.24, { bend: note(-10), room: 0.25 })
 }
 
+/** The clock started. Your eyes are on the cube, so you hear it. */
+export function playStart() {
+  const r = ready()
+  if (!r) return
+  tick(r, r.ctx.currentTime, 0.5)
+}
+
+/** The clock stopped: the last layer snaps home, and your fastest ever for the case rings out. */
+export function playStop(best: boolean) {
+  const r = ready()
+  if (!r) return
+  const t = r.ctx.currentTime
+  snap(r, t, 0.75)
+  if (!best) return
+  bell(r, note(12), t + 0.03, 0.8, -0.1)
+  bell(r, note(19), t + 0.11, 0.62, 0.12)
+  bell(r, note(24), t + 0.19, 0.45, 0.2, 1.4)
+}
+
 /** The picture turned by a quarter. */
 export function playTurn() {
   const r = ready()

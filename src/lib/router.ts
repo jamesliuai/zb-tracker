@@ -8,16 +8,21 @@ export type Route =
   | { page: 'set'; deck: Deck; set: ZSet }
   | { page: 'sub'; deck: Deck; set: ZSet; sub: Subset }
   | { page: 'case'; deck: Deck; set: ZSet; sub: Subset; case: Case }
+  | { page: 'train'; deck: Deck }
 
 /** The plain address is ZBLL. Another deck has its own name. */
 export const homeOf = (deck: DeckId) => (deck === 'ZBLL' ? '' : deck)
+export const trainOf = (deck: DeckId) => (deck === 'ZBLL' ? 'train' : `${deck}-train`)
 
 /**
  * Plain hashes: #T is a set, #T3 a subset, #T3-5 a case, and #PLL the other deck, with #PLL-Ja a
- * case in it and #PLL-edges a part of its one page.
+ * case in it and #PLL-edges a part of its one page. #train and #PLL-train are the trainers.
  */
 function read(hash: string): Route {
   const id = decodeURIComponent(hash.replace(/^#/, ''))
+  const train = /^(?:(\w+)-)?train$/i.exec(id)
+  const trains = train && deckById.get((train[1]?.toUpperCase() ?? 'ZBLL') as DeckId)
+  if (trains) return { page: 'train', deck: trains }
   const c = caseById.get(id)
   const sub = c ? subById.get(c.sub) : subById.get(id)
   const set = sub ? setById.get(sub.set) : setById.get(id)
@@ -92,6 +97,7 @@ function show(next: Route, top?: number) {
     const after = shared && diagram(shared)
     if (after) after.style.viewTransitionName = 'cube'
   })
+  t.ready.catch(() => {}) // skipped for a newer one, and that's fine
   t.finished
     .catch(() => {})
     .finally(() => {

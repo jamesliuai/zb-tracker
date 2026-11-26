@@ -4,11 +4,13 @@ import { Finale } from './components/Finale.tsx'
 import { Header } from './components/Header.tsx'
 import { Palette } from './components/Palette.tsx'
 import { Toast } from './components/Toast.tsx'
-import { settle, useRoute } from './lib/router.ts'
+import { covered } from './lib/layers.ts'
+import { getRoute, go, settle, trainOf, useRoute } from './lib/router.ts'
 import { CasePage } from './pages/CasePage.tsx'
 import { Home } from './pages/Home.tsx'
 import { SetPage } from './pages/SetPage.tsx'
 import { SubsetPage } from './pages/SubsetPage.tsx'
+import { TrainPage } from './pages/TrainPage.tsx'
 import { finale } from './reward/signals.ts'
 import { setPrefs, usePrefs } from './state/store.ts'
 
@@ -36,7 +38,8 @@ export function App() {
   useLayoutEffect(settle, [])
   useEffect(() => {
     const page = `${route.deck.id} Tracker`
-    document.title = route.page === 'home' ? page : `${route.page === 'set' ? route.set.name : route.page === 'sub' ? route.sub.id : route.case.name} · ${page}`
+    const name = route.page === 'home' ? '' : route.page === 'train' ? 'Train' : route.page === 'set' ? route.set.name : route.page === 'sub' ? route.sub.id : route.case.name
+    document.title = name ? `${name} · ${page}` : page
   }, [route])
   useEffect(() => setPrefs({ deck: route.deck.id }), [route.deck])
 
@@ -47,6 +50,11 @@ export function App() {
       if ((e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) || (e.key === 'k' && (e.metaKey || e.ctrlKey))) {
         e.preventDefault()
         flushSync(() => setSearching(true))
+      } else if ((e.key === 't' || e.key === 'T') && !typing && !e.metaKey && !e.ctrlKey && !e.altKey && !e.defaultPrevented && !covered()) {
+        const { deck, page } = getRoute()
+        if (page === 'train') return
+        e.preventDefault()
+        go(trainOf(deck.id))
       }
     }
     addEventListener('keydown', key)
@@ -61,6 +69,7 @@ export function App() {
         {route.page === 'set' && <SetPage key={route.set.id} set={route.set} />}
         {route.page === 'sub' && <SubsetPage key={route.sub.id} set={route.set} sub={route.sub} />}
         {route.page === 'case' && <CasePage key={route.case.id} c={route.case} sub={route.sub} set={route.set} deck={route.deck} />}
+        {route.page === 'train' && <TrainPage key={route.deck.id} deck={route.deck} />}
       </div>
       <Palette open={searching} deck={route.deck} onClose={() => setSearching(false)} />
       <Toast />

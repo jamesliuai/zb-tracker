@@ -9,12 +9,13 @@ import { NotationError, moveCount, normalize, parse, setup, type Turn } from '..
 import { caseById, type Case, type Deck, type Subset, type ZSet } from '../data/index.ts'
 import { covered } from '../lib/layers.ts'
 import { go, homeOf } from '../lib/router.ts'
-import { airy, date, shade } from '../lib/text.ts'
+import { airy, clock, date, shade, when } from '../lib/text.ts'
 import { change, learn } from '../reward/celebrate.ts'
 import { say } from '../reward/signals.ts'
 import { playTurn } from '../reward/sound.ts'
 import { chosen, need, offers, suggestAngle, tipFor, type Row } from '../state/choose.ts'
-import { addAngle, anglesOf, nextUp, removeAngle, setPrefs, touch, updateAngle, updateEntry, useEntry, usePrefs, type Angle, type Entry } from '../state/store.ts'
+import { addAngle, anglesOf, nextUp, removeAngle, setPrefs, touch, updateAngle, updateEntry, useEntry, usePractice, usePrefs, type Angle, type Entry, type Status } from '../state/store.ts'
+import { median } from '../train/schedule.ts'
 
 const hands = [['two', 'Two-handed'], ['oh', 'One-handed']] as const
 const AB = ['A', 'B']
@@ -39,6 +40,26 @@ function Copy({ text }: { text: string }) {
     >
       <Icon name={done ? 'check' : 'copy'} />
     </button>
+  )
+}
+
+const times = (n: number) => (n === 1 ? 'once' : n === 2 ? 'twice' : `${n} times`)
+
+/** How it has gone in the trainer, once there's something to say. */
+function Practised({ id, status }: { id: string; status: Status }) {
+  const p = usePractice(id)
+  if (!p) return null
+  const solves = p.times ?? []
+  const bits = [
+    p.best ? `Best ${clock(p.best)}${solves.length >= 3 ? `, usually ${clock(median(solves))}` : ''}.` : '',
+    `Practiced ${times(p.n)}${p.miss ? `, missed ${times(p.miss)}` : ''}.`,
+    status === 2 ? (p.due <= Date.now() ? 'Due for a refresher.' : `Next refresher ${when(p.due)}.`) : '',
+  ]
+  return (
+    <div className="note note--tip">
+      <span>Training</span>
+      <p>{bits.filter(Boolean).join(' ')}</p>
+    </div>
   )
 }
 
@@ -287,7 +308,12 @@ export function CasePage({ c, sub, set, deck }: { c: Case; sub: Subset; set: ZSe
   const before = near.cases[at - 1]?.id
   const after = near.cases[at + 1]?.id
   const onward = status === 2 ? nextUp(deck.id, c.id) : null
-  const note = <Note label="Notes" value={entry.note ?? ''} placeholder="Anything else about this case" onSave={(v) => updateEntry(c.id, { note: v })} />
+  const note = (
+    <>
+      <Note label="Notes" value={entry.note ?? ''} placeholder="Anything else about this case" onSave={(v) => updateEntry(c.id, { note: v })} />
+      <Practised id={c.id} status={status} />
+    </>
+  )
 
   useEffect(() => touch(c.id), [c.id])
 

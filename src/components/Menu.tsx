@@ -86,7 +86,7 @@ export function Menu() {
               say({ text: 'Progress cleared', undo }, 10000)
             }}
           >
-            Clear {decks.map((d) => d.id).join(' and ')}, including notes
+            Clear {decks.map((d) => d.id).join(' and ')}, including notes and times
           </button>
         ) : (
           <button onClick={() => setSure(true)}>Clear progress</button>
@@ -97,6 +97,12 @@ export function Menu() {
             <dt>Search, or paste an algorithm</dt>
             <dd>
               <kbd>/</kbd>
+            </dd>
+          </div>
+          <div>
+            <dt>Train</dt>
+            <dd>
+              <kbd>T</kbd>
             </dd>
           </div>
           <div>

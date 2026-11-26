@@ -1,10 +1,10 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { AUF, NotationError, examine, parse, solves } from '../cube/engine.ts'
 import { caseByKey, caseById, deckById, decks, setById, subById, subsets, type Case, type Deck, type Subset, type ZSet } from '../data/index.ts'
-import { go, homeOf } from '../lib/router.ts'
+import { go, homeOf, trainOf } from '../lib/router.ts'
 import { useStatus } from '../state/store.ts'
 import { Cube, Glyph } from './Cube.tsx'
-import { Icon } from './Icon.tsx'
+import { Icon, type IconName } from './Icon.tsx'
 
 interface Hit {
   id: string
@@ -13,11 +13,14 @@ interface Hit {
   ll: string
   set?: string
   isCase?: boolean
+  icon?: IconName
 }
 
 const setWords: Record<string, string> = { t: 'T', u: 'U', l: 'L', h: 'H', pi: 'Pi', p: 'Pi', s: 'S', sune: 'S', as: 'AS', a: 'AS', anti: 'AS', antisune: 'AS' }
 
 const hitDeck = (d: Deck): Hit => ({ id: homeOf(d.id), title: d.id, detail: `${d.cases.length} cases`, ll: d.cases[0].ll })
+const hitTrain = (d: Deck): Hit => ({ id: trainOf(d.id), title: 'Train', detail: `${d.id}, against the clock`, ll: d.cases[0].ll, icon: 'timer' })
+const training = (q: string) => q.length >= 3 && ['train', 'practice', 'drill', 'timer'].some((w) => w.startsWith(q.toLowerCase()))
 const hitSet = (s: ZSet): Hit => ({ id: s.id, title: s.name, detail: `${s.cases.length} cases`, ll: s.cases[0].ll, set: s.id })
 const hitSub = (s: Subset): Hit => ({ id: s.id, title: s.id, detail: s.name, ll: s.cases[0].ll, set: s.set, isCase: true })
 const hitCase = (c: Case, detail = subById.get(c.sub)!.name): Hit => ({ id: c.id, title: c.name, detail, ll: c.ll, set: c.set, isCase: true })
@@ -52,7 +55,8 @@ function inPll(q: string): Hit[] {
 function search(text: string, deck: Deck): { hits: Hit[]; message?: string } {
   const q = text.trim()
   const here = deck.flat ? deck.cases.map((c) => hitCase(c)) : deck.sets.map(hitSet)
-  if (!q) return { hits: [...here, ...decks.filter((d) => d !== deck).map(hitDeck)] }
+  if (!q) return { hits: [...here, hitTrain(deck), ...decks.filter((d) => d !== deck).map(hitDeck)] }
+  if (training(q)) return { hits: [hitTrain(deck), ...decks.filter((d) => d !== deck).map(hitTrain)] }
 
   const named = deck.id === 'PLL' ? [...inPll(q), ...inZbll(q)] : [...inZbll(q), ...inPll(q)]
   if (named.length) return { hits: named }
@@ -89,7 +93,7 @@ function Result({ hit, on, pick, hover }: { hit: Hit; on: boolean; pick: () => v
   }, [on])
   return (
     <button ref={el} className="hit" role="option" aria-selected={on} data-set={hit.set} onClick={pick} onPointerMove={hover} tabIndex={-1}>
-      {hit.isCase ? <Cube ll={hit.ll} /> : <Glyph ll={hit.ll} />}
+      {hit.icon ? <span className="hit__icon"><Icon name={hit.icon} size={20} /></span> : hit.isCase ? <Cube ll={hit.ll} /> : <Glyph ll={hit.ll} />}
       <b>{hit.title}</b>
       <span>{hit.detail}</span>
       {s === 2 && <Icon name="check" />}

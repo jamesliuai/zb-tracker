@@ -330,9 +330,11 @@
   font-weight: 400;
   color: var(--ink-2);
 }
-.subhead .quiet {
+.subhead__do {
   grid-column: 1;
-  justify-self: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 34px;
   margin-top: 4px;
 }
 .lines {

@@ -28,12 +28,37 @@ export interface Entry {
 
 export type Theme = 'system' | 'light' | 'dark'
 
+/** What a round of training holds: whatever needs it now, a status, everything, or cases picked by hand. */
+export type Pool = 'due' | 'learning' | 'learned' | 'all' | 'pick'
+/** Training with a real cube from a scramble, or recalling the algorithm from a picture. */
+export type Way = 'cube' | 'screen'
+
 export interface Prefs {
   theme: Theme
   sound: boolean
   hand: Hand
   /** The deck that was open last. */
   deck: DeckId
+  way: Way
+  pool: Partial<Record<DeckId, Pool>>
+  /** The cases picked by hand, in any deck. */
+  pick: string[]
+}
+
+/** How a case has gone in training. */
+export interface Practice {
+  /** Times practiced, and how many of those were missed. */
+  n: number
+  miss?: number
+  /** Got right in a row. */
+  run?: number
+  /** Recent solves with a cube, oldest first, and the fastest ever, all in hundredths of a second. */
+  times?: number[]
+  best?: number
+  /** When it was last practiced, when it's due again, and the days in between. */
+  at: number
+  due: number
+  days: number
 }
 
 export interface Data {
@@ -42,10 +67,14 @@ export interface Data {
   prefs: Prefs
   /** The last case that was opened or changed in each deck. */
   last: Partial<Record<DeckId, string>>
+  practice: Record<string, Practice>
 }
 
 const KEY = 'zbll-tracker'
-const blank = (): Data => ({ v: 1, cases: {}, prefs: { theme: 'system', sound: true, hand: 'two', deck: 'ZBLL' }, last: {} })
+/** Solve times kept for each case. */
+export const KEEP = 12
+const POOLS: Pool[] = ['due', 'learning', 'learned', 'all', 'pick']
+const blank = (): Data => ({ v: 1, cases: {}, prefs: { theme: 'system', sound: true, hand: 'two', deck: 'ZBLL', way: 'cube', pool: {}, pick: [] }, last: {}, practice: {} })
 const NONE: Entry = Object.freeze({})
 
 /* ------------------------------------------------------------------ reading what was saved */
@@ -57,6 +86,23 @@ function readAngle(x: unknown): Angle | null {
   if (!isObject(x)) return null
   const rot = [0, 1, 2, 3].includes(x.rot as number) ? (x.rot as Turn) : 0
   return { rot, alg: typeof x.alg === 'string' ? x.alg.slice(0, 400) : null, rec: str(x.rec), auf: str(x.auf) }
+}
+
+const whole = (x: unknown) => (typeof x === 'number' && Number.isFinite(x) && x > 0 ? Math.round(x) : 0)
+
+function readPractice(x: unknown): Practice | null {
+  if (!isObject(x) || !whole(x.n)) return null
+  // dates that could be real: practiced by tomorrow at the latest, and due within a year of that
+  const day = 86_400_000
+  const at = Math.min(whole(x.at), Date.now() + day)
+  const days = typeof x.days === 'number' && x.days > 0 ? Math.min(x.days, 365) : 0
+  const p: Practice = { n: whole(x.n), at, due: Math.min(whole(x.due), at + 366 * day), days }
+  if (whole(x.miss)) p.miss = Math.min(whole(x.miss), p.n)
+  if (whole(x.run)) p.run = Math.min(whole(x.run), p.n)
+  const times = Array.isArray(x.times) ? x.times.map(whole).filter(Boolean).slice(-KEEP) : []
+  if (times.length) p.times = times
+  if (whole(x.best)) p.best = whole(x.best)
+  return p
 }
 
 /** Accepts anything, keeps only what makes sense. */
@@ -85,7 +131,16 @@ export function readData(x: unknown): Data | null {
     if (p.sound === false) out.prefs.sound = false
     if (p.hand === 'oh') out.prefs.hand = 'oh'
     if (deckById.has(p.deck as DeckId)) out.prefs.deck = p.deck as DeckId
+    if (p.way === 'screen') out.prefs.way = 'screen'
+    if (isObject(p.pool))
+      for (const [deck, pool] of Object.entries(p.pool)) if (deckById.has(deck as DeckId) && POOLS.includes(pool as Pool)) out.prefs.pool[deck as DeckId] = pool as Pool
+    if (Array.isArray(p.pick)) out.prefs.pick = [...new Set(p.pick.filter((id): id is string => typeof id === 'string' && caseById.has(id)))]
   }
+  if (isObject(x.practice))
+    for (const [id, raw] of Object.entries(x.practice)) {
+      const p = readPractice(raw)
+      if (p && caseById.has(id)) out.practice[id] = p
+    }
   // it was a single case while there was only one deck
   for (const id of isObject(x.last) ? Object.values(x.last) : [x.last]) {
     const c = typeof id === 'string' && caseById.get(id)
@@ -153,6 +208,10 @@ export const useStatus = (id: string) => useSyncExternalStore(subscribe, () => s
 export const usePrefs = () => useSyncExternalStore(subscribe, () => data.prefs)
 export const useCases = () => useSyncExternalStore(subscribe, () => data.cases)
 export const useLast = (deck: DeckId) => useSyncExternalStore(subscribe, () => data.last[deck])
+
+export const practiceOf = (id: string): Practice | undefined => data.practice[id]
+export const usePractice = (id: string) => useSyncExternalStore(subscribe, () => data.practice[id])
+export const usePractices = () => useSyncExternalStore(subscribe, () => data.practice)
 
 export interface Stats {
   learned: number
@@ -280,6 +339,14 @@ export function touch(id: string) {
 
 export function setPrefs(change: Partial<Prefs>) {
   if (Object.entries(change).some(([k, v]) => data.prefs[k as keyof Prefs] !== v)) commit({ ...data, prefs: { ...data.prefs, ...change } })
+}
+
+/** Save how a case went in training. Undefined forgets it. */
+export function setPractice(id: string, p: Practice | undefined) {
+  const next = { ...data.practice }
+  if (p) next[id] = p
+  else delete next[id]
+  commit({ ...data, practice: next })
 }
 
 export function replaceData(next: Data): () => void {

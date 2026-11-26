@@ -11,6 +11,7 @@ const paths = {
   plus: 'M8 3.2v9.6M3.2 8h9.6',
   close: 'm4 4 8 8M12 4l-8 8',
   down: 'm3.6 6.2 4.4 4.4 4.4-4.4',
+  timer: 'M12.75 9.25a4.75 4.75 0 1 1-9.5 0 4.75 4.75 0 0 1 9.5 0ZM6.6 1.9h2.8M8 1.9v2.6M8 9.25l1.9-1.9M12.3 5l.9-.9',
 } as const
 
 export type IconName = keyof typeof paths

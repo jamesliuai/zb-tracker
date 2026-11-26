@@ -1,7 +1,7 @@
 /** Small pieces of shared state for things that are on screen for a moment. */
 import { useSyncExternalStore } from 'react'
 
-function signal<T>(value: T) {
+export function signal<T>(value: T) {
   const listeners = new Set<() => void>()
   const subscribe = (l: () => void) => {
     listeners.add(l)

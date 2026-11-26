@@ -1,4 +1,4 @@
-import { homeOf, useRoute } from '../lib/router.ts'
+import { homeOf, trainOf, useRoute } from '../lib/router.ts'
 import { inFlight } from '../reward/signals.ts'
 import { playLearning } from '../reward/sound.ts'
 import { setPrefs, usePrefs, useStats } from '../state/store.ts'
@@ -13,7 +13,7 @@ export function Header({ onSearch }: { onSearch: () => void }) {
   const stats = useStats(deck.id)
   const { sound } = usePrefs()
   const shown = stats.learned - inFlight.use()
-  const here = route.page === 'home' ? null : route.set.id
+  const here = route.page === 'home' || route.page === 'train' ? null : route.set.id
 
   return (
     <header className="top">
@@ -39,6 +39,9 @@ export function Header({ onSearch }: { onSearch: () => void }) {
               <em>/{deck.cases.length}</em>
             </a>
           )}
+          <a className="tool" href={`#${trainOf(deck.id)}`} aria-current={route.page === 'train' ? 'page' : undefined} aria-label="Train" title="Train  T">
+            <Icon name="timer" />
+          </a>
           <button className="tool" onClick={onSearch} aria-label="Search" title="Search  /">
             <Icon name="search" />
           </button>

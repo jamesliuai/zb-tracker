@@ -139,24 +139,71 @@ export function setup(text: string, turns = 0): string {
   const list = parse(text)
   const p = permOf(list)
   const grip = rotations.find(({ perm }) => centers.every((c) => perm[c] === p[c]))?.word ?? []
-  const undo = list.reverse().map((m) => (m.endsWith('2') ? m : m.endsWith("'") ? m.slice(0, -1) : m + "'"))
   const auf = AUF[((turns % 4) + 4) % 4]
-  return tidy([...grip, ...undo, ...(auf ? [auf] : [])]).join(' ')
+  return tidy([...grip, ...undo(list), ...(auf ? [auf] : [])]).join(' ')
 }
 
-/** Cancel neighbouring turns of the same face, such as a grip rotation that meets its opposite. */
-function tidy(list: string[]): string[] {
+/** The moves that take back `list`. */
+export const undo = (list: string[]) => [...list].reverse().map((m) => (m.endsWith('2') ? m : m.endsWith("'") ? m.slice(0, -1) : m + "'"))
+
+const amount = (m: string) => (m.endsWith('2') ? 2 : m.endsWith("'") ? 3 : 1)
+const suffix = ['', '', '2', "'"]
+const axisOf = (letter: string) => faces[letter][0]
+
+/**
+ * Cancel turns of the same face, such as a grip rotation that meets its opposite. Turns about one
+ * axis can swap places, so U D U′ is just D.
+ */
+export function tidy(list: string[]): string[] {
   const out: string[] = []
-  const amount = (m: string) => (m.endsWith('2') ? 2 : m.endsWith("'") ? 3 : 1)
   for (const m of list) {
-    const last = out[out.length - 1]
-    if (last && last[0] === m[0]) {
-      out.pop()
-      const n = (amount(last) + amount(m)) % 4
-      if (n) out.push(m[0] + ['', '', '2', "'"][n])
+    let i = out.length - 1
+    while (i >= 0 && out[i][0] !== m[0] && axisOf(out[i][0]) === axisOf(m[0])) i--
+    if (i >= 0 && out[i][0] === m[0]) {
+      const n = (amount(out[i]) + amount(m)) % 4
+      if (n) out[i] = m[0] + suffix[n]
+      else out.splice(i, 1)
     } else out.push(m)
   }
   return out
+}
+
+const normals: Record<string, Vec> = { R: [1, 0, 0], L: [-1, 0, 0], U: [0, 1, 0], D: [0, -1, 0], F: [0, 0, 1], B: [0, 0, -1] }
+
+/**
+ * The same algorithm in turns of the six faces alone, with the cube held one way throughout.
+ * A slice or wide turn is the outer faces it leaves behind, plus a rotation, and a rotation only
+ * changes which face each later turn lands on.
+ */
+export function plain(text: string): string[] {
+  // which face, as the cube started, is now facing each way
+  let at: Record<string, string> = { R: 'R', L: 'L', U: 'U', D: 'D', F: 'F', B: 'B' }
+  const out: string[] = []
+  const turn = (side: string, n: number) => {
+    const k = ((n % 4) + 4) % 4
+    if (k) out.push(at[side] + suffix[k])
+  }
+  for (const m of parse(text)) {
+    const [axis, layers, unit] = faces[m[0]]
+    const n = (unit * amount(m)) % 4 // quarter turns, clockwise seen from the + end of the axis
+    const plus = 'RUF'['xyz'.indexOf(axis)]
+    const minus = 'LDB'['xyz'.indexOf(axis)]
+    if (layers.length === 1 && layers[0]) {
+      if (layers[0] > 0) turn(plus, n)
+      else turn(minus, -n)
+      continue
+    }
+    if (!layers.includes(1)) turn(plus, -n)
+    if (!layers.includes(-1)) turn(minus, n)
+    const next = { ...at }
+    for (const [side, v] of Object.entries(normals)) {
+      let w = v
+      for (let i = 0; i < n; i++) w = spin[axis](w)
+      next[faceName(w)] = at[side]
+    }
+    at = next
+  }
+  return tidy(out)
 }
 
 const faceName = (n: Vec) => (n[1] === 1 ? 'U' : n[1] === -1 ? 'D' : n[2] === 1 ? 'F' : n[2] === -1 ? 'B' : n[0] === 1 ? 'R' : 'L')
@@ -206,11 +253,17 @@ export function turnU(ll: string, k: number): string {
 
 const canonical = (ll: string) => [0, 1, 2, 3].map((k) => anyColoring(turnU(ll, k))).sort()[0]
 
+/** The quarter turns that take the picture `ll` to the one `seen` on a cube, whatever its colors. Null if it's another case. */
+export function viewOf(ll: string, seen: string): Turn | null {
+  const want = anyColoring(seen)
+  return ([0, 1, 2, 3] as Turn[]).find((k) => anyColoring(turnU(ll, k)) === want) ?? null
+}
+
 /** The last layer an algorithm solves, or null if it disturbs the first two layers. */
 function solvedLayer(text: string): string | null {
-  const undo = invert(upright(permOf(parse(text))))
+  const back = invert(upright(permOf(parse(text))))
   const state: string[] = []
-  for (let i = 0; i < N; i++) state[undo[i]] = solved[i]
+  for (let i = 0; i < N; i++) state[back[i]] = solved[i]
   if (!rest.every((i) => state[i] === solved[i])) return null
   return llSlots.map((i) => state[i]).join('')
 }

@@ -3,6 +3,7 @@ import { KnowAll } from '../components/KnowAll.tsx'
 import { Line } from '../components/Line.tsx'
 import { Roll } from '../components/Roll.tsx'
 import { tileKeys } from '../components/Tile.tsx'
+import { TrainThese } from '../components/TrainThese.tsx'
 import type { Subset, ZSet } from '../data/index.ts'
 import { airy, shade } from '../lib/text.ts'
 import { ripple } from '../reward/signals.ts'
@@ -41,7 +42,10 @@ export function SubsetPage({ set, sub }: { set: ZSet; sub: Subset }) {
           <Roll value={n} />
           <i> of {sub.cases.length}</i>
         </p>
-        <KnowAll sub={sub} />
+        <div className="subhead__do">
+          <KnowAll sub={sub} />
+          <TrainThese sub={sub} />
+        </div>
       </div>
       <div className={waving ? 'lines is-waving' : 'lines'} onKeyDown={tileKeys}>
         {sub.cases.map((c, i) => (

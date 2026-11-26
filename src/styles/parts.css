@@ -308,7 +308,10 @@
   border-radius: 8px;
   background: var(--raised);
   box-shadow: 0 1px 2px rgb(20 23 29 / 0.1);
-  transition: translate 0.4s var(--spring);
+  transition: translate 0.4s var(--spring), opacity 0.2s;
+}
+.seg[data-none]::before {
+  opacity: 0;
 }
 :root[data-theme='dark'] .seg::before {
   background: #2c323d;

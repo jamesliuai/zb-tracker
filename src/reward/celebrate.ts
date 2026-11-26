@@ -11,7 +11,8 @@ const css = (name: string, el: Element = document.documentElement) => getCompute
 const cubeColors = { U: '--cube-y', F: '--cube-b', R: '--cube-r', B: '--cube-g', L: '--cube-o' } as const
 const center = (b: DOMRect) => ({ x: b.x + b.width / 2, y: b.y + b.height / 2 })
 const onScreen = (b: DOMRect) => b.width > 0 && b.bottom > 0 && b.top < innerHeight && b.right > 0 && b.left < innerWidth
-const hueOf = (sub: string) => {
+/** The color of a subset, as drawn. */
+export const hueOf = (sub: string) => {
   const look = shade(subById.get(sub)!)
   const probe = document.createElement('i')
   probe.dataset.set = look['data-set']

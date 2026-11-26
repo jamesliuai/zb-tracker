@@ -7,10 +7,12 @@ import { Roll } from '../components/Roll.tsx'
 import { Sheet } from '../components/Sheet.tsx'
 import { Tile, tileKeys } from '../components/Tile.tsx'
 import { Wall } from '../components/Wall.tsx'
-import { airy, shade } from '../lib/text.ts'
+import { trainOf } from '../lib/router.ts'
+import { airy, shade, when } from '../lib/text.ts'
 import { inFlight } from '../reward/signals.ts'
-import { anglesOf, getEntry, nextUp, statusOf, useCases, useLast, usePrefs, useStats, type Stats } from '../state/store.ts'
+import { anglesOf, getEntry, nextUp, setPrefs, statusOf, useCases, useLast, usePractices, usePrefs, useStats, type Stats } from '../state/store.ts'
 import { chosen } from '../state/choose.ts'
+import { nextDue, plan } from '../train/schedule.ts'
 
 const credits: Record<DeckId, React.ReactNode> = {
   ZBLL: 'Algorithms compiled by Juliette Sébastien, sheet layout by Thibaud Ou.',
@@ -69,6 +71,34 @@ function UpNext({ deck }: { deck: Deck }) {
   )
 }
 
+/** What's due for practice, a light for each case: outlined while you're learning it, lit once learned. */
+function Practise({ deck }: { deck: Deck }) {
+  const prefs = usePrefs()
+  const { learned, learning } = useStats(deck.id)
+  usePractices()
+  if (!learned && !learning.length) return null
+  const { ids, learning: fresh } = plan(deck, 'due', prefs.pick)
+  const review = ids.length - fresh
+  const soon = ids.length ? null : nextDue(deck)
+  return (
+    <a className="next" href={`#${trainOf(deck.id)}`} onClick={() => setPrefs({ pool: { ...prefs.pool, [deck.id]: 'due' } })}>
+      <span className="next__cells" aria-hidden="true">
+        {Array.from({ length: 30 }, (_, i) => {
+          const id = ids[i]
+          if (!id) return <i key={i} className="cell" />
+          return <i key={id} className="cell" data-s={statusOf(id) === 1 ? 1 : 2} {...shade(subById.get(caseById.get(id)!.sub)!)} />
+        })}
+      </span>
+      <span className="next__text">
+        <small>Train</small>
+        <b>{ids.length ? `${ids.length} ${ids.length === 1 ? 'case' : 'cases'}` : 'All caught up'}</b>
+        <i>{ids.length ? [fresh && `${fresh} learning`, review && `${review} to review`].filter(Boolean).join(', ') : soon && `Next refresher ${when(soon)}`}</i>
+      </span>
+      <Icon name="right" />
+    </a>
+  )
+}
+
 /** The cases being learned. Anything finished from here stays, lit, until you leave the page. */
 function Shelf({ deck }: { deck: Deck }) {
   const { learning } = useStats(deck.id)
@@ -109,7 +139,10 @@ export function Home({ deck }: { deck: Deck }) {
           </h1>
           <p>{pace(deck, stats)}</p>
         </div>
-        <UpNext deck={deck} />
+        <div className="hero__side">
+          <UpNext deck={deck} />
+          <Practise deck={deck} />
+        </div>
       </section>
 
       {deck.flat ? (
