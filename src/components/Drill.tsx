@@ -1,17 +1,22 @@
-import { useEffect, useRef, useState } from 'react'
-import { setup, solves } from '../cube/engine.ts'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { isSolved, moveCount, plain, setup, solves, undo } from '../cube/engine.ts'
 import { caseById, deckById, subById, type Case } from '../data/index.ts'
 import { clock, shade, subWords } from '../lib/text.ts'
 import { hueOf } from '../reward/celebrate.ts'
 import { calm, spark } from '../reward/fx.ts'
 import { drilling } from '../reward/signals.ts'
 import { playStop, playUndo } from '../reward/sound.ts'
+import { canConnect, link } from '../smart/connect.ts'
+import { useFollow } from '../smart/follow.ts'
+import { tokens } from '../smart/guide.ts'
+import { elapsed } from '../smart/solve.ts'
 import { chosen } from '../state/choose.ts'
 import { anglesOf, getEntry, getData, useDrills } from '../state/store.ts'
 import { average, lap, unlap, type Lap } from '../train/drill.ts'
-import { Alg } from './Alg.tsx'
+import { Alg, Turns } from './Alg.tsx'
 import { Cube } from './Cube.tsx'
 import { Icon } from './Icon.tsx'
+import { CubeButton } from './SmartCube.tsx'
 import { useStopwatch } from './Stopwatch.tsx'
 
 const touch = typeof matchMedia !== 'undefined' ? matchMedia('(pointer: coarse)') : null
@@ -40,13 +45,16 @@ const signed = (cs: number) => `${cs < 0 ? '−' : '+'}${clock(Math.abs(cs))}`
 
 /**
  * One algorithm against the clock, again and again. Set the case up, then time just the algorithm.
- * Every time is saved with the algorithm, and the fastest is the one to beat.
+ * Every time is saved with the algorithm, and the fastest is the one to beat. A smart cube follows
+ * the setup, starts the clock on the first turn of the algorithm and stops it once it's solved,
+ * and keeps times of its own.
  */
 function Session({ id, text }: { id: string; text: string }) {
   const c = caseById.get(id)!
   const sub = subById.get(c.sub)!
   const deck = deckById.get(c.deck)!
-  const d = useDrills(id)[text]
+  const smart = link.use().state === 'on'
+  const d = useDrills(id, smart)[text]
   const [laps, setLaps] = useState<Lap[]>([])
   const [full, setFull] = useState(() => !!document.fullscreenElement)
   const box = useRef<HTMLDivElement>(null)
@@ -69,10 +77,18 @@ function Session({ id, text }: { id: string; text: string }) {
     playUndo()
   }
 
-  const { phase, face, pad, cover } = useStopwatch({
-    ready: () => true,
-    stopped: (cs) => {
-      const l = lap(id, text, cs)
+  const calledOff = useRef(() => {})
+  // the smart cube started the clock that's running
+  const cubeRan = useRef(false)
+  const { phase, face, pad, cover, go, halt } = useStopwatch({
+    // a smart cube starts the clock itself, on the first turn
+    ready: () => link.get().state !== 'on',
+    stopped: (cs, by) => {
+      // what the cube started, only the cube can say is done, even if it dropped out
+      const cut = by === 'hand' && cubeRan.current
+      cubeRan.current = false
+      if (cut) return calledOff.current()
+      const l = lap(id, text, cs, by === 'cube')
       setLaps((list) => [...list, l])
       playStop(l.best)
       navigator.vibrate?.(8)
@@ -83,10 +99,24 @@ function Session({ id, text }: { id: string; text: string }) {
         })
     },
     keys: ['escape', 'backspace', 'delete', 'arrowleft', 'arrowright'],
-    press: (k) => (k === 'escape' ? close() : k === 'arrowleft' ? move(before) : k === 'arrowright' ? move(after) : drop()),
-    // the page underneath is asleep, so the keys are all ours
-    mine: () => true,
+    press: (k) => (k === 'escape' ? close() : k === 'arrowleft' ? move(before) : k === 'arrowright' ? move(after) : k === ' ' ? undefined : drop()),
+    // the page underneath is asleep, so the keys are all ours, unless a dialog is open on top, like the one asking for a cube's address
+    mine: () => !document.querySelector('dialog[open]'),
+    off: () => {
+      cubeRan.current = false
+      calledOff.current()
+    },
   })
+  // on a smart cube, the setup is the algorithm's own turns taken back, whatever grip it ends in
+  const undone = useMemo(() => undo(plain(text)).join(' '), [text])
+  const follow = useFollow(() => (link.get().state === 'on' ? { key: `${id}\n${text}`, moves: undone, start: 'first', over: isSolved } : null), {
+    begin: (t) => {
+      cubeRan.current = go(t)
+    },
+    end: (start, turns) => halt(Math.round(elapsed([start, ...turns]).at(-1)! / 10)),
+  })
+  calledOff.current = follow.reset
+  const now = follow.now
   const running = phase === 'running'
 
   useEffect(() => {
@@ -107,7 +137,22 @@ function Session({ id, text }: { id: string; text: string }) {
   const ao5 = d && average(d.times, 5)
   const ao12 = d && average(d.times, 12)
   const tap = touch?.matches
-  const hint = phase === 'armed' ? 'Let go to start' : running ? '' : tap ? 'Set it up, then touch and hold, and let go to start' : 'Set it up, then hold space, and let go to start'
+  const hint =
+    phase === 'armed'
+      ? 'Let go to start'
+      : running
+        ? ''
+        : smart
+          ? now.is === 'wait'
+            ? 'Solve your cube to set it up'
+            : now.is === 'ready'
+              ? 'Set up. The clock starts on your first turn.'
+              : 'Set it up with yellow on top'
+          : tap
+            ? 'Set it up, then touch and hold, and let go to start'
+            : 'Set it up, then hold space, and let go to start'
+  // how fast it was turned, for a time the cube took
+  const tps = last?.smart && last.cs ? moveCount(text) / (last.cs / 100) : null
   const look = shade(sub)
 
   return (
@@ -125,6 +170,7 @@ function Session({ id, text }: { id: string; text: string }) {
         <p className="drill__name">
           <b>{c.name}</b> <span>{subWords(sub)}</span>
         </p>
+        {canConnect && <CubeButton />}
         {document.fullscreenEnabled && (
           <button
             className="tool"
@@ -147,8 +193,8 @@ function Session({ id, text }: { id: string; text: string }) {
         <p className="drill__alg">
           <Alg text={text} />
         </p>
-        <p className="drill__setup drill__fade">
-          <span>Setup</span> <Alg text={setup(text)} />
+        <p className="drill__setup drill__fade" data-done={(smart && now.is === 'ready') || undefined} data-wait={(smart && now.is === 'wait') || undefined}>
+          <span>Setup</span> {smart && now.is === 'setup' && now.guide.moves.join(' ') === undone ? <Turns list={tokens(now.guide)} /> : <Alg text={smart ? undone : setup(text)} />}
         </p>
 
         <div className="drill__pad" {...pad}>
@@ -158,6 +204,7 @@ function Session({ id, text }: { id: string; text: string }) {
           <p className="drill__said drill__fade" aria-live="polite">
             {last && phase === 'idle' && (last.best ? <em key={last.after.at}>New best</em> : last.before ? <span>{signed(last.cs - last.before.best)} on your best</span> : <span>Your first time</span>)}
           </p>
+          {tps !== null && <p className="drill__tps drill__fade num">{phase === 'idle' ? `${tps.toFixed(1)} turns a second` : ''}</p>}
           <p className="drill__hint">{hint}</p>
         </div>
 

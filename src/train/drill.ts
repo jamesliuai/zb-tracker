@@ -14,6 +14,8 @@ export interface Lap {
   id: string
   text: string
   cs: number
+  /** Timed by a smart cube, which keeps its own records. */
+  smart: boolean
   /** Faster than it had ever been done. The first time doesn't count, as there was nothing to beat. */
   best: boolean
   before: Drill | undefined
@@ -25,18 +27,18 @@ export function timed(d: Drill | undefined, cs: number, at = Date.now()): Drill 
   return { n: (d?.n ?? 0) + 1, times: [...(d?.times ?? []), cs].slice(-KEEP), best: Math.min(d?.best ?? cs, cs), at }
 }
 
-/** Save a time for an algorithm of a case. */
-export function lap(id: string, text: string, cs: number): Lap {
-  const before = drillsOf(id)[text]
+/** Save a time for an algorithm of a case, from the keys or a smart cube. */
+export function lap(id: string, text: string, cs: number, smart = false): Lap {
+  const before = drillsOf(id, smart)[text]
   const after = timed(before, cs)
-  setDrill(id, text, after)
-  return { id, text, cs, best: before !== undefined && cs < before.best, before, after }
+  setDrill(id, text, after, smart)
+  return { id, text, cs, smart, best: before !== undefined && cs < before.best, before, after }
 }
 
 /** Take a time back, if nothing has changed the record since it was saved. */
 export function unlap(l: Lap): boolean {
-  if (drillsOf(l.id)[l.text] !== l.after) return false
-  setDrill(l.id, l.text, l.before)
+  if (drillsOf(l.id, l.smart)[l.text] !== l.after) return false
+  setDrill(l.id, l.text, l.before, l.smart)
   return true
 }
 

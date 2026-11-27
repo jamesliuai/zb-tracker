@@ -30,8 +30,8 @@ export type Theme = 'system' | 'light' | 'dark'
 
 /** What a round of training holds: whatever needs it now, a status, everything, or cases picked by hand. */
 export type Pool = 'due' | 'learning' | 'learned' | 'all' | 'pick'
-/** Training with a real cube from a scramble, or recalling the algorithm from a picture. */
-export type Way = 'cube' | 'screen'
+/** Training with a real cube from a scramble, with a smart cube that keeps the time itself, or recalling the algorithm from a picture. */
+export type Way = 'cube' | 'smart' | 'screen'
 
 export interface Prefs {
   theme: Theme
@@ -43,6 +43,8 @@ export interface Prefs {
   pool: Partial<Record<DeckId, Pool>>
   /** The cases picked by hand, in any deck. */
   pick: string[]
+  /** Which side faces you when you scramble with yellow on top, as a smart cube worked it out from your turns. */
+  front: 0 | 1 | 2 | 3
 }
 
 /** How a case has gone in training. */
@@ -59,6 +61,15 @@ export interface Practice {
   at: number
   due: number
   days: number
+  /** Solves timed by a smart cube. With no hand going to the keyboard they run faster, so they're kept apart. */
+  smart?: Smart
+}
+
+/** Recent solves with a smart cube, oldest first, the part of each before the first turn, and the fastest ever, in hundredths. */
+export interface Smart {
+  times: number[]
+  look: number[]
+  best: number
 }
 
 /** One algorithm timed on its own, again and again, to get it faster. */
@@ -81,13 +92,15 @@ export interface Data {
   practice: Record<string, Practice>
   /** For each case, its algorithms that were timed on their own, by the algorithm. */
   drills: Record<string, Record<string, Drill>>
+  /** The same, timed by a smart cube. */
+  cubeDrills: Record<string, Record<string, Drill>>
 }
 
 const KEY = 'zbll-tracker'
 /** Solve times kept for each case. */
 export const KEEP = 12
 const POOLS: Pool[] = ['due', 'learning', 'learned', 'all', 'pick']
-const blank = (): Data => ({ v: 1, cases: {}, prefs: { theme: 'system', sound: true, hand: 'two', deck: 'ZBLL', way: 'cube', pool: {}, pick: [] }, last: {}, practice: {}, drills: {} })
+const blank = (): Data => ({ v: 1, cases: {}, prefs: { theme: 'system', sound: true, hand: 'two', deck: 'ZBLL', way: 'cube', pool: {}, pick: [], front: 0 }, last: {}, practice: {}, drills: {}, cubeDrills: {} })
 const NONE: Entry = Object.freeze({})
 
 /* ------------------------------------------------------------------ reading what was saved */
@@ -115,7 +128,23 @@ function readPractice(x: unknown): Practice | null {
   const times = Array.isArray(x.times) ? x.times.map(whole).filter(Boolean).slice(-KEEP) : []
   if (times.length) p.times = times
   if (whole(x.best)) p.best = whole(x.best)
+  const smart = readSmart(x.smart)
+  if (smart) p.smart = smart
   return p
+}
+
+function readSmart(x: unknown): Smart | null {
+  if (!isObject(x) || !Array.isArray(x.times)) return null
+  const look = Array.isArray(x.look) ? x.look : []
+  // each time with the part of it before the first turn, which can be none at all but never more than the time
+  const pairs = x.times.flatMap((t, i) => {
+    const cs = whole(t)
+    const l = typeof look[i] === 'number' && Number.isFinite(look[i]) && look[i] >= 0 ? Math.round(look[i]) : null
+    return cs && l !== null && l <= cs ? [[cs, l] as const] : []
+  })
+  if (!pairs.length) return null
+  const times = pairs.map(([t]) => t).slice(-KEEP)
+  return { times, look: pairs.map(([, l]) => l).slice(-KEEP), best: Math.min(whole(x.best) || Infinity, ...times) }
 }
 
 function readDrill(x: unknown): Drill | null {
@@ -153,7 +182,8 @@ export function readData(x: unknown): Data | null {
     if (p.sound === false) out.prefs.sound = false
     if (p.hand === 'oh') out.prefs.hand = 'oh'
     if (deckById.has(p.deck as DeckId)) out.prefs.deck = p.deck as DeckId
-    if (p.way === 'screen') out.prefs.way = 'screen'
+    if (p.way === 'screen' || p.way === 'smart') out.prefs.way = p.way
+    if (p.front === 1 || p.front === 2 || p.front === 3) out.prefs.front = p.front
     if (isObject(p.pool))
       for (const [deck, pool] of Object.entries(p.pool)) if (deckById.has(deck as DeckId) && POOLS.includes(pool as Pool)) out.prefs.pool[deck as DeckId] = pool as Pool
     if (Array.isArray(p.pick)) out.prefs.pick = [...new Set(p.pick.filter((id): id is string => typeof id === 'string' && caseById.has(id)))]
@@ -163,16 +193,19 @@ export function readData(x: unknown): Data | null {
       const p = readPractice(raw)
       if (p && caseById.has(id)) out.practice[id] = p
     }
-  if (isObject(x.drills))
-    for (const [id, raw] of Object.entries(x.drills)) {
+  for (const key of ['drills', 'cubeDrills'] as const) {
+    const all = x[key]
+    if (!isObject(all)) continue
+    for (const [id, raw] of Object.entries(all)) {
       if (!caseById.has(id) || !isObject(raw)) continue
       const algs: Record<string, Drill> = {}
       for (const [text, d] of Object.entries(raw).slice(0, 40)) {
         const drill = text.length <= 400 && readDrill(d)
         if (drill) algs[text] = drill
       }
-      if (Object.keys(algs).length) out.drills[id] = algs
+      if (Object.keys(algs).length) out[key][id] = algs
     }
+  }
   // it was a single case while there was only one deck
   for (const id of isObject(x.last) ? Object.values(x.last) : [x.last]) {
     const c = typeof id === 'string' && caseById.get(id)
@@ -243,9 +276,26 @@ export const useLast = (deck: DeckId) => useSyncExternalStore(subscribe, () => d
 
 export const practiceOf = (id: string): Practice | undefined => data.practice[id]
 const NO_DRILLS: Record<string, Drill> = Object.freeze({})
-/** A case's algorithms that were timed on their own, by the algorithm. */
-export const drillsOf = (id: string): Record<string, Drill> => data.drills[id] ?? NO_DRILLS
-export const useDrills = (id: string) => useSyncExternalStore(subscribe, () => drillsOf(id))
+/** Whether a smart cube has timed anything yet. */
+export const timedBySmartCube = (d: Pick<Data, 'practice' | 'cubeDrills'>) => Object.keys(d.cubeDrills).length > 0 || Object.values(d.practice).some((p) => p.smart)
+let smartSeen: { practice: Data['practice']; drills: Data['cubeDrills']; yes: boolean } | null = null
+/** While you train with a smart cube, its times are the ones that show, once it has timed something. Just picking it hides nothing. */
+export function bySmartCube() {
+  if (data.prefs.way !== 'smart') return false
+  // worked out again only when the times change
+  if (smartSeen?.practice !== data.practice || smartSeen.drills !== data.cubeDrills) smartSeen = { practice: data.practice, drills: data.cubeDrills, yes: timedBySmartCube(data) }
+  return smartSeen.yes
+}
+export const useBySmartCube = () => useSyncExternalStore(subscribe, bySmartCube)
+/** A case's algorithms that were timed on their own, by the algorithm: with a smart cube, or with the keys. */
+export const drillsOf = (id: string, smart = bySmartCube()): Record<string, Drill> => (smart ? data.cubeDrills : data.drills)[id] ?? NO_DRILLS
+export const useDrills = (id: string, smart?: boolean) => useSyncExternalStore(subscribe, () => drillsOf(id, smart))
+
+/** A case's recent solves in the trainer, oldest first, and its fastest: with a smart cube, or with the keys. */
+export function solvesOf(p: Practice | undefined, smart = bySmartCube()): { times: number[]; best?: number; look?: number[] } {
+  if (smart) return { times: p?.smart?.times ?? [], best: p?.smart?.best, look: p?.smart?.look }
+  return { times: p?.times ?? [], best: p?.best }
+}
 export const usePractice = (id: string) => useSyncExternalStore(subscribe, () => data.practice[id])
 export const usePractices = () => useSyncExternalStore(subscribe, () => data.practice)
 
@@ -385,15 +435,16 @@ export function setPractice(id: string, p: Practice | undefined) {
   commit({ ...data, practice: next })
 }
 
-/** Save how an algorithm has gone on its own. Undefined forgets it. */
-export function setDrill(id: string, text: string, d: Drill | undefined) {
-  const algs = { ...drillsOf(id) }
+/** Save how an algorithm has gone on its own, with a smart cube or with the keys. Undefined forgets it. */
+export function setDrill(id: string, text: string, d: Drill | undefined, smart = false) {
+  const key = smart ? 'cubeDrills' : 'drills'
+  const algs = { ...drillsOf(id, smart) }
   if (d) algs[text] = d
   else delete algs[text]
-  const next = { ...data.drills }
+  const next = { ...data[key] }
   if (Object.keys(algs).length) next[id] = algs
   else delete next[id]
-  commit({ ...data, drills: next })
+  commit({ ...data, [key]: next })
 }
 
 export function replaceData(next: Data): () => void {

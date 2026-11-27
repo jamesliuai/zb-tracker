@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
-import { Alg, Auf } from '../components/Alg.tsx'
+import { Alg, Auf, Turns } from '../components/Alg.tsx'
 import { Cube, Glyph } from '../components/Cube.tsx'
 import { Icon } from '../components/Icon.tsx'
 import { Roll } from '../components/Roll.tsx'
 import { Segmented } from '../components/Segmented.tsx'
+import { CubeLine } from '../components/SmartCube.tsx'
 import { useStopwatch } from '../components/Stopwatch.tsx'
 import { Check } from '../components/Tile.tsx'
 import { turnU } from '../cube/engine.ts'
@@ -14,12 +15,19 @@ import { airy, clock, shade, subLine, subWords, when } from '../lib/text.ts'
 import { hueOf } from '../reward/celebrate.ts'
 import { calm, spark } from '../reward/fx.ts'
 import { playStop, playSubset, playUndo } from '../reward/sound.ts'
-import { chosen, need, tipFor } from '../state/choose.ts'
-import { anglesOf, setPrefs, useCases, useEntry, usePractice, usePractices, usePrefs, type Pool, type Way } from '../state/store.ts'
+import { canConnect, connect, link, markSolved } from '../smart/connect.ts'
+import { useFollow } from '../smart/follow.ts'
+import { tokens } from '../smart/guide.ts'
+import { finished, read, type Solve } from '../smart/solve.ts'
+import { allOf, chosen, need, tipFor } from '../state/choose.ts'
+import { anglesOf, getData, getEntry, setPrefs, solvesOf, useCases, useEntry, usePractice, usePractices, usePrefs, type Pool, type Way } from '../state/store.ts'
 import { median, nextDue, plan, type Plan } from '../train/schedule.ts'
 import { begin, end, finish, leave, resume, round, toggleMiss, type Attempt, type Round } from '../train/session.ts'
 
-const ways = [['cube', 'With a cube'], ['screen', 'On screen']] as const
+const ways = [['cube', 'With a cube'], ['smart', 'Smart cube'], ['screen', 'On screen']] as const
+/** A smart cube needs Web Bluetooth, which only Chrome and Edge have. */
+const waysHere = canConnect ? ways : ways.filter(([w]) => w !== 'smart')
+const wayOf = (w: Way): Way => (w === 'smart' && !canConnect ? 'cube' : w)
 const pools = [['due', 'Due'], ['learning', 'Learning'], ['learned', 'Learned'], ['all', 'All']] as const
 const touch = typeof matchMedia !== 'undefined' ? matchMedia('(pointer: coarse)') : null
 /** A picture with nothing lit, for a case you haven't seen yet. */
@@ -130,8 +138,9 @@ function Chooser({ deck, on }: { deck: Deck; on: Set<string> }) {
 function Slowest({ deck, way }: { deck: Deck; way: Way }) {
   const practice = usePractices()
   const list = deck.cases
-    .filter((c) => (practice[c.id]?.times?.length ?? 0) >= 2)
-    .map((c) => ({ c, t: median(practice[c.id]!.times!) }))
+    .map((c) => ({ c, times: solvesOf(practice[c.id], way === 'smart').times }))
+    .filter(({ times }) => times.length >= 2)
+    .map(({ c, times }) => ({ c, t: median(times) }))
     .sort((a, b) => b.t - a.t)
     .slice(0, 8)
   if (list.length < 4) return null
@@ -163,7 +172,15 @@ function Setup({ deck }: { deck: Deck }) {
   const pool = prefs.pool[deck.id] ?? 'due'
   const p = plan(deck, pool, prefs.pick)
   const n = p.ids.length
-  const start = () => n && swap(() => begin(deck.id, p.ids, prefs.way))
+  const way = wayOf(prefs.way)
+  const cube = link.use()
+  // with a smart cube, the first press connects it
+  const connecting = cube.state === 'connecting'
+  const pair = way === 'smart' && cube.state !== 'on'
+  const start = () => {
+    if (pair) void connect()
+    else if (n) swap(() => begin(deck.id, p.ids, way))
+  }
 
   // Space starts, the same as it starts the clock
   useEffect(() => {
@@ -192,11 +209,18 @@ function Setup({ deck }: { deck: Deck }) {
           <p>{blurb(deck, pool, p)}</p>
         </div>
         <div className="go">
-          <Segmented label="Train" value={prefs.way} options={ways} onChange={(way) => setPrefs({ way })} />
-          <p>{prefs.way === 'cube' ? 'Each case comes as a scramble. Do it on a solved cube, then solve the case against the clock.' : 'Each case comes as a picture. Stop the clock the moment you know its algorithm.'}</p>
-          <button className="btn btn--main" disabled={!n} onClick={start} title="Start  Space">
-            Start
+          <Segmented label="Train" value={way} options={waysHere} onChange={(way) => setPrefs({ way })} />
+          <p>
+            {way === 'cube'
+              ? 'Each case comes as a scramble. Do it on a solved cube, then solve the case against the clock.'
+              : way === 'smart'
+                ? 'Each case comes as a scramble that follows your turns. The clock starts the moment the case is on the cube, and stops the moment it’s solved.'
+                : 'Each case comes as a picture. Stop the clock the moment you know its algorithm.'}
+          </p>
+          <button className="btn btn--main" disabled={pair ? connecting : !n} onClick={start} title={pair ? 'Connect your cube  Space' : 'Start  Space'}>
+            {pair ? (connecting ? 'Connecting' : 'Connect') : 'Start'}
           </button>
+          {way === 'smart' && <CubeLine />}
         </div>
       </section>
 
@@ -208,7 +232,7 @@ function Setup({ deck }: { deck: Deck }) {
         <Chooser deck={deck} on={new Set(p.ids)} />
       </section>
 
-      <Slowest deck={deck} way={prefs.way} />
+      <Slowest deck={deck} way={way} />
 
       <footer className="foot">
         <p>
@@ -236,21 +260,25 @@ function Lights({ r, wave = false }: { r: Round; wave?: boolean }) {
   )
 }
 
-/** The case just done: what it was, seen the way it came up, and the algorithm for that side. */
+/**
+ * The case just done: what it was, seen the way it came up, and the algorithm for that side. With a
+ * smart cube, the algorithm you did, how long you took to recognize the case, and any wrong turn.
+ */
 function Reveal({ a, way, onMiss }: { a: Attempt; way: Way; onMiss: () => void }) {
   const c = caseById.get(a.id)!
   const s = sub(a.id)
   const { hand } = usePrefs()
   const angles = anglesOf(useEntry(c.id))
-  const p = usePractice(c.id)
-  // with two angles, the one that needs the least AUF from here
-  const best = angles
-    .map((angle, i) => {
-      const pick = chosen(c, angle, hand)
-      return { angle, i, pick, turn: need(c, pick.text, a.view) ?? pick.need }
-    })
-    .reduce((x, y) => (effort[y.turn] < effort[x.turn] ? y : x))
-  const typical = p?.times && p.times.length >= 3 ? median(p.times) : null
+  const mine = solvesOf(usePractice(c.id), way === 'smart')
+  const sides = angles.map((angle, i) => {
+    const pick = chosen(c, angle, hand)
+    return { angle, i, pick, turn: need(c, pick.text, a.view) ?? pick.need }
+  })
+  // the angle whose algorithm you did, or with two angles, the one that needs the least AUF from here
+  const did = a.seen?.alg ? sides.find((x) => x.pick.text === a.seen!.alg) : undefined
+  const best = did ?? sides.reduce((x, y) => (effort[y.turn] < effort[x.turn] ? y : x))
+  const other = a.seen?.alg && !did ? a.seen.alg : null
+  const typical = mine.times.length >= 3 ? median(mine.times) : null
   const tip = tipFor(c, best.pick.text)
   return (
     <article className="reveal" data-case={c.id} data-missed={a.missed || undefined} {...shade(s)}>
@@ -267,14 +295,22 @@ function Reveal({ a, way, onMiss }: { a: Attempt; way: Way; onMiss: () => void }
           <Auf turn={best.turn} />
           <Alg text={best.pick.text} />
         </p>
+        {a.seen?.astray && <p className="reveal__note reveal__note--seen">It went through another case on the way.</p>}
+        {other && (
+          <p className="reveal__note reveal__note--seen">
+            You did <Alg text={other} />
+          </p>
+        )}
+        {a.seen && !a.seen.alg && !a.seen.astray && <p className="reveal__note reveal__note--seen">You did it another way, in {a.seen.turns} turns.</p>}
         {best.angle.rec && <p className="reveal__note">{best.angle.rec}</p>}
         {tip && <p className="reveal__note reveal__note--tip">{tip}</p>}
       </div>
       <div className="reveal__side">
-        {way === 'cube' && (
+        {way !== 'screen' && (
           <p className="reveal__stats num">
-            {a.best && !a.missed ? <em>Fastest yet</em> : p?.best && (p.times?.length ?? 0) > 1 ? <>Best {clock(p.best)}</> : null}
+            {a.best && !a.missed ? <em>Fastest yet</em> : mine.best && mine.times.length > 1 ? <>Best {clock(mine.best)}</> : null}
             {typical !== null && <span>Usually {clock(typical)}</span>}
+            {a.seen && <span>Recognized in {clock(a.seen.look)}</span>}
           </p>
         )}
         <button className="btn reveal__miss" aria-pressed={a.missed} onClick={onMiss} title={a.missed ? 'Take it back  M' : 'It comes back in a few cases  M'}>
@@ -286,23 +322,42 @@ function Reveal({ a, way, onMiss }: { a: Attempt; way: Way; onMiss: () => void }
   )
 }
 
+/** While a smart cube is connected, it runs the clock for a round with it. */
+const byCube = () => round.get()?.way === 'smart' && link.get().state === 'on'
+
 function Stage({ r }: { r: Round }) {
   const time = useRef<HTMLDivElement>(null)
   const last = r.done.at(-1)
   const next = r.next
   const screen = r.way === 'screen'
+  const cube = link.use()
+  const auto = r.way === 'smart' && cube.state === 'on'
   const got = new Set(r.done.filter((a) => !a.missed).map((a) => a.id)).size
   const miss = () => {
     if (toggleMiss()) playUndo()
   }
-  const { phase, face, pad, cover } = useStopwatch({
-    ready: () => !!round.get()?.next,
-    stopped: (cs) => {
-      const a = finish(cs)
+  // what the cube saw of the solve that's just stopped the clock
+  const seen = useRef<Solve | null>(null)
+  const calledOff = useRef(() => {})
+  // the smart cube started the clock that's running
+  const cubeRan = useRef(false)
+  const { phase, face, pad, cover, go, halt } = useStopwatch({
+    ready: () => !!round.get()?.next && !byCube(),
+    stopped: (cs, by) => {
+      const info = by === 'cube' ? seen.current : null
+      seen.current = null
+      // a hand stopped what the cube started, so the time isn't kept, even if the cube dropped out
+      const cut = by === 'hand' && cubeRan.current
+      cubeRan.current = false
+      const a = finish(cs, info ?? undefined, cut)
       if (!a) return
-      playStop(a.best)
+      // stopped by hand before the cube was solved, or by way of another case: missed, though M takes it back
+      const missed = (cut && byCube()) || !!info?.astray
+      if (missed) toggleMiss()
+      const best = a.best && !missed
+      playStop(best)
       navigator.vibrate?.(8)
-      if (a.best && !calm())
+      if (best && !calm())
         requestAnimationFrame(() => {
           const b = time.current?.getBoundingClientRect()
           if (b) spark(b.x + b.width / 2, b.y + b.height / 2, hueOf(caseById.get(a.id)!.sub), 12, Math.min(150, b.width * 0.42))
@@ -310,15 +365,65 @@ function Stage({ r }: { r: Round }) {
     },
     // Escape ends the round, and so does space once every case is done
     keys: ['m', 'escape'],
-    press: (k) => (k === 'm' ? miss() : swap(end)),
+    press: (k) => (k === 'm' ? miss() : k === 'escape' || !round.get()?.next ? swap(end) : undefined),
+    off: () => {
+      cubeRan.current = false
+      calledOff.current()
+    },
   })
+  const follow = useFollow(
+    () => {
+      const q = round.get()
+      const n = q?.way === 'smart' && !q.over ? q.next : null
+      return n?.moves ? { key: n, moves: n.moves, start: 'set', over: (x) => finished(caseById.get(n.id)!, x) } : null
+    },
+    {
+      begin: (t) => {
+        cubeRan.current = go(t)
+      },
+      end: (start, turns, from) => {
+        const n = round.get()?.next
+        if (!n) return
+        const c = caseById.get(n.id)!
+        const e = getEntry(c.id)
+        seen.current = read(c, start, turns, from, allOf(c, e, getData().prefs.hand, anglesOf(e)))
+        halt(seen.current.cs)
+      },
+    },
+  )
+  calledOff.current = follow.reset
+  const now = follow.now
   const running = phase === 'running'
 
   const c = next && caseById.get(next.id)!
   const tap = touch?.matches
-  const hint = !next
+  const hint: React.ReactNode = !next
     ? ''
-    : phase === 'armed'
+    : auto
+      ? running
+        ? ''
+        : now.is === 'wait'
+          ? (
+              <>
+                Solve your cube, and the scramble starts.{' '}
+                <button className="quiet" onClick={markSolved} title="When the cube is solved but the trainer thinks it isn’t">
+                  It’s solved
+                </button>
+              </>
+            )
+          : r.done.length
+            ? ''
+            : 'Scramble with yellow on top. The clock starts when it’s done.'
+      : r.way === 'smart' && phase === 'idle'
+        ? (
+            <>
+              Your cube isn’t connected, so the space bar keeps the time.{' '}
+              <button className="quiet" onClick={() => void connect()} disabled={cube.state === 'connecting'}>
+                {cube.state === 'connecting' ? 'Connecting' : 'Connect'}
+              </button>
+            </>
+          )
+        : phase === 'armed'
       ? screen
         ? 'Let go to see the case'
         : 'Let go to start'
@@ -368,8 +473,8 @@ function Stage({ r }: { r: Round }) {
               <Cube ll={running ? turnU(c.ll, next.view) : blank(c.ll)} label={running ? 'The case to recall' : undefined} />
             </div>
           ) : (
-            <p className="stage__scramble" aria-label={`Scramble: ${next.moves}`}>
-              <Alg text={next.moves ?? ''} />
+            <p className="stage__scramble" aria-label={`Scramble: ${next.moves}`} data-wait={(auto && now.is === 'wait') || undefined}>
+              {auto && now.is === 'setup' && now.guide.moves.join(' ') === next.moves ? <Turns list={tokens(now.guide)} /> : <Alg text={next.moves ?? ''} />}
             </p>
           )}
         </div>
@@ -403,6 +508,8 @@ function Stage({ r }: { r: Round }) {
 interface Row {
   id: string
   cs: number | null
+  /** With a smart cube, the part of the time before the first turn. */
+  look: number | null
   /** Times it was missed in the round. */
   missed: number
   best: boolean
@@ -416,10 +523,12 @@ function Summary({ r }: { r: Round }) {
     .map((id) => {
       const tries = r.done.filter((a) => a.id === id)
       const got = tries.findLast((a) => !a.missed)
-      return { id, cs: got ? got.cs : null, missed: tries.filter((a) => a.missed).length, best: !!got?.best }
+      return { id, cs: got ? got.cs : null, look: got?.seen?.look ?? null, missed: tries.filter((a) => a.missed).length, best: !!got?.best }
     })
   const timed = rows.filter((x) => x.cs !== null)
   const mean = timed.length ? timed.reduce((t, x) => t + x.cs!, 0) / timed.length : null
+  const looked = timed.filter((x) => x.look !== null)
+  const look = looked.length ? looked.reduce((t, x) => t + x.look!, 0) / looked.length : null
   const order = [...rows].sort((a, b) => (b.cs ?? Infinity) - (a.cs ?? Infinity))
   const most = Math.max(...timed.map((x) => x.cs!), 1)
   const weak = order.slice(0, Math.min(8, Math.max(3, Math.ceil(rows.length / 3))))
@@ -460,6 +569,7 @@ function Summary({ r }: { r: Round }) {
     fastest && rows.length > 1 ? `${caseById.get(fastest.id)!.name} was the fastest, at ${clock(fastest.cs!)}.` : '',
     bests ? (bests === 1 ? 'One new best.' : `${bests} new bests.`) : '',
     missed ? (missed === 1 ? 'One missed.' : `${missed} missed.`) : '',
+    look !== null && looked.length === timed.length ? `Recognizing took ${clock(look)} of that, on average.` : '',
   ]
 
   return (
@@ -471,7 +581,7 @@ function Summary({ r }: { r: Round }) {
             <span className="hero__of">
               {mean === null ? (rows.length === 1 ? 'case' : 'cases') : 'seconds'}
               <br />
-              {mean === null ? 'missed' : r.way === 'cube' ? 'on average' : 'to recall'}
+              {mean === null ? 'missed' : r.way === 'screen' ? 'to recall' : 'on average'}
             </span>
           </h1>
           <p>{story.filter(Boolean).join(' ')}</p>
@@ -510,8 +620,8 @@ function Summary({ r }: { r: Round }) {
                 <b>{c.name}</b>
                 <span>{subWords(s)}</span>
               </a>
-              <span className="tally__bar" aria-hidden="true">
-                <b style={{ scale: `${x.cs === null ? 1 : x.cs / most} 1` }} />
+              <span className="tally__bar" aria-hidden="true" title={x.look !== null && x.cs ? `${clock(x.look)} recognizing, ${clock(x.cs - x.look)} solving` : undefined}>
+                <b style={{ scale: `${x.cs === null ? 1 : x.cs / most} 1` }}>{x.look !== null && x.cs ? <i style={{ width: `${Math.min(100, (x.look / x.cs) * 100)}%` }} /> : null}</b>
               </span>
               <span className="tally__time num">
                 {x.cs === null ? 'Missed' : clock(x.cs)}

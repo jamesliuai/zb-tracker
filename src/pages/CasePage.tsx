@@ -14,7 +14,7 @@ import { change, learn } from '../reward/celebrate.ts'
 import { say } from '../reward/signals.ts'
 import { playTurn } from '../reward/sound.ts'
 import { chosen, need, offers, suggestAngle, tipFor, type Row } from '../state/choose.ts'
-import { addAngle, anglesOf, nextUp, removeAngle, setPrefs, touch, updateAngle, updateEntry, useDrills, useEntry, usePractice, usePrefs, type Angle, type Entry, type Status } from '../state/store.ts'
+import { addAngle, anglesOf, nextUp, removeAngle, setPrefs, solvesOf, touch, updateAngle, updateEntry, useBySmartCube, useDrills, useEntry, usePractice, usePrefs, type Angle, type Entry, type Status } from '../state/store.ts'
 import { drill } from '../train/drill.ts'
 import { median } from '../train/schedule.ts'
 
@@ -49,10 +49,12 @@ const times = (n: number) => (n === 1 ? 'once' : n === 2 ? 'twice' : `${n} times
 /** How it has gone in the trainer, once there's something to say. */
 function Practised({ id, status }: { id: string; status: Status }) {
   const p = usePractice(id)
+  const smart = useBySmartCube()
   if (!p) return null
-  const solves = p.times ?? []
+  const { times: solves, best, look } = solvesOf(p, smart)
+  const seeing = look && look.length >= 3 ? `, ${clock(median(look))} of it recognizing` : ''
   const bits = [
-    p.best ? `Best ${clock(p.best)}${solves.length >= 3 ? `, usually ${clock(median(solves))}` : ''}.` : '',
+    best ? `Best ${clock(best)}${solves.length >= 3 ? `, usually ${clock(median(solves))}${seeing}` : ''}.` : '',
     `Practiced ${times(p.n)}${p.miss ? `, missed ${times(p.miss)}` : ''}.`,
     status === 2 ? (p.due <= Date.now() ? 'Due for a refresher.' : `Next refresher ${when(p.due)}.`) : '',
   ]

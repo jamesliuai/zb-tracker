@@ -156,6 +156,29 @@
 .alg i {
   color: var(--ink-3);
 }
+
+/* moves to follow on a smart cube. A slip is shown in ink, never the case's color, which would give its subset away. */
+.turn {
+  border-radius: 0.2em;
+  transition: color 0.18s, opacity 0.18s, background-color 0.18s;
+}
+.turn[data-is='done'] {
+  color: var(--ink-3);
+  opacity: 0.42;
+}
+.turn[data-is='next'] {
+  text-decoration: underline;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.24em;
+}
+.turn[data-is='half'] {
+  background: linear-gradient(90deg, color-mix(in oklab, var(--ink) 16%, transparent) 50%, transparent 50%);
+}
+.turn[data-is='fix'] {
+  padding-inline: 0.12em;
+  color: var(--bg);
+  background: var(--ink);
+}
 .auf {
   display: inline-grid;
   place-items: center;

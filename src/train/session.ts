@@ -5,6 +5,7 @@
 import type { Turn } from '../cube/engine.ts'
 import { caseById, type DeckId } from '../data/index.ts'
 import { signal } from '../reward/signals.ts'
+import type { Solve } from '../smart/solve.ts'
 import { practiceOf, setPractice, type Practice, type Way } from '../state/store.ts'
 import { practised } from './schedule.ts'
 import { scramble } from './scramble.ts'
@@ -29,6 +30,10 @@ export interface Attempt {
   before: Practice | undefined
   after: Practice
   at: number
+  /** What a smart cube saw of it, when one timed it. */
+  seen?: Solve
+  /** A smart cube started the clock but a hand stopped it, so the time isn't a solve's, and isn't kept. */
+  cut?: boolean
 }
 
 export interface Round {
@@ -72,16 +77,20 @@ export function begin(deck: DeckId, ids: string[], way: Way) {
   round.set({ n: ++rounds, deck, way, ids: order, queue: order, next: prompt(order[0], way), done: [], start: Date.now(), over: false, complete: false })
 }
 
-/** The case coming up was done in `cs` hundredths. */
-export function finish(cs: number): Attempt | null {
+/**
+ * The case coming up was done in `cs` hundredths, timed by the keys or, with what it saw, a smart
+ * cube. `cut` when a smart cube started the clock and a hand stopped it: the time isn't kept.
+ */
+export function finish(cs: number, seen?: Solve, cut = false): Attempt | null {
   const r = round.get()
   if (!r?.next || r.over) return null
   const { id, view } = r.next
   const before = practiceOf(id)
-  const cube = r.way === 'cube'
+  const timed = r.way !== 'screen' && !cut
   const at = Date.now()
-  const after = practised(before, true, cube ? cs : null, at)
-  const attempt: Attempt = { id, view, cs, missed: false, best: cube && before?.best !== undefined && cs < before.best, before, after, at }
+  const after = practised(before, true, timed ? cs : null, at, seen?.look)
+  const was = seen ? before?.smart?.best : before?.best
+  const attempt: Attempt = { id, view, cs, missed: false, best: timed && was !== undefined && cs < was, before, after, at, seen, cut }
   setPractice(id, after)
   const queue = r.queue.slice(1)
   round.set({ ...r, queue, next: queue.length ? prompt(queue[0], r.way) : null, done: [...r.done, attempt] })
@@ -97,7 +106,7 @@ export function toggleMiss(): boolean | null {
   // only rewrite the record this attempt saved, not one that a cleared or imported progress put there since
   let { after } = last
   if (practiceOf(last.id) === after) {
-    after = practised(last.before, !missed, !missed && r.way === 'cube' ? last.cs : null, last.at)
+    after = practised(last.before, !missed, !missed && r.way !== 'screen' && !last.cut ? last.cs : null, last.at, last.seen?.look)
     setPractice(last.id, after)
   }
   let { queue, next } = r

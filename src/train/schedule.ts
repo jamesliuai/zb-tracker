@@ -19,18 +19,22 @@ export const median = (list: number[]) => {
 /**
  * A case was practiced: got right in `cs` hundredths (null without a cube), or missed. Getting it
  * right spaces it out, a little less when it was slow for you. Practice before it's due doesn't
- * stretch the gap, so three rounds in an evening count as one review.
+ * stretch the gap, so three rounds in an evening count as one review. A smart cube's solve comes
+ * with `look`, the part of it before the first turn, and goes with the smart cube's other times.
  */
-export function practised(p: Practice | undefined, got: boolean, cs: number | null, now = Date.now()): Practice {
+export function practised(p: Practice | undefined, got: boolean, cs: number | null, now = Date.now(), look?: number): Practice {
   const n = (p?.n ?? 0) + 1
   if (!got) return { ...p, n, miss: (p?.miss ?? 0) + 1, run: 0, at: now, due: now, days: 0 }
   const was = p?.days ?? 0
-  const slow = cs !== null && (p?.times?.length ?? 0) >= 3 && cs > median(p!.times!) * 1.3
+  const smart = look !== undefined
+  const times = (smart ? p?.smart?.times : p?.times) ?? []
+  const slow = cs !== null && times.length >= 3 && cs > median(times) * 1.3
   const early = p !== undefined && now - p.at < was * DAY * 0.5
   const days = !was ? 1 : early ? was : Math.min(180, was * (slow ? 1.4 : 2.5))
   const out: Practice = { ...p, n, run: (p?.run ?? 0) + 1, at: now, due: now + days * DAY, days }
-  if (cs !== null) {
-    out.times = [...(p?.times ?? []), cs].slice(-KEEP)
+  if (cs !== null && smart) out.smart = { times: [...times, cs].slice(-KEEP), look: [...(p?.smart?.look ?? []), look].slice(-KEEP), best: Math.min(p?.smart?.best ?? cs, cs) }
+  else if (cs !== null) {
+    out.times = [...times, cs].slice(-KEEP)
     out.best = Math.min(p?.best ?? cs, cs)
   }
   return out

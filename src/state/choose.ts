@@ -59,3 +59,9 @@ export function offers(c: Case, hand: Hand, rot: Turn, e: Entry): { main: Row[];
   })
   return { main: [...own, ...c.algs[hand].main.map(row)], more: c.algs[hand].more.map(row) }
 }
+
+/** Every algorithm a case has, the ones chosen for its angles first, then your own, then the sheets', both hands. */
+export function allOf(c: Case, e: Entry, hand: Hand, angles: Angle[]): string[] {
+  const sheets = (['two', 'oh'] as const).flatMap((h) => [...c.algs[h].main, ...c.algs[h].more].map((a) => a.text))
+  return [...new Set([...angles.map((a) => chosen(c, a, hand).text), ...(e.own ?? []), ...sheets])]
+}

@@ -13,11 +13,44 @@
 }
 .go .seg {
   display: grid;
+  /* even columns that can give, for three ways on a narrow phone */
+  grid-auto-columns: minmax(0, 1fr);
+}
+.go .seg button {
+  padding-inline: 6px;
 }
 .hero .go p {
   margin: 0 4px 2px;
   font-size: 14.5px;
   max-width: none;
+}
+/* the smart cube that's connected, under the button */
+.hero .go .cubeline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0 4px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.cubeline .icon {
+  color: var(--ink-3);
+}
+.cubeline b {
+  font-weight: 500;
+  color: var(--ink);
+}
+.cubeline__do {
+  display: flex;
+  gap: 14px;
+  margin-left: auto;
+}
+.cubeline__do .quiet {
+  font-size: 13.5px;
+}
+.hero .go .cubeline--note {
+  color: var(--ink-2);
 }
 
 /* ------------------------------------------------------------ what to train */
@@ -267,6 +300,13 @@
 .stage__scramble .alg {
   word-spacing: 0.1em;
 }
+.stage__scramble[data-wait] {
+  opacity: 0.4;
+}
+.stage__hint .quiet {
+  margin-block: -6px;
+  font-size: 14.5px;
+}
 .stage__card {
   width: min(62vw, 290px, 34vh);
   padding: clamp(26px, 3.4vw, 38px);
@@ -341,7 +381,7 @@
   transition: opacity 0.3s var(--ease), visibility 0.3s;
 }
 .stage[data-phase='running'] :is(.stage__fade, .lights),
-.stage[data-phase='running'][data-way='cube'] .stage__prompt {
+.stage[data-phase='running']:is([data-way='cube'], [data-way='smart']) .stage__prompt {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.12s, visibility 0.12s;
@@ -416,6 +456,13 @@
 }
 .reveal__note--tip {
   color: var(--ink-3);
+}
+/* what a smart cube saw: a wrong turn, or another algorithm */
+.reveal__note--seen {
+  color: var(--ink);
+}
+.reveal__note--seen .alg {
+  margin-left: 4px;
 }
 .reveal__side {
   display: grid;
@@ -513,6 +560,13 @@
   background: var(--hue);
   transform-origin: 0 50%;
   animation: grow 0.9s 0.1s var(--spring) backwards;
+}
+/* with a smart cube, the part spent recognizing the case, before the first turn */
+.tally__bar b i {
+  display: block;
+  height: 100%;
+  border-right: 2px solid var(--raised);
+  background: color-mix(in oklab, var(--hue) 45%, var(--bg));
 }
 .tally__row:not([data-got]) .tally__bar b {
   background: var(--wash);

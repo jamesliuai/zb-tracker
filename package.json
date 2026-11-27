@@ -17,7 +17,8 @@
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/rubik": "^5.3.0",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "smartcube-web-bluetooth": "github:poliva/smartcube-web-bluetooth#2077416d6c828ec926dee424cf1bbfe4c0f25a47"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

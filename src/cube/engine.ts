@@ -241,7 +241,7 @@ const pieces = (() => {
 export const isSlot = (ll: string) => ll.length > 21
 
 /** A cube as a ZBLS picture: the last layer's pieces only say where an edge's yellow is. */
-function slotPicture(state: string[]): string {
+function slotPicture(state: readonly string[]): string {
   const out = [...state]
   for (const piece of pieces) if (piece.some((i) => state[i] === 'U')) for (const i of piece) out[i] = piece.length === 2 && state[i] === 'U' ? 'U' : 'X'
   return [...llSlots, ...slotSlots].map((i) => out[i]).join('')
@@ -304,8 +304,8 @@ function doneOn(text: string): string[] {
   return state
 }
 
-const keeps = (state: string[], list: number[]) => list.every((i) => state[i] === solved[i])
-const layerOf = (state: string[]) => llSlots.map((i) => state[i]).join('')
+const keeps = (state: readonly string[], list: number[]) => list.every((i) => state[i] === solved[i])
+const layerOf = (state: readonly string[]) => llSlots.map((i) => state[i]).join('')
 
 /** The last layer after doing `text` on a solved cube, or null if F2L or the grip changed. */
 export function layerAfter(text: string): string | null {
@@ -360,3 +360,74 @@ export function examine(text: string): Verdict {
 }
 
 export const caseKey = canonical
+
+/* ------------------------------------------------------------------ a cube in hand */
+
+/**
+ * A whole cube, the way a smart cube keeps it up to date: for each sticker's place, the face the
+ * sticker belongs to. Yellow is U, as everywhere else here.
+ */
+export type Cube = readonly string[]
+
+export const solvedCube: Cube = Object.freeze([...solved])
+
+/** The cube after one more move. */
+export function turned(cube: Cube, move: string): Cube {
+  const p = moves.get(move)
+  if (!p) throw new NotationError(move)
+  const out: string[] = new Array(N)
+  for (let i = 0; i < N; i++) out[p[i]] = cube[i]
+  return out
+}
+
+/** A solved cube after `text`. */
+export const cubeAfter = (text: string): Cube => doneOn(text)
+
+export const sameCube = (a: Cube, b: Cube) => a.every((s, i) => s === b[i])
+export const isSolved = (cube: Cube) => sameCube(cube, solved)
+
+/** The last layer, while the first two layers are whole. */
+export const topOf = (cube: Cube): string | null => (keeps(cube, rest) ? layerOf(cube) : null)
+
+/** The ZBLS picture, while everything but the front right slot and the last layer is whole. */
+export const slotOf = (cube: Cube): string | null => (keeps(cube, below) ? slotPicture(cube) : null)
+
+/** The edges of a last layer have yellow on top, the way a ZBLS leaves them. */
+export const edgesOriented = oriented
+
+/** A ZBLS is done: the first two layers whole and the edges on top oriented, whatever else the top does. */
+export const slotDone = (cube: Cube) => {
+  const top = topOf(cube)
+  return top !== null && oriented(top)
+}
+
+/**
+ * Smart cubes report a cube held white on top and green in front. Turned over about the front,
+ * yellow is on top and green still faces you: white and yellow change places, and so do red and
+ * orange, while a turn stays the same way round.
+ */
+const yellowSide: Record<string, string> = { U: 'D', D: 'U', R: 'L', L: 'R', F: 'F', B: 'B' }
+
+/** A turn a smart cube reported, with yellow on top. */
+export const yellowUp = (move: string) => yellowSide[move[0]] + move.slice(1)
+
+/** Where each of the 54 stickers a smart cube reports is, held white on top: U R F D L B, each face row by row. */
+const reported: { p: Vec; n: Vec }[] = [
+  ...[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => ({ p: [c - 1, 1, r - 1] as Vec, n: [0, 1, 0] as Vec }))),
+  ...[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => ({ p: [1, 1 - r, 1 - c] as Vec, n: [1, 0, 0] as Vec }))),
+  ...[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => ({ p: [c - 1, 1 - r, 1] as Vec, n: [0, 0, 1] as Vec }))),
+  ...[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => ({ p: [c - 1, -1, 1 - r] as Vec, n: [0, -1, 0] as Vec }))),
+  ...[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => ({ p: [-1, 1 - r, c - 1] as Vec, n: [-1, 0, 0] as Vec }))),
+  ...[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => ({ p: [1 - c, 1 - r, -1] as Vec, n: [0, 0, -1] as Vec }))),
+]
+const overFront = ([x, y, z]: Vec): Vec => [-x, -y, z]
+const reportedAt = reported.map(({ p, n }) => at(overFront(p), overFront(n)))
+
+/** A cube from the stickers a smart cube reports, or null if they can't be a 3x3. */
+export function fromFacelets(facelets: string): Cube | null {
+  if (!/^[URFDLB]{54}$/.test(facelets)) return null
+  if ([...'URFDLB'].some((f, i) => facelets[i * 9 + 4] !== f || facelets.split(f).length !== 10)) return null
+  const out: string[] = new Array(N)
+  reportedAt.forEach((i, k) => (out[i] = yellowSide[facelets[k]]))
+  return out
+}

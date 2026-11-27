@@ -4,6 +4,7 @@ import { Drill } from './components/Drill.tsx'
 import { Finale } from './components/Finale.tsx'
 import { Header } from './components/Header.tsx'
 import { Palette } from './components/Palette.tsx'
+import { MacAsk } from './components/SmartCube.tsx'
 import { Toast } from './components/Toast.tsx'
 import { covered } from './lib/layers.ts'
 import { getRoute, go, settle, trainOf, useRoute } from './lib/router.ts'
@@ -78,6 +79,7 @@ export function App() {
       <Toast />
       <Finale />
       <Drill />
+      <MacAsk />
     </>
   )
 }

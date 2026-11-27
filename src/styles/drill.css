@@ -79,6 +79,30 @@
   margin-right: 6px;
   color: var(--ink-2);
 }
+.drill__setup[data-wait] .alg {
+  opacity: 0.45;
+}
+.drill__setup[data-done] .alg {
+  opacity: 0.42;
+}
+.drill__tps {
+  min-height: 1.4em;
+  margin-top: -2px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+/* connect a smart cube from the top bar, lit while one is connected */
+.cubebutton[data-on] {
+  color: var(--hue-ink);
+}
+.cubebutton[aria-busy] .icon {
+  animation: cube-wait 1s ease-in-out infinite alternate;
+}
+@keyframes cube-wait {
+  to {
+    opacity: 0.3;
+  }
+}
 
 /* the clock is the button, for fingers */
 .drill__pad {

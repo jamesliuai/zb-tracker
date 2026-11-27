@@ -6,10 +6,12 @@ import { playStart } from '../reward/sound.ts'
 export type Phase = 'idle' | 'armed' | 'running'
 
 interface Hands {
-  /** Whether there's anything to time right now. */
+  /** Whether there's anything to time right now with space or a finger. False while a smart cube runs the clock. */
   ready: () => boolean
-  /** The clock was stopped after `cs` hundredths. A slip of the finger never gets here. */
-  stopped: (cs: number) => void
+  /** The clock was stopped after `cs` hundredths, by hand or by a smart cube. A slip of the finger never gets here. */
+  stopped: (cs: number, by: 'hand' | 'cube') => void
+  /** Escape called the clock off. */
+  off?: () => void
   /** Keys besides space that do something while the clock is still, in lowercase. */
   keys?: string[]
   /** One of those keys was pressed, or space when there's nothing to time. */
@@ -21,7 +23,8 @@ interface Hands {
 /**
  * A speedcubing timer. Hold space, or a finger on the pad, and let go to start; any key or a tap
  * anywhere stops it, and Escape calls it off. While it runs the time counts on its own, frame by
- * frame, and the page is told, so everything else can step back.
+ * frame, and the page is told, so everything else can step back. A smart cube starts it with `go`
+ * and stops it with `halt`, with the time it measured itself.
  *
  * Spread `pad` onto the clock, set `face` on the element that shows the running time, and render
  * `cover` anywhere, which is there while a tap can stop the clock.
@@ -79,7 +82,23 @@ export function useStopwatch(hands: Hands) {
     if (at.current !== 'running') return
     set('idle')
     const cs = Math.floor((t - from.current) / 10)
-    if (cs >= 30) o.current.stopped(cs)
+    // a slip of the finger is as good as calling it off
+    if (cs >= 30) o.current.stopped(cs, 'hand')
+    else o.current.off?.()
+  }
+  /** Started by a smart cube, from the turn that set it off. False if it was going already. */
+  const go = (t: number) => {
+    if (at.current === 'running') return false
+    from.current = t
+    set('running')
+    playStart()
+    return true
+  }
+  /** Stopped by a smart cube, with the time by its own clock. */
+  const halt = (cs: number) => {
+    if (at.current !== 'running') return
+    set('idle')
+    o.current.stopped(cs, 'cube')
   }
 
   useEffect(() => {
@@ -96,8 +115,11 @@ export function useStopwatch(hands: Hands) {
         own(e)
         // a key held down since before the clock started isn't the one stopping it
         if (e.repeat) return
-        if (e.key === 'Escape') set('idle') // called off, and it doesn't count
-        else stop(e.timeStamp)
+        if (e.key === 'Escape') {
+          // called off, and it doesn't count
+          set('idle')
+          o.current.off?.()
+        } else stop(e.timeStamp)
         return
       }
       const k = e.key.toLowerCase()
@@ -127,7 +149,8 @@ export function useStopwatch(hands: Hands) {
 
   const pad = {
     onPointerDown: (e: React.PointerEvent<HTMLElement>) => {
-      if (e.button || at.current !== 'idle' || !o.current.ready()) return
+      // a button on the pad, like Connect, is pressed for itself, not to start the clock
+      if (e.button || at.current !== 'idle' || !o.current.ready() || (e.target as Element).closest('button, a')) return
       e.currentTarget.setPointerCapture(e.pointerId)
       arm()
     },
@@ -151,5 +174,5 @@ export function useStopwatch(hands: Hands) {
       />
     ) : null
 
-  return { phase, face, pad, cover }
+  return { phase, face, pad, cover, go, halt }
 }
